@@ -28,6 +28,13 @@ mv "$APP" "$HOME/domains/zaghroutaa.com/nodejs_old_$TS"
 mv "$HOME/zaghroutaa-new" "$APP"
 cp "/tmp/zg.env.$TS" "$APP/.env" 2>/dev/null || true
 mkdir -p "$APP/tmp"
+
+# uploads ثابتة بتفضل بعد كل نشر (symlink لمجلد دائم بره التطبيق)
+PERSIST="$HOME/domains/zaghroutaa.com/persist-uploads"
+mkdir -p "$PERSIST"
+rm -rf "$APP/public/uploads"
+ln -s "$PERSIST" "$APP/public/uploads"
+
 touch "$APP/tmp/restart.txt"
 
 # نظافة: سيب آخر باك أب واحد بس

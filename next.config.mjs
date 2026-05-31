@@ -3,9 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    formats: ["image/avif", "image/webp"],
-    // كل الصور محلية داخل /public — مش محتاجين دومينات خارجية
-    remotePatterns: [],
+    // بنوقف تحسين الصور عشان الصور المرفوعة وقت التشغيل (لوجو/معرض/آراء)
+    // تظهر صح على السيرفر (الـ optimizer في وضع standalone بيرفض ملفات /uploads بـ 400)
+    unoptimized: true,
   },
   experimental: {
     optimizePackageImports: ["lucide-react"],
