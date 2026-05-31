@@ -4,10 +4,11 @@ import path from "path";
 
 export const runtime = "nodejs";
 
-// مجلد الرفع — على السيرفر بنحطه في مكان دائم عبر UPLOAD_DIR
+// مجلد الرفع — مكان دائم بره مجلد التطبيق عشان الصور ما تتمسحش مع كل نشر
+// (على السيرفر بنحدده عبر UPLOAD_DIR، وبيتقدّم عن طريق راوت /media)
 const UPLOAD_DIR =
-  process.env.UPLOAD_DIR || path.join(process.cwd(), "public", "uploads");
-const URL_PREFIX = process.env.UPLOAD_URL_PREFIX || "/uploads";
+  process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
+const URL_PREFIX = process.env.UPLOAD_URL_PREFIX || "/media";
 
 const MAX_BYTES = 8 * 1024 * 1024; // 8 ميجا
 const ALLOWED = ["jpeg", "jpg", "png", "webp", "gif", "avif"];

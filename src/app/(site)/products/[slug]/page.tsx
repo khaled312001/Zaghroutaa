@@ -121,8 +121,8 @@ export default async function ProductPage({
         </div>
       </div>
 
-      <div className="container-zg py-10">
-        <div className="grid gap-10 lg:grid-cols-2">
+      <div className="container-zg py-8 sm:py-10">
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
           <ProductGallery images={product.images} name={product.nameAr} />
 
           <div>
