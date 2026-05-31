@@ -14,11 +14,13 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-cream-100 font-body text-espresso-800 antialiased;
     overflow-x: clip;
+    max-width: 100%;
     background-image: radial-gradient(
         1100px 520px at 100% -5%,
         rgba(232, 210, 172, 0.35) 0%,

@@ -23,25 +23,51 @@ export function ProductGallery({
     setActive((a) => (a + dir + list.length) % list.length);
 
   return (
-    <div className="w-full">
-      {/* الصورة الرئيسية — مربّع، عمره ما يبقى أطول من الشاشة */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-gold-200 bg-cream-100 shadow-card sm:rounded-3xl"
-      >
-        <Image
-          src={current.url}
-          alt={current.alt ?? name}
-          fill
-          sizes="(max-width: 1024px) 100vw, 45vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          priority
-        />
-        <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-espresso-900/65 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
+    // على الموبايل الصورة صغيرة ومتمركزة في النص، وعلى الشاشات الكبيرة بتاخد عرض العمود
+    <div className="mx-auto w-full max-w-[260px] sm:max-w-[340px] lg:max-w-none">
+      {/* الصورة الرئيسية — مربّع، عمره ما يبقى أطول من عرضه */}
+      <div className="group relative aspect-square w-full overflow-hidden rounded-2xl border border-gold-200 bg-cream-100 shadow-card sm:rounded-3xl">
+        {/* الضغط على الصورة بيفتح التكبير */}
+        <button type="button" onClick={() => setOpen(true)} className="block h-full w-full" aria-label="تكبير الصورة">
+          <Image
+            src={current.url}
+            alt={current.alt ?? name}
+            fill
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            priority
+          />
+        </button>
+
+        <span className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-espresso-900/65 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
           <ZoomIn className="h-3.5 w-3.5" /> اضغطي للتكبير
         </span>
-      </button>
+
+        {/* أسهم التقليب على الصورة نفسها (RTL: اليمين = السابق، الشمال = التالي) */}
+        {list.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              aria-label="الصورة السابقة"
+              className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-espresso-800 shadow-card backdrop-blur transition hover:bg-white"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              aria-label="الصورة التالية"
+              className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-espresso-800 shadow-card backdrop-blur transition hover:bg-white"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <span className="pointer-events-none absolute bottom-2 right-2 rounded-full bg-espresso-900/65 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur">
+              {active + 1} / {list.length}
+            </span>
+          </>
+        )}
+      </div>
 
       {/* الصور المصغّرة */}
       {list.length > 1 && (
