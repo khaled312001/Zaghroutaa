@@ -54,7 +54,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
       )}
     >
       <div className="container-zg flex h-[72px] items-center justify-between gap-4">
-        <Logo />
+        <Logo showText={false} />
 
         <nav className="hidden items-center gap-1 lg:flex">
           {NAV.map((item) => (
@@ -112,7 +112,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
               className="fixed right-0 top-0 z-50 flex h-[100dvh] w-[300px] max-w-[85vw] flex-col bg-pearl shadow-2xl lg:hidden"
             >
               <div className="flex items-center justify-between border-b border-gold-100 p-5">
-                <Logo />
+                <Logo showText={false} />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

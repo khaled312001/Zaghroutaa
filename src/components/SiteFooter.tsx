@@ -23,7 +23,7 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
     <footer className="mt-20 border-t border-gold-200/60 bg-espresso-900 text-cream-200">
       <div className="container-zg grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
-          <Logo light />
+          <Logo light showText={false} />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream-200/80">
             كل حاجة تخص العروسة في كتب الكتاب والفرح — قطع هاند ميد مميزة ومعمولة
             بدقة ونظافة تقفيل مفيش زيها، عشان العروسة تكون مختلفة في يومها.
