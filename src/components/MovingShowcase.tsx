@@ -16,7 +16,7 @@ export async function MovingShowcase({
           <span className="text-sm font-bold text-gold-600">{title}</span>
         </span>
       </div>
-      <ProductMarquee products={products} speed={50} />
+      <ProductMarquee products={products} />
     </section>
   );
 }
