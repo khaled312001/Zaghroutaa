@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gold: 192 141 69;
+    --cream: 251 247 240;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream-100 font-body text-espresso-800 antialiased;
+    background-image: radial-gradient(
+        1100px 520px at 100% -5%,
+        rgba(232, 210, 172, 0.35) 0%,
+        transparent 55%
+      ),
+      radial-gradient(900px 480px at 0% 0%, rgba(248, 232, 230, 0.45) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-espresso-900;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: rgba(192, 141, 69, 0.25);
+    color: #2a211b;
+  }
+
+  /* سكرول بار راقي */
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f6efe3;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(#cda15a, #a4762f);
+    border-radius: 999px;
+    border: 2px solid #f6efe3;
+  }
+}
+
+@layer components {
+  .container-zg {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  /* نص بتدرّج ذهبي لامع */
+  .text-gold-gradient {
+    @apply bg-gold-shine bg-clip-text text-transparent;
+    background-size: 200% auto;
+  }
+
+  .text-gold-shimmer {
+    @apply bg-gold-shine bg-clip-text text-transparent animate-shimmer;
+    background-size: 200% auto;
+  }
+
+  /* زرار أساسي ذهبي */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-base font-semibold
+      transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/60
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-gold {
+    @apply btn text-white shadow-glow;
+    background-image: linear-gradient(120deg, #cda15a, #a4762f 55%, #835e26);
+  }
+  .btn-gold:hover {
+    @apply -translate-y-0.5 shadow-[0_22px_55px_-16px_rgba(164,118,47,0.6)];
+    filter: brightness(1.06);
+  }
+  .btn-outline {
+    @apply btn border-2 border-gold-400/70 bg-white/40 text-gold-700 backdrop-blur hover:bg-gold-50 hover:border-gold-500;
+  }
+  .btn-whatsapp {
+    @apply btn text-white shadow-[0_18px_45px_-16px_rgba(37,211,102,0.65)];
+    background-image: linear-gradient(120deg, #25d366, #1faa52);
+  }
+  .btn-whatsapp:hover {
+    @apply -translate-y-0.5;
+    filter: brightness(1.05);
+  }
+  .btn-ghost {
+    @apply btn text-espresso-700 hover:bg-cream-200;
+  }
+
+  /* كارت زجاجي */
+  .glass {
+    @apply border border-white/60 bg-white/70 backdrop-blur-md;
+  }
+
+  .card-zg {
+    @apply rounded-3xl border border-gold-200/60 bg-pearl shadow-card;
+  }
+
+  /* شارة */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold;
+  }
+
+  /* تأثير اللمعة على الصور عند المرور */
+  .shine-on-hover {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine-on-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%);
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.45) 50%,
+      transparent 70%
+    );
+    transition: transform 0.85s ease;
+  }
+  .shine-on-hover:hover::after {
+    transform: translateX(120%);
+  }
+
+  /* فاصل زخرفي */
+  .divider-ornament {
+    @apply flex items-center justify-center gap-3 text-gold-500;
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: "";
+    @apply h-px w-16 sm:w-24;
+    background: linear-gradient(90deg, transparent, #cda15a);
+  }
+  .divider-ornament::after {
+    background: linear-gradient(90deg, #cda15a, transparent);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+}

@@ -1,0 +1,305 @@
+[
+  {
+    "slug": "fingerprint-handmade-deluxe",
+    "cover": "fingerprint-handmade-deluxe-01.jpg",
+    "ordered": [
+      "fingerprint-handmade-deluxe-01.jpg"
+    ],
+    "drop": [],
+    "captionAr": "تابلوه بصمة فاخر بإطار لؤلؤ وكريستال"
+  },
+  {
+    "slug": "wedding-pens",
+    "cover": "wedding-pens-03.jpg",
+    "ordered": [
+      "wedding-pens-03.jpg",
+      "wedding-pens-04.jpg"
+    ],
+    "drop": [
+      "wedding-pens-05.jpg"
+    ],
+    "captionAr": "أقلام عروسة مزينة بالريش واللؤلؤ"
+  },
+  {
+    "slug": "strass-bouquets",
+    "cover": "strass-bouquets-04.jpg",
+    "ordered": [
+      "strass-bouquets-04.jpg",
+      "strass-bouquets-06.jpg",
+      "strass-bouquets-03.jpg",
+      "strass-bouquets-07.jpg"
+    ],
+    "drop": [
+      "strass-bouquets-05.jpg",
+      "strass-bouquets-08.jpg",
+      "strass-bouquets-09.jpg",
+      "strass-bouquets-10.jpg"
+    ],
+    "captionAr": "بوكيه كريستال يلمع زي العروسة"
+  },
+  {
+    "slug": "bridal-robe",
+    "cover": "bridal-robe-03.jpg",
+    "ordered": [
+      "bridal-robe-03.jpg",
+      "bridal-robe-04.jpg"
+    ],
+    "drop": [
+      "bridal-robe-02.zip"
+    ],
+    "captionAr": "روب ساتان للعروسة بكتابة دهبي أنيقة"
+  },
+  {
+    "slug": "pearl-crocs",
+    "cover": "pearl-crocs-01.jpg",
+    "ordered": [
+      "pearl-crocs-01.jpg",
+      "pearl-crocs-02.jpg"
+    ],
+    "drop": [],
+    "captionAr": "كروكس اللؤلؤ للعروسة بلمسة فخامة"
+  },
+  {
+    "slug": "feather-fans",
+    "cover": "feather-fans-18.jpg",
+    "ordered": [
+      "feather-fans-18.jpg",
+      "feather-fans-16.jpg",
+      "feather-fans-12.jpg",
+      "feather-fans-07.jpg",
+      "feather-fans-03.jpg",
+      "feather-fans-08.jpg",
+      "feather-fans-19.jpg",
+      "feather-fans-06.jpg",
+      "feather-fans-15.jpg",
+      "feather-fans-09.jpg"
+    ],
+    "drop": [
+      "feather-fans-10.jpg",
+      "feather-fans-11.jpg",
+      "feather-fans-13.jpg",
+      "feather-fans-14.jpg",
+      "feather-fans-17.jpg"
+    ],
+    "captionAr": "مروحة دانتيل باللؤلؤ والكريستال للعروسة"
+  },
+  {
+    "slug": "bridal-mirror",
+    "cover": "bridal-mirror-06.jpg",
+    "ordered": [
+      "bridal-mirror-06.jpg",
+      "bridal-mirror-07.jpg",
+      "bridal-mirror-04.jpg",
+      "bridal-mirror-03.jpg",
+      "bridal-mirror-09.jpg"
+    ],
+    "drop": [
+      "bridal-mirror-05.jpg",
+      "bridal-mirror-08.jpg",
+      "bridal-mirror-10.jpg"
+    ],
+    "captionAr": "مراية عروسة لؤلؤ هاند ميد فخامة"
+  },
+  {
+    "slug": "bridal-glasses",
+    "cover": "bridal-glasses-05.jpg",
+    "ordered": [
+      "bridal-glasses-05.jpg",
+      "bridal-glasses-04.jpg"
+    ],
+    "drop": [
+      "bridal-glasses-03.jpg"
+    ],
+    "captionAr": "نظارة اللؤلؤ للعروسة بلمسة فخامة"
+  },
+  {
+    "slug": "satin-pajamas",
+    "cover": "satin-pajamas-01.jpg",
+    "ordered": [
+      "satin-pajamas-01.jpg",
+      "satin-pajamas-02.jpg"
+    ],
+    "drop": [
+      "satin-pajamas-03.jpg"
+    ],
+    "captionAr": "روب ساتان مطرز باسم العروسة والعريس"
+  },
+  {
+    "slug": "katb-ketab-fingerprint",
+    "cover": "katb-ketab-fingerprint-04.jpg",
+    "ordered": [
+      "katb-ketab-fingerprint-04.jpg",
+      "katb-ketab-fingerprint-06.jpg",
+      "katb-ketab-fingerprint-07.jpg",
+      "katb-ketab-fingerprint-11.jpg",
+      "katb-ketab-fingerprint-13.jpg",
+      "katb-ketab-fingerprint-05.jpg"
+    ],
+    "drop": [
+      "katb-ketab-fingerprint-02.jpg",
+      "katb-ketab-fingerprint-08.jpg",
+      "katb-ketab-fingerprint-09.jpg",
+      "katb-ketab-fingerprint-10.jpg",
+      "katb-ketab-fingerprint-12.jpg"
+    ],
+    "captionAr": "تابلوه كتب كتاب ببصمة العروسين لؤلؤ وذهبي"
+  },
+  {
+    "slug": "rose-bouquet",
+    "cover": "rose-bouquet-01.jpg",
+    "ordered": [
+      "rose-bouquet-01.jpg"
+    ],
+    "drop": [],
+    "captionAr": "بوكيه ورد حرير بلمسة لؤلؤ للعروسة"
+  },
+  {
+    "slug": "bridal-bouquets",
+    "cover": "bridal-bouquets-04.jpg",
+    "ordered": [
+      "bridal-bouquets-04.jpg",
+      "bridal-bouquets-02.jpg",
+      "bridal-bouquets-06.jpg",
+      "bridal-bouquets-08.jpg",
+      "bridal-bouquets-05.jpg"
+    ],
+    "drop": [
+      "bridal-bouquets-07.jpg"
+    ],
+    "captionAr": "بوكيه عروسة هاند ميد بلؤلؤ فخم"
+  },
+  {
+    "slug": "veil-clip",
+    "cover": "veil-clip-04.jpg",
+    "ordered": [
+      "veil-clip-04.jpg",
+      "veil-clip-08.jpg",
+      "veil-clip-05.jpg",
+      "veil-clip-02.jpg",
+      "veil-clip-07.jpg"
+    ],
+    "drop": [
+      "veil-clip-06.jpg"
+    ],
+    "captionAr": "طوقة العروسة باللؤلؤ والطرحة الناعمة"
+  },
+  {
+    "slug": "mirror-stand",
+    "cover": "mirror-stand-04.jpg",
+    "ordered": [
+      "mirror-stand-04.jpg",
+      "mirror-stand-03.jpg",
+      "mirror-stand-05.jpg"
+    ],
+    "drop": [
+      "mirror-stand-02.zip"
+    ],
+    "captionAr": "مرايا عروسة فخمة بلمسة لؤلؤ وكريستال"
+  },
+  {
+    "slug": "framed-fingerprint",
+    "cover": "framed-fingerprint-04.jpg",
+    "ordered": [
+      "framed-fingerprint-04.jpg",
+      "framed-fingerprint-03.jpg",
+      "framed-fingerprint-06.jpg"
+    ],
+    "drop": [
+      "framed-fingerprint-05.jpg",
+      "framed-fingerprint-02.zip"
+    ],
+    "captionAr": "تابلوه بصمة مأطّر بلمسة لؤلؤ فخمة"
+  },
+  {
+    "slug": "strass-handkerchief",
+    "cover": "strass-handkerchief-04.jpg",
+    "ordered": [
+      "strass-handkerchief-04.jpg",
+      "strass-handkerchief-03.jpg",
+      "strass-handkerchief-08.jpg",
+      "strass-handkerchief-05.jpg",
+      "strass-handkerchief-06.jpg",
+      "strass-handkerchief-07.jpg",
+      "strass-handkerchief-11.jpg",
+      "strass-handkerchief-12.jpg"
+    ],
+    "drop": [
+      "strass-handkerchief-09.jpg",
+      "strass-handkerchief-10.jpg",
+      "strass-handkerchief-13.jpg"
+    ],
+    "captionAr": "منديل فرح مطرز بالكريستال يدوي فاخر"
+  },
+  {
+    "slug": "bridal-slippers",
+    "cover": "bridal-slippers-03.jpg",
+    "ordered": [
+      "bridal-slippers-03.jpg",
+      "bridal-slippers-04.jpg"
+    ],
+    "drop": [
+      "bridal-slippers-05.jpg",
+      "bridal-slippers-02.zip"
+    ],
+    "captionAr": "شبشب العروسة الناعم بلمسة دهبي فخمة"
+  },
+  {
+    "slug": "pearl-tulip-crown",
+    "cover": "pearl-tulip-crown-01.jpg",
+    "ordered": [
+      "pearl-tulip-crown-01.jpg"
+    ],
+    "drop": [],
+    "captionAr": "إكليل لؤلؤ وتوليب أبيض لعروسة أنيقة"
+  },
+  {
+    "slug": "fingerprint-book",
+    "cover": "fingerprint-book-01.jpg",
+    "ordered": [
+      "fingerprint-book-01.jpg",
+      "fingerprint-book-02.jpg"
+    ],
+    "drop": [],
+    "captionAr": "كتاب بصمة العمر بلمسة فخامة وأناقة"
+  },
+  {
+    "slug": "bride-mug",
+    "cover": "bride-mug-03.jpg",
+    "ordered": [
+      "bride-mug-03.jpg",
+      "bride-mug-01.jpg",
+      "bride-mug-02.jpg"
+    ],
+    "drop": [],
+    "captionAr": "مج العروسة لمعة وفخامة ليوم الفرح"
+  },
+  {
+    "slug": "printed-handkerchief",
+    "cover": "printed-handkerchief-08.jpg",
+    "ordered": [
+      "printed-handkerchief-08.jpg",
+      "printed-handkerchief-03.jpg",
+      "printed-handkerchief-11.jpg",
+      "printed-handkerchief-07.jpg",
+      "printed-handkerchief-06.jpg",
+      "printed-handkerchief-10.jpg"
+    ],
+    "drop": [
+      "printed-handkerchief-02.zip",
+      "printed-handkerchief-04.jpg",
+      "printed-handkerchief-05.jpg",
+      "printed-handkerchief-09.jpg"
+    ],
+    "captionAr": "منديل فرح مطبوع بأسمائكم ولؤلؤ وذهبي"
+  },
+  {
+    "slug": "katb-ketab-handkerchief",
+    "cover": "katb-ketab-handkerchief-02.jpg",
+    "ordered": [
+      "katb-ketab-handkerchief-02.jpg",
+      "katb-ketab-handkerchief-01.jpg"
+    ],
+    "drop": [],
+    "captionAr": "منديل كتب الكتاب مطرز بإيد الفنانة"
+  }
+]
