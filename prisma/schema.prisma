@@ -139,3 +139,24 @@ model AdminUser {
   passwordHash String
   createdAt    DateTime @default(now())
 }
+
+/// صور معرض الأعمال (سابقة الأعمال)
+model GalleryItem {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  title     String?
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+/// محتوى ديناميكي للصفحات (نصوص، روابط، صور)
+model Content {
+  key       String   @id
+  value     String   @db.Text
+  type      String   @default("text") // text, image, rich
+  groupAr   String?
+  labelAr   String?
+  order     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}

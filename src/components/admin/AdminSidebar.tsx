@@ -15,6 +15,8 @@ import {
   Menu,
   X,
   ExternalLink,
+  Images,
+  LayoutTemplate,
 } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions";
 import { cn } from "@/lib/utils";
@@ -23,7 +25,9 @@ const NAV = [
   { href: "/admin", label: "نظرة عامة", icon: LayoutDashboard },
   { href: "/admin/orders", label: "الطلبات", icon: ShoppingBag },
   { href: "/admin/products", label: "المنتجات", icon: Package },
+  { href: "/admin/portfolio", label: "معرض الأعمال", icon: Images },
   { href: "/admin/reviews", label: "آراء العملاء", icon: Star },
+  { href: "/admin/content", label: "محتوى الموقع", icon: LayoutTemplate },
   { href: "/admin/settings", label: "الإعدادات", icon: Settings },
 ];
 

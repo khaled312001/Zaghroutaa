@@ -3,14 +3,13 @@
 import Image from "next/image";
 
 /**
- * شريط آراء العملاء — نفس فكرة ProductMarquee بالظبط:
- * نسختين متطابقتين + translateX(-50%) = حلقة مغلقة بلا نهاية.
+ * شريط آراء العملاء.
  */
 export function ReviewsMarquee({ images }: { images: string[] }) {
   if (!images.length) return null;
 
-  // كل كارت ≈ 256px + 16px gap = 272px
-  const minCards = Math.ceil(2000 / 272);
+  // كل كارت ≈ 256px
+  const minCards = Math.ceil(2000 / 256);
   const repeat = Math.max(1, Math.ceil(minCards / images.length));
 
   const set: string[] = [];
@@ -19,12 +18,11 @@ export function ReviewsMarquee({ images }: { images: string[] }) {
   const duration = set.length * 4;
 
   return (
-    <div className="relative mask-fade-x overflow-hidden py-2">
+    <div className="relative mask-fade-x overflow-hidden py-2 flex">
       <div
-        className="marquee-track flex w-max gap-4 hover:[animation-play-state:paused]"
+        className="marquee-content flex shrink-0 pr-4 gap-4 hover:[animation-play-state:paused]"
         style={{ animationDuration: `${duration}s` }}
       >
-        {/* النسخة A */}
         {set.map((src, i) => (
           <figure key={`a-${i}`} className="card-zg w-52 shrink-0 overflow-hidden sm:w-60">
             <div className="relative aspect-[3/4] bg-cream-200">
@@ -38,9 +36,14 @@ export function ReviewsMarquee({ images }: { images: string[] }) {
             </div>
           </figure>
         ))}
-        {/* النسخة B */}
+      </div>
+      <div
+        className="marquee-content flex shrink-0 pr-4 gap-4 hover:[animation-play-state:paused]"
+        aria-hidden="true"
+        style={{ animationDuration: `${duration}s` }}
+      >
         {set.map((src, i) => (
-          <figure key={`b-${i}`} className="card-zg w-52 shrink-0 overflow-hidden sm:w-60" aria-hidden>
+          <figure key={`b-${i}`} className="card-zg w-52 shrink-0 overflow-hidden sm:w-60">
             <div className="relative aspect-[3/4] bg-cream-200">
               <Image
                 src={src}

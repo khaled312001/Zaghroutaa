@@ -171,12 +171,12 @@
   }
 }
 
-/* شريط متحرك بحلقة مغلقة — بيتحرك بالظبط -50% (= عرض نسخة واحدة) */
+/* شريط متحرك بحلقة مغلقة للغة العربية (RTL) — بيتحرك لليمين (100%) عشان النسخة التانية (اللي على الشمال) تيجي مكان الأولى */
 @keyframes marquee-infinite {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(100%); }
 }
 
-.marquee-track {
+.marquee-content {
   animation: marquee-infinite 40s linear infinite;
 }

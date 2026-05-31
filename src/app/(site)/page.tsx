@@ -27,7 +27,7 @@ export default async function HomePage() {
       <ValueProps />
       <CategoriesSection />
       <FeaturedProducts />
-      <PackageSpotlight />
+      <PackageSpotlight heroImage="/pages/packages.png" />
       <WhyUs />
       <GalleryPreview />
       <ReviewsPreview />

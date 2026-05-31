@@ -6,16 +6,7 @@ import type { Product } from "@/data/catalog";
 import { formatPriceEGP } from "@/lib/utils";
 
 /**
- * شريط منتجات بيتحرك في حلقة مغلقة لا تنتهي أبدًا.
- *
- * الفكرة بسيطة:
- * - بنعمل div فيه نسختين متطابقتين من المنتجات (A + B)
- * - الأنيميشن بتحرك الـ div بالظبط -50% (= عرض نسخة A)
- * - لما النسخة A تخرج من الشاشة، النسخة B بتكون في نفس المكان بالظبط
- * - فبيبان كأنه حلقة مغلقة بلا نهاية
- *
- * المهم: لازم نسخة واحدة (A) تكون عرضها أكبر من الشاشة —
- * عشان كدا بنكرّر المنتجات لو عددهم قليل.
+ * شريط منتجات بيتحرك في حلقة مغلقة لا تنتهي.
  */
 export function ProductMarquee({
   products,
@@ -26,32 +17,37 @@ export function ProductMarquee({
 }) {
   if (!products.length) return null;
 
-  // نحسب كام مرة نكرّر عشان نسخة واحدة تملا الشاشة
-  // كل كارت ≈ 240px (w-56) + 20px gap = 260px
-  // نحتاج نغطي على الأقل 2000px (أعرض شاشة متوقعة)
-  const minCards = Math.ceil(2000 / 260); // ≈ 8
+  // كل كارت ≈ 240px (w-56)
+  const minCards = Math.ceil(2000 / 240);
   const repeat = Math.max(1, Math.ceil(minCards / products.length));
 
   const set: Product[] = [];
   for (let r = 0; r < repeat; r++) set.push(...products);
 
-  // المدة حسب عدد الكروت — كل كارت ≈ 4 ثواني عشان السرعة تكون هادية
   const duration = set.length * 4;
 
   return (
-    <div className="relative mask-fade-x overflow-hidden py-3">
+    <div className="relative mask-fade-x overflow-hidden py-3 flex">
       <div
-        className="marquee-track flex w-max gap-4 sm:gap-5"
+        className="marquee-content flex shrink-0 pr-4 sm:pr-5 gap-4 sm:gap-5"
         style={{
           animationDuration: `${duration}s`,
           animationDirection: reverse ? "reverse" : "normal",
         }}
       >
-        {/* النسخة A */}
         {set.map((p, i) => (
           <ProductCard key={`a-${i}`} product={p} />
         ))}
-        {/* النسخة B (مطابقة لـ A) */}
+      </div>
+      
+      <div
+        className="marquee-content flex shrink-0 pr-4 sm:pr-5 gap-4 sm:gap-5"
+        aria-hidden="true"
+        style={{
+          animationDuration: `${duration}s`,
+          animationDirection: reverse ? "reverse" : "normal",
+        }}
+      >
         {set.map((p, i) => (
           <ProductCard key={`b-${i}`} product={p} isClone />
         ))}

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Eye, EyeOff, Trash2, Plus, Loader2 } from "lucide-react";
 import { toggleReviewAction, deleteReviewAction, addReviewAction } from "@/app/admin/actions";
+import { ImageUpload } from "@/components/ImageUpload";
 import { cn } from "@/lib/utils";
 
 export type AdminReview = {
@@ -71,26 +72,22 @@ export function ReviewsManager({ reviews: initial }: { reviews: AdminReview[] })
           <Plus className="h-5 w-5 text-gold-600" /> إضافة رأي جديد
         </h2>
         <p className="mb-3 text-xs text-espresso-500">
-          ارفعي صورة السكرين شوت في مجلد <code className="rounded bg-cream-200 px-1">public/reviews</code> وحطّي رابطها (مثال: /reviews/review-13.jpg) أو رابط خارجي.
+          ارفعي صورة سكرين شوت الرأي مباشرة من جهازك، واكتبي اسم العميلة (اختياري).
         </p>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            dir="ltr"
-            placeholder="/reviews/review-13.jpg"
-            className="flex-1 rounded-2xl border border-gold-200 bg-cream-50 px-4 py-2.5 text-sm outline-none focus:border-gold-400"
-          />
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="اسم العميلة (اختياري)"
-            className="rounded-2xl border border-gold-200 bg-cream-50 px-4 py-2.5 text-sm outline-none focus:border-gold-400 sm:w-52"
-          />
-          <button type="button" onClick={add} disabled={adding} className="btn-gold px-5 py-2.5 text-sm">
-            {adding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-            إضافة
-          </button>
+        <div className="grid gap-4 sm:grid-cols-[1fr_1.2fr] sm:items-end">
+          <ImageUpload value={url} onChange={setUrl} aspect="aspect-[3/4]" />
+          <div className="space-y-3">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="اسم العميلة (اختياري)"
+              className="w-full rounded-2xl border border-gold-200 bg-cream-50 px-4 py-2.5 text-sm outline-none focus:border-gold-400"
+            />
+            <button type="button" onClick={add} disabled={adding || !url} className="btn-gold w-full">
+              {adding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              إضافة الرأي
+            </button>
+          </div>
         </div>
       </div>
 

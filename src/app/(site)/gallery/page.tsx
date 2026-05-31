@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GALLERY_IMAGES } from "@/data/catalog";
+import { getGalleryImages } from "@/lib/gallery";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { MediaGrid } from "@/components/MediaGrid";
 
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/gallery" },
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const images = (await getGalleryImages()).map((g) => g.url);
   return (
     <>
       <PageHeader
@@ -20,7 +21,7 @@ export default function GalleryPage() {
         subtitle="صور حقيقية من أوردرات عرايسنا اللي طلعت حديثًا — كل قطعة بتحكي حكاية فرح."
       />
       <div className="container-zg py-10">
-        <MediaGrid images={GALLERY_IMAGES} variant="grid" />
+        <MediaGrid images={images} variant="grid" />
       </div>
     </>
   );
