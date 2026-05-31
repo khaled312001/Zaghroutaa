@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
-import { authSecret } from "./lib/secret";
+import { getAuthSecret } from "./lib/secret";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
     let valid = false;
     if (token) {
       try {
-        await jwtVerify(token, authSecret);
+        await jwtVerify(token, getAuthSecret());
         valid = true;
       } catch {
         valid = false;
