@@ -23,7 +23,7 @@ export function ProductGallery({
   return (
     <div>
       <div
-        className="group relative h-[58vh] max-h-[540px] min-h-[320px] cursor-zoom-in overflow-hidden rounded-3xl border-4 border-pearl bg-cream-200 shadow-card"
+        className="group relative h-[40vh] max-h-[520px] min-h-[240px] cursor-zoom-in overflow-hidden rounded-3xl border-4 border-pearl bg-cream-200 shadow-card sm:h-[52vh]"
         onClick={() => setOpen(true)}
       >
         <Image
