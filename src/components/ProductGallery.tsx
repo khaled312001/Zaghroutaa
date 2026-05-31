@@ -17,48 +17,54 @@ export function ProductGallery({
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
 
+  const list = images.length ? images : [{ url: "/logo.png", alt: name }];
+  const current = list[Math.min(active, list.length - 1)];
   const go = (dir: number) =>
-    setActive((a) => (a + dir + images.length) % images.length);
+    setActive((a) => (a + dir + list.length) % list.length);
 
   return (
-    <div>
-      <div
-        className="group relative h-[40vh] max-h-[520px] min-h-[240px] cursor-zoom-in overflow-hidden rounded-3xl border-4 border-pearl bg-cream-200 shadow-card sm:h-[52vh]"
+    <div className="w-full">
+      {/* الصورة الرئيسية — مربّع، عمره ما يبقى أطول من الشاشة */}
+      <button
+        type="button"
         onClick={() => setOpen(true)}
+        className="group relative block aspect-square w-full overflow-hidden rounded-2xl border border-gold-200 bg-cream-100 shadow-card sm:rounded-3xl"
       >
         <Image
-          src={images[active]?.url}
-          alt={images[active]?.alt ?? name}
+          src={current.url}
+          alt={current.alt ?? name}
           fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          sizes="(max-width: 1024px) 100vw, 45vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
           priority
         />
-        <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-espresso-900/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">
+        <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-espresso-900/65 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
           <ZoomIn className="h-3.5 w-3.5" /> اضغطي للتكبير
         </span>
-      </div>
+      </button>
 
-      {images.length > 1 && (
-        <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto pb-1">
-          {images.map((img, i) => (
+      {/* الصور المصغّرة */}
+      {list.length > 1 && (
+        <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto pb-1">
+          {list.map((img, i) => (
             <button
-              key={img.url}
+              key={img.url + i}
               type="button"
               onClick={() => setActive(i)}
               className={cn(
-                "relative aspect-square w-20 shrink-0 overflow-hidden rounded-2xl border-2 transition-all",
+                "relative aspect-square w-16 shrink-0 overflow-hidden rounded-xl border-2 transition sm:w-20",
                 i === active
                   ? "border-gold-500 ring-2 ring-gold-300"
-                  : "border-pearl opacity-70 hover:opacity-100",
+                  : "border-gold-100 opacity-70 hover:opacity-100",
               )}
             >
-              <Image src={img.url} alt={img.alt} fill sizes="80px" className="object-cover" />
+              <Image src={img.url} alt={img.alt ?? name} fill sizes="80px" className="object-cover" />
             </button>
           ))}
         </div>
       )}
 
+      {/* التكبير */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -70,7 +76,7 @@ export function ProductGallery({
           >
             <button
               type="button"
-              className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+              className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
               onClick={() => setOpen(false)}
               aria-label="إغلاق"
             >
@@ -82,21 +88,19 @@ export function ProductGallery({
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.25 }}
-              className="relative max-h-[85vh] w-full max-w-3xl"
+              className="relative flex max-h-[85vh] w-full max-w-2xl items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative mx-auto aspect-[4/5] max-h-[85vh] w-auto">
-                <Image
-                  src={images[active]?.url}
-                  alt={images[active]?.alt ?? name}
-                  fill
-                  sizes="90vw"
-                  className="rounded-2xl object-contain"
-                />
-              </div>
+              <Image
+                src={current.url}
+                alt={current.alt ?? name}
+                width={900}
+                height={900}
+                className="max-h-[85vh] w-auto rounded-2xl object-contain"
+              />
             </motion.div>
 
-            {images.length > 1 && (
+            {list.length > 1 && (
               <>
                 <NavBtn side="right" onClick={(e) => { e.stopPropagation(); go(-1); }}>
                   <ChevronRight className="h-7 w-7" />

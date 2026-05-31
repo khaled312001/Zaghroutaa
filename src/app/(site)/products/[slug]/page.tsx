@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  Check, Sparkles, MessageCircle, Truck, Clock, ShieldCheck, ChevronLeft,
-} from "lucide-react";
+import { Check, Sparkles, MessageCircle, Truck, Clock, ShieldCheck, ChevronLeft } from "lucide-react";
 import { getSiteProductBySlug, getSiteByCategory } from "@/lib/products";
 import { getSettings } from "@/lib/settings";
 import { formatPrice, toArabicDigits } from "@/data/catalog";
@@ -25,19 +23,12 @@ export async function generateMetadata({
   if (!product) return { title: "المنتج غير موجود" };
   return {
     title: product.nameAr,
-    description: product.shortAr ?? product.descriptionAr ?? undefined,
-    keywords: [
-      product.nameAr,
-      product.category?.nameAr ?? "",
-      "هاند ميد",
-      "اكسسوارات العروسة",
-      "كتب الكتاب",
-      "زغروطة",
-    ].filter(Boolean),
+    description: product.shortAr || product.descriptionAr || undefined,
+    keywords: [product.nameAr, product.category?.nameAr ?? "", "هاند ميد", "اكسسوارات العروسة", "زغروطة"].filter(Boolean),
     alternates: { canonical: `/products/${slug}` },
     openGraph: {
       title: `${product.nameAr} | زُغْرُوطَة`,
-      description: product.shortAr ?? undefined,
+      description: product.shortAr || undefined,
       images: [{ url: product.cover, alt: product.nameAr }],
     },
   };
@@ -67,7 +58,7 @@ export default async function ProductPage({
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.nameAr,
-    description: product.descriptionAr ?? product.shortAr ?? product.nameAr,
+    description: product.descriptionAr || product.shortAr || product.nameAr,
     image: product.images.map((i) => `${SITE_URL}${i.url}`),
     brand: { "@type": "Brand", name: "زُغْرُوطَة" },
     category: product.category?.nameAr,
@@ -83,75 +74,68 @@ export default async function ProductPage({
   const crumbs = [
     { name: "الرئيسية", item: SITE_URL },
     { name: "المنتجات", item: `${SITE_URL}/products` },
-    ...(product.category
-      ? [{ name: product.category.nameAr, item: `${SITE_URL}/products?cat=${product.categorySlug}` }]
-      : []),
+    ...(product.category ? [{ name: product.category.nameAr, item: `${SITE_URL}/products?cat=${product.categorySlug}` }] : []),
     { name: product.nameAr, item: `${SITE_URL}/products/${product.slug}` },
   ];
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: crumbs.map((c, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: c.name,
-      item: c.item,
-    })),
+    itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: c.item })),
   };
 
   return (
     <>
       <JsonLd data={[productLd, breadcrumbLd]} />
+
       {/* breadcrumb */}
       <div className="border-b border-gold-100 bg-cream-50">
-        <div className="container-zg flex flex-wrap items-center gap-1.5 py-3 text-sm text-espresso-500">
+        <div className="container-zg no-scrollbar flex items-center gap-1.5 overflow-x-auto whitespace-nowrap py-3 text-xs text-espresso-500 sm:text-sm">
           <Link href="/" className="hover:text-gold-700">الرئيسية</Link>
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4 shrink-0" />
           <Link href="/products" className="hover:text-gold-700">المنتجات</Link>
           {product.category && (
             <>
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4 shrink-0" />
               <Link href={`/products?cat=${product.categorySlug}`} className="hover:text-gold-700">
                 {product.category.nameAr}
               </Link>
             </>
           )}
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4 shrink-0" />
           <span className="font-semibold text-espresso-700">{product.nameAr}</span>
         </div>
       </div>
 
-      <div className="container-zg py-8 sm:py-10">
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
-          <ProductGallery images={product.images} name={product.nameAr} />
+      <div className="container-zg py-6 sm:py-10">
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+          {/* الصور */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <ProductGallery images={product.images} name={product.nameAr} />
+          </div>
 
-          <div>
+          {/* التفاصيل */}
+          <div className="flex flex-col">
             {product.category && (
-              <Link
-                href={`/products?cat=${product.categorySlug}`}
-                className="chip border border-gold-200 bg-gold-50 text-gold-700"
-              >
+              <Link href={`/products?cat=${product.categorySlug}`} className="chip w-fit border border-gold-200 bg-gold-50 text-gold-700">
                 <CategoryIcon slug={product.categorySlug} className="h-3.5 w-3.5" />
                 {product.category.nameAr}
               </Link>
             )}
-            <h1 className="mt-3 text-3xl font-bold sm:text-4xl">{product.nameAr}</h1>
+
+            <h1 className="mt-3 text-2xl font-bold leading-snug sm:text-3xl md:text-4xl">{product.nameAr}</h1>
+
             {(product.caption || product.shortAr) && (
-              <p className="mt-2 text-lg text-espresso-600">
-                {product.caption || product.shortAr}
-              </p>
+              <p className="mt-2 text-base text-espresso-600 sm:text-lg">{product.caption || product.shortAr}</p>
             )}
 
             {/* السعر */}
-            <div className="mt-5 flex items-baseline gap-3">
-              {hasVariants && (
-                <span className="text-sm text-espresso-500">يبدأ من</span>
-              )}
-              <span className="font-display text-4xl font-extrabold text-gold-gradient">
+            <div className="mt-4 flex flex-wrap items-baseline gap-2 sm:gap-3">
+              {hasVariants && <span className="text-sm text-espresso-500">يبدأ من</span>}
+              <span className="font-display text-3xl font-extrabold text-gold-gradient sm:text-4xl">
                 {formatPrice(product.basePrice)}
               </span>
               {product.oldPrice && (
-                <span className="text-lg text-espresso-400 line-through">
+                <span className="text-base text-espresso-400 line-through sm:text-lg">
                   {toArabicDigits(product.oldPrice.toLocaleString("en-US"))} جنيه
                 </span>
               )}
@@ -159,18 +143,14 @@ export default async function ProductPage({
 
             {/* الخيارات */}
             {hasVariants && (
-              <div className="mt-5 rounded-2xl border border-gold-200/70 bg-cream-50 p-4">
+              <div className="mt-4 rounded-2xl border border-gold-200/70 bg-cream-50 p-4">
                 <h3 className="mb-2 text-sm font-bold text-espresso-700">الخيارات المتاحة:</h3>
                 <ul className="divide-y divide-gold-100">
                   {product.variants!.map((v) => (
-                    <li key={v.nameAr} className="flex items-center justify-between py-2 text-sm">
+                    <li key={v.nameAr} className="flex items-center justify-between gap-2 py-2 text-sm">
                       <span className="text-espresso-700">{v.nameAr}</span>
                       <span className="flex items-baseline gap-2">
-                        {v.oldPrice && (
-                          <span className="text-xs text-espresso-400 line-through">
-                            {toArabicDigits(v.oldPrice)}
-                          </span>
-                        )}
+                        {v.oldPrice && <span className="text-xs text-espresso-400 line-through">{toArabicDigits(v.oldPrice)}</span>}
                         <span className="font-bold text-gold-700">{formatPrice(v.price)}</span>
                       </span>
                     </li>
@@ -181,7 +161,7 @@ export default async function ProductPage({
 
             {/* المميزات */}
             {product.features?.length ? (
-              <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                 {product.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm text-espresso-700">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-shine text-white">
@@ -195,11 +175,11 @@ export default async function ProductPage({
 
             {/* الوصف */}
             {product.descriptionAr && (
-              <p className="mt-5 leading-relaxed text-espresso-600">{product.descriptionAr}</p>
+              <p className="mt-4 leading-relaxed text-espresso-600">{product.descriptionAr}</p>
             )}
 
             {/* أزرار */}
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link href={`/book/${product.slug}`} className="btn-gold flex-1">
                 <Sparkles className="h-5 w-5" /> احجزي دلوقتي
               </Link>
@@ -209,7 +189,7 @@ export default async function ProductPage({
             </div>
 
             {/* ثقة */}
-            <div className="mt-6 grid grid-cols-3 gap-3 border-t border-gold-100 pt-5 text-center">
+            <div className="mt-6 grid grid-cols-3 gap-2 border-t border-gold-100 pt-5 text-center">
               <Trust icon={<Clock className="h-5 w-5" />} text="إنقاذ في الوقت الضيّق" />
               <Trust icon={<Truck className="h-5 w-5" />} text="شحن لكل المحافظات" />
               <Trust icon={<ShieldCheck className="h-5 w-5" />} text="هاند ميد بضمان جودة" />
@@ -218,7 +198,7 @@ export default async function ProductPage({
         </div>
 
         {related.length > 0 && (
-          <div className="mt-20">
+          <div className="mt-16 sm:mt-20">
             <SectionHeading eyebrow="يمكن يعجبك كمان" title="قطع من نفس القسم" />
             <div className="mt-8">
               <ProductGrid products={related} />
