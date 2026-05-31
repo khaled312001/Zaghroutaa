@@ -40,6 +40,11 @@
                      "decor-set-deluxe":  "decor-set-deluxe-01.jpg",
                      "decor-set-elegant":  "decor-set-elegant-01.jpg",
                      "decor-set-gold":  "decor-set-gold-01.jpg",
+                     "embroidered-caps":  [
+                                              "embroidered-caps-01.jpg",
+                                              "embroidered-caps-02.jpg",
+                                              "embroidered-caps-03.jpg"
+                                          ],
                      "feather-fans":  [
                                           "feather-fans-03.jpg",
                                           "feather-fans-06.jpg",
@@ -85,9 +90,13 @@
                                                      "katb-ketab-handkerchief-01.jpg",
                                                      "katb-ketab-handkerchief-02.jpg"
                                                  ],
+                     "katb-ketab-handkerchief-lolly":  "katb-ketab-handkerchief-lolly-01.jpg",
                      "macrame-bag":  "macrame-bag-01.jpg",
+                     "macrame-curtain":  "macrame-curtain-01.jpg",
                      "macrame-cushion":  "macrame-cushion-01.jpg",
                      "macrame-keychain":  "macrame-keychain-01.jpg",
+                     "macrame-keychain-rainbow":  "macrame-keychain-rainbow-01.jpg",
+                     "macrame-pillow":  "macrame-pillow-01.jpg",
                      "macrame-wall-120":  "macrame-wall-120-01.jpg",
                      "macrame-wall-80":  "macrame-wall-80-01.jpg",
                      "mirror-stand":  [
