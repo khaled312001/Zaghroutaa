@@ -4,81 +4,75 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/data/catalog";
 import { formatPriceEGP } from "@/lib/utils";
-import { useRef, useEffect, useState, useCallback } from "react";
 
 /**
- * صف منتجات بيتحرك في حلقة مغلقة لا تتوقف (single-row infinite marquee).
- * بنعرض نسختين متطابقين جنب بعض وبنحرك بالظبط عرض نسخة واحدة —
- * كدا اللوب بيكون seamless ومفيش فراغ أبدًا.
+ * شريط منتجات بيتحرك في حلقة مغلقة لا تنتهي أبدًا.
+ *
+ * الفكرة بسيطة:
+ * - بنعمل div فيه نسختين متطابقتين من المنتجات (A + B)
+ * - الأنيميشن بتحرك الـ div بالظبط -50% (= عرض نسخة A)
+ * - لما النسخة A تخرج من الشاشة، النسخة B بتكون في نفس المكان بالظبط
+ * - فبيبان كأنه حلقة مغلقة بلا نهاية
+ *
+ * المهم: لازم نسخة واحدة (A) تكون عرضها أكبر من الشاشة —
+ * عشان كدا بنكرّر المنتجات لو عددهم قليل.
  */
 export function ProductMarquee({
   products,
   reverse = false,
-  speed = 60, // بكسل في الثانية
 }: {
   products: Product[];
   reverse?: boolean;
-  speed?: number;
 }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [halfWidth, setHalfWidth] = useState(0);
-
-  const measure = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    // النص الأول = نص العرض الكلي (عندنا نسختين)
-    setHalfWidth(el.scrollWidth / 2);
-  }, []);
-
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [measure, products]);
-
   if (!products.length) return null;
 
-  // بنكرّر المنتجات كفاية عشان نسخة واحدة تملا الشاشة على الأقل
-  const minCards = Math.max(1, Math.ceil(1920 / (260))); // 260px per card approx
-  const repeatCount = Math.max(2, Math.ceil(minCards / products.length));
-  const singleSet: Product[] = [];
-  for (let i = 0; i < repeatCount; i++) singleSet.push(...products);
+  // نحسب كام مرة نكرّر عشان نسخة واحدة تملا الشاشة
+  // كل كارت ≈ 240px (w-56) + 20px gap = 260px
+  // نحتاج نغطي على الأقل 2000px (أعرض شاشة متوقعة)
+  const minCards = Math.ceil(2000 / 260); // ≈ 8
+  const repeat = Math.max(1, Math.ceil(minCards / products.length));
 
-  const durationSec = halfWidth > 0 ? halfWidth / speed : 40;
+  const set: Product[] = [];
+  for (let r = 0; r < repeat; r++) set.push(...products);
+
+  // المدة حسب عدد الكروت — كل كارت ≈ 4 ثواني عشان السرعة تكون هادية
+  const duration = set.length * 4;
 
   return (
     <div className="relative mask-fade-x overflow-hidden py-3">
       <div
-        ref={trackRef}
-        className="flex w-max gap-4 sm:gap-5"
+        className="marquee-track flex w-max gap-4 sm:gap-5"
         style={{
-          animation: halfWidth > 0
-            ? `marquee-scroll ${durationSec}s linear infinite`
-            : "none",
+          animationDuration: `${duration}s`,
           animationDirection: reverse ? "reverse" : "normal",
-          ["--marquee-distance" as string]: `-${halfWidth}px`,
         }}
       >
-        {/* النسخة الأولى */}
-        {singleSet.map((p, i) => (
-          <ProductCard key={`a-${p.slug}-${i}`} product={p} />
+        {/* النسخة A */}
+        {set.map((p, i) => (
+          <ProductCard key={`a-${i}`} product={p} />
         ))}
-        {/* النسخة الثانية (مطابقة) */}
-        {singleSet.map((p, i) => (
-          <ProductCard key={`b-${p.slug}-${i}`} product={p} aria-hidden />
+        {/* النسخة B (مطابقة لـ A) */}
+        {set.map((p, i) => (
+          <ProductCard key={`b-${i}`} product={p} isClone />
         ))}
       </div>
     </div>
   );
 }
 
-function ProductCard({ product: p, ...rest }: { product: Product; "aria-hidden"?: boolean }) {
+function ProductCard({
+  product: p,
+  isClone = false,
+}: {
+  product: Product;
+  isClone?: boolean;
+}) {
   return (
     <Link
       href={`/products/${p.slug}`}
-      tabIndex={rest["aria-hidden"] ? -1 : 0}
+      aria-hidden={isClone || undefined}
+      tabIndex={isClone ? -1 : 0}
       className="group w-48 shrink-0 overflow-hidden rounded-3xl border border-gold-200/70 bg-pearl shadow-card transition-all duration-500 hover:-translate-y-1 hover:shadow-glow sm:w-56"
-      {...rest}
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-cream-200 shine-on-hover">
         <Image
@@ -103,4 +97,3 @@ function ProductCard({ product: p, ...rest }: { product: Product; "aria-hidden"?
     </Link>
   );
 }
-

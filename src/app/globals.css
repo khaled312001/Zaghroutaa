@@ -171,12 +171,12 @@
   }
 }
 
-/* Infinite marquee — uses a CSS variable for exact pixel distance */
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(var(--marquee-distance));
-  }
+/* شريط متحرك بحلقة مغلقة — بيتحرك بالظبط -50% (= عرض نسخة واحدة) */
+@keyframes marquee-infinite {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee-infinite 40s linear infinite;
 }
