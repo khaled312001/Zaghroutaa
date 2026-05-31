@@ -1,86 +1,95 @@
 import "server-only";
 import { cache } from "react";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import {
   getAllProducts,
   getProductBySlug,
   type Product,
+  type ProductImage,
 } from "@/data/catalog";
 
-/**
- * منتجات الموقع = الكتالوج الثابت (صور + بنية ثابتة عمرها ما هتبوظ)
- * + طبقة تعديلات من قاعدة البيانات (السعر/الظهور/المميز/الشارة) لو الأدمن غيّرها.
- * لو الداتابيز مش متاحة لأي سبب، بنرجع الكتالوج الثابت زي ما هو.
- */
+// نخزّن الكتالوج الثابت عشان نكمّل به الحقول اللي مش في الداتابيز (زي features/caption)
+const staticBySlug = new Map(getAllProducts().map((p) => [p.slug, p]));
+
+const productInclude = {
+  category: true,
+  images: { orderBy: { order: "asc" as const } },
+  variants: { orderBy: { order: "asc" as const } },
+} satisfies Prisma.ProductInclude;
+
+type DbProduct = Prisma.ProductGetPayload<{ include: typeof productInclude }>;
+
+function mapRow(r: DbProduct): Product {
+  const images: ProductImage[] = r.images.length
+    ? r.images.map((i) => ({ url: i.url, alt: i.alt ?? r.nameAr }))
+    : [{ url: r.coverImage, alt: r.nameAr }];
+  const s = staticBySlug.get(r.slug);
+  return {
+    slug: r.slug,
+    nameAr: r.nameAr,
+    categorySlug: r.category?.slug ?? "",
+    basePrice: r.basePrice,
+    oldPrice: r.oldPrice ?? undefined,
+    shortAr: r.shortAr ?? "",
+    descriptionAr: r.descriptionAr ?? "",
+    features: s?.features,
+    variants: r.variants.length
+      ? r.variants.map((v) => ({
+          nameAr: v.nameAr,
+          price: v.price,
+          oldPrice: v.oldPrice ?? undefined,
+        }))
+      : s?.variants,
+    badge: r.badge ?? undefined,
+    isPackage: r.isPackage,
+    isFeatured: r.isFeatured,
+    order: r.order,
+    cover: r.coverImage,
+    images,
+    category: r.category
+      ? {
+          slug: r.category.slug,
+          nameAr: r.category.nameAr,
+          emoji: r.category.emoji ?? undefined,
+          order: r.category.order,
+        }
+      : undefined,
+    caption: s?.caption,
+  };
+}
+
+/** كل منتجات الموقع — من الداتابيز (مصدر الحقيقة)، ولو الداتابيز مش متاحة بنرجع الكتالوج الثابت */
 export const getSiteProducts = cache(async (): Promise<Product[]> => {
-  const base = getAllProducts();
   try {
     const rows = await prisma.product.findMany({
-      select: {
-        slug: true,
-        basePrice: true,
-        oldPrice: true,
-        isFeatured: true,
-        isActive: true,
-        badge: true,
-        order: true,
-      },
+      where: { isActive: true },
+      orderBy: { order: "asc" },
+      include: productInclude,
     });
-    if (!rows.length) return base;
-    const bySlug = new Map(rows.map((r) => [r.slug, r]));
-    return base
-      .filter((p) => bySlug.get(p.slug)?.isActive !== false)
-      .map((p) => {
-        const o = bySlug.get(p.slug);
-        if (!o) return p;
-        // قيم الداتابيز هي المرجع (null يعني الأدمن مسحها عن قصد)
-        return {
-          ...p,
-          basePrice: o.basePrice,
-          oldPrice: o.oldPrice ?? undefined,
-          isFeatured: o.isFeatured,
-          badge: o.badge ?? undefined,
-          order: o.order,
-        };
-      })
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    if (rows.length) return rows.map(mapRow);
   } catch {
-    return base;
+    // فولباك
   }
+  return getAllProducts();
 });
 
 export async function getSiteProductBySlug(
   slug: string,
 ): Promise<Product | undefined> {
-  const staticP = getProductBySlug(slug);
   try {
-    const o = await prisma.product.findUnique({
+    const r = await prisma.product.findUnique({
       where: { slug },
-      select: {
-        basePrice: true,
-        oldPrice: true,
-        isFeatured: true,
-        isActive: true,
-        badge: true,
-        order: true,
-      },
+      include: productInclude,
     });
-    if (o) {
-      // المنتج اتخفي من الأدمن → مش متاح حتى بالرابط المباشر
-      if (!o.isActive || !staticP) return undefined;
-      return {
-        ...staticP,
-        basePrice: o.basePrice,
-        oldPrice: o.oldPrice ?? undefined,
-        isFeatured: o.isFeatured,
-        badge: o.badge ?? undefined,
-        order: o.order,
-      };
+    if (r) {
+      if (!r.isActive) return undefined; // اتخفي من الأدمن
+      return mapRow(r);
     }
-    return staticP;
   } catch {
-    return staticP;
+    // فولباك
   }
+  return getProductBySlug(slug);
 }
 
 export async function getSiteFeatured(): Promise<Product[]> {

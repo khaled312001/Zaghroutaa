@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Save, Loader2, Star, Eye, EyeOff } from "lucide-react";
+import { Save, Loader2, Star, Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
 import { updateProductAction } from "@/app/admin/actions";
+import { deleteProductFullAction } from "@/app/admin/cms-actions";
 import { cn } from "@/lib/utils";
 
 export type AdminProduct = {
@@ -37,6 +40,18 @@ function ProductRow({ product }: { product: AdminProduct }) {
   const [isActive, setIsActive] = useState(product.isActive);
   const [isFeatured, setIsFeatured] = useState(product.isFeatured);
   const [saving, setSaving] = useState(false);
+  const router = useRouter();
+
+  async function remove() {
+    if (!window.confirm(`متأكدة إنك عايزة تمسحي «${product.nameAr}» نهائيًا؟`)) return;
+    try {
+      await deleteProductFullAction(product.id);
+      toast.success("اتمسح المنتج");
+      router.refresh();
+    } catch {
+      toast.error("حصل خطأ، حاولي تاني");
+    }
+  }
 
   async function save() {
     setSaving(true);
@@ -88,6 +103,21 @@ function ProductRow({ product }: { product: AdminProduct }) {
         <button type="button" onClick={save} disabled={saving} className="btn-gold px-4 py-2 text-sm">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           حفظ
+        </button>
+        <Link
+          href={`/admin/products/${product.id}/edit`}
+          title="تعديل كامل"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-gold-200 text-espresso-600 hover:bg-cream-200"
+        >
+          <Pencil className="h-4 w-4" />
+        </Link>
+        <button
+          type="button"
+          onClick={remove}
+          title="مسح المنتج"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50"
+        >
+          <Trash2 className="h-4 w-4" />
         </button>
       </div>
     </div>
