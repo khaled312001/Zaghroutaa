@@ -1,0 +1,129 @@
+// ==========================================================
+//  زُغْرُوطَة — مخطط قاعدة البيانات (MySQL)
+// ==========================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// تصنيفات المنتجات (بصمات، مرايات، بوكيهات، مناديل ...)
+model Category {
+  id       Int       @id @default(autoincrement())
+  slug     String    @unique
+  nameAr   String
+  emoji    String?
+  order    Int       @default(0)
+  products Product[]
+}
+
+/// المنتج (قطعة منفردة أو باكدج)
+model Product {
+  id            Int              @id @default(autoincrement())
+  slug          String           @unique
+  nameAr        String
+  shortAr       String?          @db.Text
+  descriptionAr String?          @db.Text
+  basePrice     Int
+  oldPrice      Int?
+  categoryId    Int?
+  category      Category?        @relation(fields: [categoryId], references: [id])
+  coverImage    String
+  isPackage     Boolean          @default(false)
+  isFeatured    Boolean          @default(false)
+  isActive      Boolean          @default(true)
+  badge         String?
+  order         Int              @default(0)
+  images        ProductImage[]
+  variants      ProductVariant[]
+  orders        Order[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+/// صور المنتج (جاليري)
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  order     Int     @default(0)
+
+  @@index([productId])
+}
+
+/// خيارات المنتج (مثال: العريس بس / الاتنين مع بعض / بالريش)
+model ProductVariant {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  nameAr    String
+  price     Int
+  oldPrice  Int?
+  order     Int     @default(0)
+
+  @@index([productId])
+}
+
+/// طلب الحجز اللي بييجي من العروسة
+model Order {
+  id           Int         @id @default(autoincrement())
+  productId    Int?
+  product      Product?    @relation(fields: [productId], references: [id])
+  productName  String
+  variantName  String?
+  price        Int?
+  customerName String
+  phone        String
+  governorate  String
+  address      String      @db.Text
+  groomName    String?
+  brideName    String?
+  eventType    String? // كتب كتاب / فرح
+  eventDate    DateTime?
+  notes        String?     @db.Text
+  status       OrderStatus @default(NEW)
+  createdAt    DateTime    @default(now())
+
+  @@index([productId])
+  @@index([status])
+}
+
+enum OrderStatus {
+  NEW
+  CONTACTED
+  CONFIRMED
+  DONE
+  CANCELLED
+}
+
+/// آراء العملاء (سكرين شوت + نص اختياري)
+model Review {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  name      String?
+  text      String?  @db.Text
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+/// إعدادات الموقع (رقم الواتساب، السوشيال، نص الديبوزت ...)
+model Setting {
+  key   String @id
+  value String @db.Text
+}
+
+/// حساب الأدمن (إيمان)
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
