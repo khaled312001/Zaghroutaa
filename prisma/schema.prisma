@@ -89,9 +89,21 @@ model Order {
   notes        String?     @db.Text
   status       OrderStatus @default(NEW)
   createdAt    DateTime    @default(now())
+  images       OrderImage[]
 
   @@index([productId])
   @@index([status])
+}
+
+/// صور مرفقة بالطلب (صورة مرجعية من العميلة)
+model OrderImage {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
 }
 
 enum OrderStatus {
