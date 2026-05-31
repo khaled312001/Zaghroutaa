@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/data/catalog";
 import { formatPriceEGP } from "@/lib/utils";
+import { useMemo, useRef, useEffect, useState } from "react";
 
 /**
  * صف منتجات بيتحرك في حلقة مغلقة لا تتوقف (single-row infinite marquee).
- * بنكرّر القايمة مرتين عشان الحركة تبقى سلسة من غير قطع.
+ * بنكرّر القايمة كفاية عشان تملا الشاشة دايمًا — مفيش فراغ أبدًا.
  */
 export function ProductMarquee({
   products,
@@ -19,7 +20,19 @@ export function ProductMarquee({
   reverse?: boolean;
 }) {
   if (!products.length) return null;
-  const list = [...products, ...products];
+
+  // نكرّر المنتجات كفاية عشان نملا على الأقل ضعف عرض الشاشة
+  // كل كارت ≈ 240px + 20px gap = 260px
+  // بنعمل نسخة واحدة على الأقل 3 مرات عشان نضمن التغطية
+  const repeatCount = Math.max(3, Math.ceil((2 * 1920) / (products.length * 260)));
+  const halfList = useMemo(() => {
+    const arr: Product[] = [];
+    for (let i = 0; i < repeatCount; i++) arr.push(...products);
+    return arr;
+  }, [products, repeatCount]);
+
+  // ننشئ نصفين متطابقين — الأنيميشن بتحرك -50% فبتخلق لوب مثالي
+  const fullList = useMemo(() => [...halfList, ...halfList], [halfList]);
 
   return (
     <div className="relative mask-fade-x overflow-hidden py-3">
@@ -30,12 +43,12 @@ export function ProductMarquee({
           animationDirection: reverse ? "reverse" : "normal",
         }}
       >
-        {list.map((p, i) => (
+        {fullList.map((p, i) => (
           <Link
             key={`${p.slug}-${i}`}
             href={`/products/${p.slug}`}
-            aria-hidden={i >= products.length}
-            tabIndex={i >= products.length ? -1 : 0}
+            aria-hidden={i >= halfList.length}
+            tabIndex={i >= halfList.length ? -1 : 0}
             className="group w-48 shrink-0 overflow-hidden rounded-3xl border border-gold-200/70 bg-pearl shadow-card transition-all duration-500 hover:-translate-y-1 hover:shadow-glow sm:w-56"
           >
             <div className="relative aspect-[4/5] overflow-hidden bg-cream-200 shine-on-hover">
@@ -64,3 +77,4 @@ export function ProductMarquee({
     </div>
   );
 }
+
