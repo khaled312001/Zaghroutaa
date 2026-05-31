@@ -23,7 +23,7 @@ export function ProductGallery({
   return (
     <div>
       <div
-        className="group relative aspect-[4/5] cursor-zoom-in overflow-hidden rounded-3xl border-4 border-pearl bg-cream-200 shadow-card"
+        className="group relative h-[58vh] max-h-[540px] min-h-[320px] cursor-zoom-in overflow-hidden rounded-3xl border-4 border-pearl bg-cream-200 shadow-card"
         onClick={() => setOpen(true)}
       >
         <Image
@@ -31,7 +31,7 @@ export function ProductGallery({
           alt={images[active]?.alt ?? name}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-contain transition-transform duration-700 group-hover:scale-105"
           priority
         />
         <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-espresso-900/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">
