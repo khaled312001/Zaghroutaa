@@ -31,7 +31,7 @@ export function ProductGallery({
           alt={images[active]?.alt ?? name}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-contain transition-transform duration-700 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
           priority
         />
         <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-espresso-900/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">
