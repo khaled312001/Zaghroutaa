@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -6,10 +5,12 @@ export function Logo({
   className,
   showText = true,
   light = false,
+  src = "/logo.png",
 }: {
   className?: string;
   showText?: boolean;
   light?: boolean;
+  src?: string;
 }) {
   return (
     <Link
@@ -17,14 +18,11 @@ export function Logo({
       className={cn("group flex items-center gap-2.5", className)}
       aria-label="زُغْرُوطَة — الصفحة الرئيسية"
     >
-      <Image
-        src="/logo.png"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src || "/logo.png"}
         alt="زُغْرُوطَة Zaghroutaa — إكسسوارات العرايس الهاند ميد"
-        width={799}
-        height={954}
-        sizes="72px"
-        priority
-        className="h-14 w-auto shrink-0 transition-transform duration-500 group-hover:scale-105 sm:h-16"
+        className="h-14 w-auto shrink-0 object-contain transition-transform duration-500 group-hover:scale-105 sm:h-16"
       />
       {showText && (
         <span

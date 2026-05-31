@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Save, Loader2, MessageCircle } from "lucide-react";
 import { updateSettingsAction, type SettingsState } from "@/app/admin/actions";
+import { ImageUpload } from "@/components/ImageUpload";
 
 const FIELDS: {
   key: string;
@@ -33,6 +34,7 @@ export function SettingsForm({ values }: { values: Record<string, string> }) {
     updateSettingsAction,
     {},
   );
+  const [logo, setLogo] = useState(values.logoUrl || "/logo.png");
 
   useEffect(() => {
     if (state.ok) toast.success("اتحفظت الإعدادات بنجاح");
@@ -45,6 +47,18 @@ export function SettingsForm({ values }: { values: Record<string, string> }) {
         <p className="text-sm leading-relaxed text-espresso-700">
           رقم الواتساب ده هو اللي كل أزرار الحجز في الموقع بتحوّل عليه. اكتبيه صح
           عشان الأوردرات توصلك.
+        </p>
+      </div>
+
+      {/* لوجو الموقع */}
+      <div className="mb-6">
+        <label className="mb-1.5 block text-sm font-semibold text-espresso-700">لوجو الموقع</label>
+        <input type="hidden" name="logoUrl" value={logo} />
+        <div className="rounded-2xl bg-espresso-900/95 p-3">
+          <ImageUpload value={logo} onChange={setLogo} aspect="aspect-square" className="mx-auto max-w-[160px]" />
+        </div>
+        <p className="mt-1.5 text-xs text-espresso-400">
+          ارفعي صورة اللوجو (يفضّل PNG بخلفية شفافة). بيظهر في الهيدر والفوتر.
         </p>
       </div>
 

@@ -8,6 +8,8 @@ import {
   Camera,
   Footprints,
   Shirt,
+  Waypoints,
+  Armchair,
   type LucideIcon,
 } from "lucide-react";
 
@@ -22,6 +24,8 @@ const ICONS: Record<string, LucideIcon> = {
   photoshoot: Camera,
   footwear: Footprints,
   sleepwear: Shirt,
+  macrame: Waypoints,
+  decor: Armchair,
 };
 
 export function getCategoryIcon(slug: string): LucideIcon {

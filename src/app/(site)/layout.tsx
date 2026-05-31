@@ -31,7 +31,7 @@ export default async function SiteLayout({
         ]}
       />
       <AnnouncementBar text="بنشحن لكل محافظات مصر بأمان وسرعة" />
-      <SiteHeader whatsappNumber={settings.whatsappNumber} />
+      <SiteHeader whatsappNumber={settings.whatsappNumber} logoUrl={settings.logoUrl} />
       <main className="min-h-[60vh]">{children}</main>
       <SiteFooter settings={settings} />
       <WhatsappFab number={settings.whatsappNumber} />

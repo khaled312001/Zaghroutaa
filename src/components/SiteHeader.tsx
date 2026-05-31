@@ -21,7 +21,7 @@ const NAV = [
   { href: "/contact", label: "تواصلي", icon: Phone },
 ];
 
-export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
+export function SiteHeader({ whatsappNumber, logoUrl }: { whatsappNumber: string; logoUrl?: string }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
       )}
     >
       <div className="container-zg flex h-[72px] items-center justify-between gap-4">
-        <Logo showText={false} />
+        <Logo showText={false} src={logoUrl} />
 
         <nav className="hidden items-center gap-1 lg:flex">
           {NAV.map((item) => (
@@ -112,7 +112,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
               className="fixed right-0 top-0 z-50 flex h-[100dvh] w-[300px] max-w-[85vw] flex-col bg-pearl shadow-2xl lg:hidden"
             >
               <div className="flex items-center justify-between border-b border-gold-100 p-5">
-                <Logo showText={false} />
+                <Logo showText={false} src={logoUrl} />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

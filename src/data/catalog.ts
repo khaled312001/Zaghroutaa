@@ -55,10 +55,14 @@ export type Product = Omit<ProductMeta, "cover" | "imageOrder" | "hide" | "image
   caption?: string;
 };
 
-const manifest = manifestJson as {
-  products: Record<string, string[]>;
-  reviews: string[];
-  gallery: string[];
+// يحوّل القيمة لمصفوفة (بيعالج لخبطة JSON اللي بتفك المصفوفة ذات العنصر الواحد)
+const toArray = (v: string[] | string | undefined | null): string[] =>
+  Array.isArray(v) ? v : v ? [v] : [];
+
+const manifest = manifestJson as unknown as {
+  products: Record<string, string[] | string>;
+  reviews: string[] | string;
+  gallery: string[] | string;
 };
 
 // فلتر أمان: نقبل ملفات الصور بس (يمنع أي zip/مجلد/ملف تالف يتسرب للموقع)
@@ -80,6 +84,8 @@ export const CATEGORIES: Category[] = [
   { slug: "photoshoot", nameAr: "قطع الفوتوسيشن", emoji: "📸", order: 6 },
   { slug: "footwear", nameAr: "كروكس وسليبر", emoji: "🥿", order: 7 },
   { slug: "sleepwear", nameAr: "روب وبجامة", emoji: "🪶", order: 8 },
+  { slug: "macrame", nameAr: "مكرامية هاند ميد", emoji: "🧶", order: 9 },
+  { slug: "decor", nameAr: "ديكور وتحف", emoji: "🏺", order: 10 },
 ];
 
 /* ----------------------------- المنتجات ----------------------------- */
@@ -374,6 +380,112 @@ export const PRODUCTS: ProductMeta[] = [
     ],
     order: 22,
   },
+
+  /* ----------------------------- مكرامية هاند ميد ----------------------------- */
+  {
+    slug: "macrame-wall-120",
+    nameAr: "مكرمية حائط كبيرة ١٢٠ سم",
+    categorySlug: "macrame",
+    basePrice: 1000,
+    shortAr: "مكرمية حائط فخمة مقاس ١٢٠ سم بتصميم بوهيمي مميز.",
+    descriptionAr:
+      "مكرمية حائط فاخرة مقاس ١٢٠ سم، هاند ميد بالكامل بخيوط القطن الطبيعي وتصميم بوهيمي مميز — قطعة بيان تضيف دفء وأناقة لأي حائط في البيت أو ركن الفوتوسيشن.",
+    badge: "فخم",
+    isFeatured: true,
+    order: 23,
+  },
+  {
+    slug: "macrame-wall-80",
+    nameAr: "مكرمية حائط ٨٠×١٠٠ سم",
+    categorySlug: "macrame",
+    basePrice: 750,
+    shortAr: "مكرمية حائط بوهيمية هاند ميد بخيوط القطن الطبيعي.",
+    descriptionAr:
+      "مكرمية حائط هاند ميد مقاس ٨٠×١٠٠ سم بخيوط قطن طبيعي وتصميم بوهيمي ناعم على فرع خشب — لمسة دافئة وأنيقة لأي حائط.",
+    isFeatured: true,
+    order: 24,
+  },
+  {
+    slug: "macrame-bag",
+    nameAr: "شنطة مكرمية كروس",
+    categorySlug: "macrame",
+    basePrice: 450,
+    shortAr: "شنطة مكرمية هاند ميد بخيط قطن، كروس شيك ومريحة.",
+    descriptionAr:
+      "شنطة مكرمية هاند ميد بخيط القطن الطبيعي — كروس شيك ومريحة للخروج والصيف، بتكمّل أي لوك بستايل بوهيمي.",
+    order: 25,
+  },
+  {
+    slug: "macrame-cushion",
+    nameAr: "كوشن مكرمية",
+    categorySlug: "macrame",
+    basePrice: 300,
+    shortAr: "كوشن مكرمية هاند ميد بشراشيب، لمسة بوهيمية ناعمة.",
+    descriptionAr:
+      "كوشن مكرمية هاند ميد بشراشيب ناعمة — يضيف لمسة بوهيمية دافئة للكنبة والسرير. متاح بالقطعة أو طقم اتنين.",
+    variants: [
+      { nameAr: "القطعة", price: 300 },
+      { nameAr: "الاتنين مع بعض", price: 500 },
+    ],
+    order: 26,
+  },
+  {
+    slug: "macrame-keychain",
+    nameAr: "ميدالية مكرمية للمفاتيح",
+    categorySlug: "macrame",
+    basePrice: 50,
+    shortAr: "ميدالية مفاتيح مكرمية هاند ميد بشراشيب ملوّنة.",
+    descriptionAr:
+      "ميدالية مفاتيح مكرمية هاند ميد بشراشيب ملوّنة وألوان شيك — هدية لطيفة وعملية وتوزيعة حلوة للمناسبات.",
+    order: 27,
+  },
+
+  /* ----------------------------- ديكور وتحف ----------------------------- */
+  {
+    slug: "decor-set-deluxe",
+    nameAr: "طقم ديكور كامل فاخر",
+    categorySlug: "decor",
+    basePrice: 550,
+    shortAr: "طقم ديكور فاخر: تمثال وفازات وعلبة وصينية بلمسات راقية.",
+    descriptionAr:
+      "طقم ديكور كامل هاند ميد: تمثال لمسة، فازات سيراميك مع ريش طبيعي، علبة وصينية — يزيّن أوضة العروسة أو ركن الاستقبال بلمسة فخمة وهادئة.",
+    isFeatured: true,
+    order: 28,
+  },
+  {
+    slug: "decor-set-elegant",
+    nameAr: "طقم ديكور أنيق بلمسة ذهبية",
+    categorySlug: "decor",
+    basePrice: 400,
+    shortAr: "طقم ديكور: صينية وتمثال لمسة وعلبة وفازة دونات بلمسات ذهبية.",
+    descriptionAr:
+      "طقم ديكور راقي بلمسات ذهبية: صينية، تمثال لمسة، علبة مزخرفة وفازة دونات — تحفة تضيف رقي لركن العروسة أو الصالون.",
+    order: 29,
+  },
+  {
+    slug: "decor-set-gold",
+    nameAr: "طقم ديكور ذهبي",
+    categorySlug: "decor",
+    basePrice: 350,
+    shortAr: "طقم ديكور أنيق: صينية وعلب وفازة وطبق صدفة بلمسات ذهبية.",
+    descriptionAr:
+      "طقم ديكور أنيق بلمسات ذهبية: صينية، علب مزخرفة، فازة وطبق صدفة — لمسة شيك وراقية لركن العروسة بسعر مميز.",
+    order: 30,
+  },
+
+  /* ----------------------------- مراية إضافية ----------------------------- */
+  {
+    slug: "pearl-feather-mirror",
+    nameAr: "مراية العروسة المرصّعة بالريش ٤٠ سم",
+    categorySlug: "mirrors",
+    basePrice: 700,
+    shortAr: "مراية دائرية ٤٠ سم مرصّعة باللؤلؤ والكريستال والفراشات والريش.",
+    descriptionAr:
+      "مراية العروسة الدائرية مقاس ٤٠ سم، مرصّعة باللؤلؤ والكريستال والفراشات مع الريش الناعم على الإطار — تحفة هاند ميد تليق بتسريحة العروسة وأوضتها.",
+    badge: "هاند ميد",
+    isFeatured: true,
+    order: 31,
+  },
 ];
 
 /* ----------------------------- المساعدات ----------------------------- */
@@ -396,7 +508,7 @@ function resolveImages(p: ProductMeta): ProductImage[] {
   if (p.imagePaths && p.imagePaths.length) {
     return p.imagePaths.map((url) => ({ url, alt: p.nameAr }));
   }
-  let files = [...(manifest.products[p.slug] ?? [])].filter(isImageFile);
+  let files = toArray(manifest.products[p.slug]).filter(isImageFile);
   const drop = p.hide ?? cur?.drop;
   if (drop?.length) files = files.filter((f) => !drop.includes(f));
   const order = p.imageOrder ?? cur?.ordered;
@@ -453,5 +565,5 @@ export function getCategoriesWithCounts(): (Category & { count: number })[] {
     .map((c) => ({ ...c, count: all.filter((p) => p.categorySlug === c.slug).length }));
 }
 
-export const REVIEW_IMAGES = manifest.reviews.filter(isImageFile).map((f) => `/reviews/${f}`);
-export const GALLERY_IMAGES = manifest.gallery.filter(isImageFile).map((f) => `/gallery/${f}`);
+export const REVIEW_IMAGES = toArray(manifest.reviews).filter(isImageFile).map((f) => `/reviews/${f}`);
+export const GALLERY_IMAGES = toArray(manifest.gallery).filter(isImageFile).map((f) => `/gallery/${f}`);

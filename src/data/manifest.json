@@ -37,6 +37,9 @@
                                        "bride-mug-02.jpg",
                                        "bride-mug-03.jpg"
                                    ],
+                     "decor-set-deluxe":  "decor-set-deluxe-01.jpg",
+                     "decor-set-elegant":  "decor-set-elegant-01.jpg",
+                     "decor-set-gold":  "decor-set-gold-01.jpg",
                      "feather-fans":  [
                                           "feather-fans-03.jpg",
                                           "feather-fans-06.jpg",
@@ -58,9 +61,7 @@
                                               "fingerprint-book-01.jpg",
                                               "fingerprint-book-02.jpg"
                                           ],
-                     "fingerprint-handmade-deluxe":  [
-                                                         "fingerprint-handmade-deluxe-01.jpg"
-                                                     ],
+                     "fingerprint-handmade-deluxe":  "fingerprint-handmade-deluxe-01.jpg",
                      "framed-fingerprint":  [
                                                 "framed-fingerprint-03.jpg",
                                                 "framed-fingerprint-04.jpg",
@@ -84,6 +85,11 @@
                                                      "katb-ketab-handkerchief-01.jpg",
                                                      "katb-ketab-handkerchief-02.jpg"
                                                  ],
+                     "macrame-bag":  "macrame-bag-01.jpg",
+                     "macrame-cushion":  "macrame-cushion-01.jpg",
+                     "macrame-keychain":  "macrame-keychain-01.jpg",
+                     "macrame-wall-120":  "macrame-wall-120-01.jpg",
+                     "macrame-wall-80":  "macrame-wall-80-01.jpg",
                      "mirror-stand":  [
                                           "mirror-stand-03.jpg",
                                           "mirror-stand-04.jpg",
@@ -93,9 +99,8 @@
                                          "pearl-crocs-01.jpg",
                                          "pearl-crocs-02.jpg"
                                      ],
-                     "pearl-tulip-crown":  [
-                                               "pearl-tulip-crown-01.jpg"
-                                           ],
+                     "pearl-feather-mirror":  "pearl-feather-mirror-01.jpg",
+                     "pearl-tulip-crown":  "pearl-tulip-crown-01.jpg",
                      "printed-handkerchief":  [
                                                   "printed-handkerchief-03.jpg",
                                                   "printed-handkerchief-04.jpg",
@@ -107,9 +112,7 @@
                                                   "printed-handkerchief-10.jpg",
                                                   "printed-handkerchief-11.jpg"
                                               ],
-                     "rose-bouquet":  [
-                                          "rose-bouquet-01.jpg"
-                                      ],
+                     "rose-bouquet":  "rose-bouquet-01.jpg",
                      "satin-pajamas":  [
                                            "satin-pajamas-01.jpg",
                                            "satin-pajamas-02.jpg",

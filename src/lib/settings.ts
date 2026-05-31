@@ -11,6 +11,7 @@ export type SiteSettings = {
   email: string;
   depositNote: string;
   announcement: string;
+  logoUrl: string;
 };
 
 export const SETTING_KEYS: (keyof SiteSettings)[] = [
@@ -22,6 +23,7 @@ export const SETTING_KEYS: (keyof SiteSettings)[] = [
   "email",
   "depositNote",
   "announcement",
+  "logoUrl",
 ];
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -33,6 +35,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   email: "eman@zaghroutaa.com",
   depositNote: "بنأكّد الحجز بعد دفع ديبوزت بسيط، والباقي عند الاستلام.",
   announcement: "بننقذ العرايس في الوقت الضيّق — وبنشحن لكل المحافظات بأمان وسرعة",
+  logoUrl: "/logo.png",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {

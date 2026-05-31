@@ -23,7 +23,7 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
     <footer className="mt-20 border-t border-gold-200/60 bg-espresso-900 text-cream-200">
       <div className="container-zg grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
-          <Logo light showText={false} />
+          <Logo light showText={false} src={settings.logoUrl} />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream-200/80">
             كل حاجة تخص العروسة في كتب الكتاب والفرح — قطع هاند ميد مميزة ومعمولة
             بدقة ونظافة تقفيل مفيش زيها، عشان العروسة تكون مختلفة في يومها.
@@ -92,8 +92,7 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-zg flex flex-col items-center justify-between gap-2 py-5 text-center text-xs text-cream-200/70 sm:flex-row">
-          <p>© {year} زُغْرُوطَة — جميع الحقوق محفوظة.</p>
+        <div className="container-zg flex flex-col items-center justify-center gap-1.5 py-5 text-center text-xs text-cream-200/70">
           <p className="flex items-center gap-1.5">
             تصميم وبرمجة الموقع
             <a
@@ -105,6 +104,7 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
               شركة برمجلي <Heart className="h-3 w-3 fill-blush-400 text-blush-400" />
             </a>
           </p>
+          <p>© {year} زُغْرُوطَة — جميع الحقوق محفوظة.</p>
         </div>
       </div>
     </footer>
