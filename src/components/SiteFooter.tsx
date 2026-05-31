@@ -95,7 +95,15 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
         <div className="container-zg flex flex-col items-center justify-between gap-2 py-5 text-center text-xs text-cream-200/70 sm:flex-row">
           <p>© {year} زُغْرُوطَة — جميع الحقوق محفوظة.</p>
           <p className="flex items-center gap-1.5">
-            صُمّم بكل <Heart className="h-3.5 w-3.5 fill-blush-400 text-blush-400" /> لعرايس مصر
+            تصميم وبرمجة الموقع
+            <a
+              href="http://barmagly.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-semibold text-gold-300 transition-colors hover:text-gold-200"
+            >
+              شركة برمجلي <Heart className="h-3 w-3 fill-blush-400 text-blush-400" />
+            </a>
           </p>
         </div>
       </div>
