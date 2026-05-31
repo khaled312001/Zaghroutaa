@@ -32,7 +32,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   phone: "",
   email: "eman@zaghroutaa.com",
   depositNote: "بنأكّد الحجز بعد دفع ديبوزت بسيط، والباقي عند الاستلام.",
-  announcement: "بننقذ العرايس في الوقت الضيّق — وبنشحن لكل المحافظات بأمان وسرعة 💕",
+  announcement: "بننقذ العرايس في الوقت الضيّق — وبنشحن لكل المحافظات بأمان وسرعة",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {

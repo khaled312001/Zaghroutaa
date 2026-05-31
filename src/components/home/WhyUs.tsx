@@ -27,7 +27,7 @@ export function WhyUs() {
             <div className="absolute -bottom-6 right-6 hidden max-w-[16rem] rounded-2xl border border-gold-200 bg-pearl/95 p-4 shadow-card backdrop-blur sm:block">
               <Quote className="h-6 w-6 text-gold-400" />
               <p className="mt-2 text-sm font-medium leading-relaxed text-espresso-700">
-                "جميلة تسلم إيدك ❤️ الشغل تمام والتوتر راح بفضل زُغْرُوطَة"
+                "جميلة تسلم إيدك، الشغل تمام والتوتر راح بفضل زُغْرُوطَة"
               </p>
               <span className="mt-1 block text-xs text-gold-600">— عروسة من عرايسنا</span>
             </div>

@@ -33,16 +33,17 @@ export const getSiteProducts = cache(async (): Promise<Product[]> => {
       .map((p) => {
         const o = bySlug.get(p.slug);
         if (!o) return p;
+        // قيم الداتابيز هي المرجع (null يعني الأدمن مسحها عن قصد)
         return {
           ...p,
           basePrice: o.basePrice,
-          oldPrice: o.oldPrice ?? p.oldPrice,
+          oldPrice: o.oldPrice ?? undefined,
           isFeatured: o.isFeatured,
-          badge: o.badge ?? p.badge,
-          order: o.order ?? p.order,
+          badge: o.badge ?? undefined,
+          order: o.order,
         };
       })
-      .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   } catch {
     return base;
   }
@@ -51,8 +52,35 @@ export const getSiteProducts = cache(async (): Promise<Product[]> => {
 export async function getSiteProductBySlug(
   slug: string,
 ): Promise<Product | undefined> {
-  const all = await getSiteProducts();
-  return all.find((p) => p.slug === slug) ?? getProductBySlug(slug);
+  const staticP = getProductBySlug(slug);
+  try {
+    const o = await prisma.product.findUnique({
+      where: { slug },
+      select: {
+        basePrice: true,
+        oldPrice: true,
+        isFeatured: true,
+        isActive: true,
+        badge: true,
+        order: true,
+      },
+    });
+    if (o) {
+      // المنتج اتخفي من الأدمن → مش متاح حتى بالرابط المباشر
+      if (!o.isActive || !staticP) return undefined;
+      return {
+        ...staticP,
+        basePrice: o.basePrice,
+        oldPrice: o.oldPrice ?? undefined,
+        isFeatured: o.isFeatured,
+        badge: o.badge ?? undefined,
+        order: o.order,
+      };
+    }
+    return staticP;
+  } catch {
+    return staticP;
+  }
 }
 
 export async function getSiteFeatured(): Promise<Product[]> {

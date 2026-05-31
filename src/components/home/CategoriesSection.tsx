@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCategoriesWithCounts, toArabicDigits } from "@/data/catalog";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { CategoryIcon } from "@/lib/categoryIcons";
 
 export function CategoriesSection() {
   const categories = getCategoriesWithCounts().filter((c) => c.count > 0);
@@ -20,8 +21,8 @@ export function CategoriesSection() {
               href={`/products?cat=${c.slug}`}
               className="card-zg group flex h-full flex-col items-center justify-center gap-2 p-6 text-center transition-all duration-500 hover:-translate-y-1 hover:border-gold-300 hover:shadow-glow"
             >
-              <span className="text-4xl transition-transform duration-500 group-hover:scale-110">
-                {c.emoji}
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gold-50 text-gold-600 transition-all duration-500 group-hover:scale-105 group-hover:bg-gold-shine group-hover:text-white">
+                <CategoryIcon slug={c.slug} className="h-7 w-7" />
               </span>
               <span className="font-display text-base font-bold text-espresso-900">
                 {c.nameAr}

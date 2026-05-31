@@ -8,6 +8,9 @@ import { getSiteProductBySlug, getSiteByCategory } from "@/lib/products";
 import { getSettings } from "@/lib/settings";
 import { formatPrice, toArabicDigits } from "@/data/catalog";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
+import { CategoryIcon } from "@/lib/categoryIcons";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/seo";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -23,8 +26,17 @@ export async function generateMetadata({
   return {
     title: product.nameAr,
     description: product.shortAr ?? product.descriptionAr ?? undefined,
+    keywords: [
+      product.nameAr,
+      product.category?.nameAr ?? "",
+      "هاند ميد",
+      "اكسسوارات العروسة",
+      "كتب الكتاب",
+      "زغروطة",
+    ].filter(Boolean),
+    alternates: { canonical: `/products/${slug}` },
     openGraph: {
-      title: product.nameAr,
+      title: `${product.nameAr} | زُغْرُوطَة`,
       description: product.shortAr ?? undefined,
       images: [{ url: product.cover, alt: product.nameAr }],
     },
@@ -51,8 +63,45 @@ export default async function ProductPage({
     `السلام عليكم 🌷 حابة أستفسر عن: ${product.nameAr}`,
   );
 
+  const productLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.nameAr,
+    description: product.descriptionAr ?? product.shortAr ?? product.nameAr,
+    image: product.images.map((i) => `${SITE_URL}${i.url}`),
+    brand: { "@type": "Brand", name: "زُغْرُوطَة" },
+    category: product.category?.nameAr,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "EGP",
+      price: product.basePrice,
+      availability: "https://schema.org/InStock",
+      url: `${SITE_URL}/products/${product.slug}`,
+      seller: { "@type": "Organization", name: "زُغْرُوطَة" },
+    },
+  };
+  const crumbs = [
+    { name: "الرئيسية", item: SITE_URL },
+    { name: "المنتجات", item: `${SITE_URL}/products` },
+    ...(product.category
+      ? [{ name: product.category.nameAr, item: `${SITE_URL}/products?cat=${product.categorySlug}` }]
+      : []),
+    { name: product.nameAr, item: `${SITE_URL}/products/${product.slug}` },
+  ];
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: c.item,
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={[productLd, breadcrumbLd]} />
       {/* breadcrumb */}
       <div className="border-b border-gold-100 bg-cream-50">
         <div className="container-zg flex flex-wrap items-center gap-1.5 py-3 text-sm text-espresso-500">
@@ -82,7 +131,8 @@ export default async function ProductPage({
                 href={`/products?cat=${product.categorySlug}`}
                 className="chip border border-gold-200 bg-gold-50 text-gold-700"
               >
-                {product.category.emoji} {product.category.nameAr}
+                <CategoryIcon slug={product.categorySlug} className="h-3.5 w-3.5" />
+                {product.category.nameAr}
               </Link>
             )}
             <h1 className="mt-3 text-3xl font-bold sm:text-4xl">{product.nameAr}</h1>

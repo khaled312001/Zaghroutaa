@@ -12,7 +12,7 @@ const FIELDS: {
   type?: string;
   dir?: "ltr" | "rtl";
 }[] = [
-  { key: "whatsappNumber", label: "رقم واتساب الحجز ⭐", hint: "بمفتاح الدولة من غير + أو مسافات (مثال لمصر: 201001234567)", type: "tel", dir: "ltr" },
+  { key: "whatsappNumber", label: "رقم واتساب الحجز", hint: "بمفتاح الدولة من غير + أو مسافات (مثال لمصر: 201001234567)", type: "tel", dir: "ltr" },
   { key: "phone", label: "رقم الهاتف للاتصال", type: "tel", dir: "ltr" },
   { key: "email", label: "البريد الإلكتروني", type: "email", dir: "ltr" },
   { key: "instagram", label: "رابط انستجرام", type: "url", dir: "ltr" },
@@ -35,7 +35,7 @@ export function SettingsForm({ values }: { values: Record<string, string> }) {
   );
 
   useEffect(() => {
-    if (state.ok) toast.success("اتحفظت الإعدادات بنجاح 🌷");
+    if (state.ok) toast.success("اتحفظت الإعدادات بنجاح");
   }, [state]);
 
   return (

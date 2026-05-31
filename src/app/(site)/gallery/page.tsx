@@ -4,8 +4,11 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { MediaGrid } from "@/components/MediaGrid";
 
 export const metadata: Metadata = {
-  title: "معرض الأعمال",
-  description: "صور حقيقية من أوردرات عرايس زُغْرُوطَة — شوفي شغلنا الهاند ميد بنفسك.",
+  title: "معرض أعمال إكسسوارات العرايس الهاند ميد",
+  description:
+    "صور حقيقية من أوردرات عرايس زُغْرُوطَة — شوفي شغلنا الهاند ميد من مناديل كتب الكتاب والبصمات والمرايات والبوكيهات بنفسك.",
+  keywords: ["معرض اعمال زغروطة", "اكسسوارات العرايس", "شغل هاند ميد", "كتب الكتاب", "العروسة"],
+  alternates: { canonical: "/gallery" },
 };
 
 export default function GalleryPage() {

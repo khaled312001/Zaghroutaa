@@ -98,10 +98,10 @@ export function ProductGallery({
 
             {images.length > 1 && (
               <>
-                <NavBtn side="right" onClick={(e) => { e.stopPropagation(); go(1); }}>
+                <NavBtn side="right" onClick={(e) => { e.stopPropagation(); go(-1); }}>
                   <ChevronRight className="h-7 w-7" />
                 </NavBtn>
-                <NavBtn side="left" onClick={(e) => { e.stopPropagation(); go(-1); }}>
+                <NavBtn side="left" onClick={(e) => { e.stopPropagation(); go(1); }}>
                   <ChevronLeft className="h-7 w-7" />
                 </NavBtn>
               </>
@@ -130,7 +130,7 @@ function NavBtn({
         "absolute top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20",
         side === "right" ? "right-4" : "left-4",
       )}
-      aria-label={side === "right" ? "التالي" : "السابق"}
+      aria-label={side === "right" ? "السابق" : "التالي"}
     >
       {children}
     </button>

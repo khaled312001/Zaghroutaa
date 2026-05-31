@@ -4,7 +4,7 @@ import { Check, Sparkles, Crown } from "lucide-react";
 import { getProductBySlug, formatPrice } from "@/data/catalog";
 import { Reveal } from "@/components/ui/Reveal";
 
-export function PackageSpotlight() {
+export function PackageSpotlight({ heroImage }: { heroImage?: string }) {
   const pkg = getProductBySlug("bridal-package");
   if (!pkg) return null;
 
@@ -17,24 +17,42 @@ export function PackageSpotlight() {
       <div className="container-zg relative grid items-center gap-10 lg:grid-cols-2">
         {/* صور */}
         <Reveal className="order-2 lg:order-1">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {pkg.images.slice(0, 4).map((img, i) => (
-              <div
-                key={img.url}
-                className={`relative overflow-hidden rounded-3xl border-4 border-pearl/90 shadow-glow ${
-                  i === 0 ? "col-span-2 aspect-[16/10]" : "aspect-square"
-                }`}
-              >
-                <Image
-                  src={img.url}
-                  alt={img.alt}
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 25vw"
-                  className="object-cover"
-                />
+          {heroImage ? (
+            <div className="relative mx-auto max-w-md">
+              <div className="pointer-events-none absolute -inset-3 rounded-[2.5rem] border border-gold-300/30" />
+              <div className="relative overflow-hidden rounded-[2rem] border-4 border-pearl/90 shadow-glow">
+                <div className="relative aspect-[3/4]">
+                  <Image
+                    src={heroImage}
+                    alt={pkg.nameAr}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 440px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {pkg.images.slice(0, 4).map((img, i) => (
+                <div
+                  key={img.url}
+                  className={`relative overflow-hidden rounded-3xl border-4 border-pearl/90 shadow-glow ${
+                    i === 0 ? "col-span-2 aspect-[16/10]" : "aspect-square"
+                  }`}
+                >
+                  <Image
+                    src={img.url}
+                    alt={img.alt}
+                    fill
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </Reveal>
 
         {/* تفاصيل */}

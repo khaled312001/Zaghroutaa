@@ -1,9 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
-
-const secret = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "dev-insecure-secret-change-me-please",
-);
+import { authSecret } from "./lib/secret";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -14,7 +11,7 @@ export async function middleware(req: NextRequest) {
     let valid = false;
     if (token) {
       try {
-        await jwtVerify(token, secret);
+        await jwtVerify(token, authSecret);
         valid = true;
       } catch {
         valid = false;

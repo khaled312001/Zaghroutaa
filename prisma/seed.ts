@@ -78,8 +78,13 @@ async function main() {
 
   // ---------- الأدمن (إيمان) ----------
   const email = process.env.ADMIN_EMAIL || "eman@zaghroutaa.com";
-  const password = process.env.ADMIN_PASSWORD || "Zaghroutaa@2026";
+  const password = process.env.ADMIN_PASSWORD;
   const name = process.env.ADMIN_NAME || "إيمان";
+  if (!password) {
+    throw new Error(
+      "ADMIN_PASSWORD مطلوب في ملف .env قبل تشغيل الـ seed (متحطّش باسورد افتراضي في الكود).",
+    );
+  }
   const passwordHash = await bcrypt.hash(password, 10);
   await prisma.adminUser.upsert({
     where: { email },

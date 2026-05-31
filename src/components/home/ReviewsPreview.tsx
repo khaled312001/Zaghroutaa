@@ -14,7 +14,7 @@ export async function ReviewsPreview() {
         <SectionHeading
           eyebrow="كلامهم أحلى شهادة"
           title="آراء عرايسنا"
-          subtitle="ريفيوهات حقيقية وصلتنا بعد الاستلام — دي أكتر حاجة بتفرح قلبنا 💕"
+          subtitle="ريفيوهات حقيقية وصلتنا بعد الاستلام — دي أكتر حاجة بتفرح قلبنا"
         />
       </div>
       <div className="mt-10">

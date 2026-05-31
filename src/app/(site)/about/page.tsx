@@ -9,9 +9,18 @@ import { ValueProps } from "@/components/home/ValueProps";
 import { FinalCta } from "@/components/home/FinalCta";
 
 export const metadata: Metadata = {
-  title: "عننا",
+  title: "عننا — أول براند مصري وعربي لإكسسوارات العرايس الهاند ميد",
   description:
-    "زُغْرُوطَة — قصة شغف بتفاصيل العروسة. متخصصون في القطع الهاند ميد لكتب الكتاب والفرح.",
+    "زُغْرُوطَة — قصة شغف بتفاصيل العروسة. أول وأكبر براند مصري وعربي متخصص في إكسسوارات العرايس الهاند ميد لكتب الكتاب والفرح، بشغل متقن وتقفيل نضيف وشحن لكل المحافظات.",
+  keywords: [
+    "زغروطة", "عن زغروطة", "براند اكسسوارات العرايس", "هاند ميد مصر",
+    "اكسسوارات العروسة", "كتب الكتاب", "العروسة المصرية",
+  ],
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "عن زُغْرُوطَة",
+    images: [{ url: "/pages/about.png", alt: "تشكيلة زُغْرُوطَة الهاند ميد للعروسة" }],
+  },
 };
 
 const OFFERS = [
@@ -46,15 +55,19 @@ export default async function AboutPage() {
       <section className="container-zg py-14 sm:py-16">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <div className="relative col-span-2 aspect-[16/10] overflow-hidden rounded-3xl border-4 border-pearl shadow-glow">
-                <Image src="/products/katb-ketab-fingerprint/katb-ketab-fingerprint-04.jpg" alt="تابلوه بصمة" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
-              </div>
-              <div className="relative aspect-square overflow-hidden rounded-3xl border-4 border-pearl shadow-card">
-                <Image src="/products/bridal-mirror/bridal-mirror-06.jpg" alt="مراية العروسة" fill sizes="25vw" className="object-cover" />
-              </div>
-              <div className="relative aspect-square overflow-hidden rounded-3xl border-4 border-pearl shadow-card">
-                <Image src="/products/strass-bouquets/strass-bouquets-04.jpg" alt="بوكيه استراس" fill sizes="25vw" className="object-cover" />
+            <div className="relative">
+              <div className="pointer-events-none absolute -inset-3 rounded-[2.5rem] border border-gold-200/50" />
+              <div className="relative overflow-hidden rounded-[2rem] border-4 border-pearl shadow-glow">
+                <div className="relative aspect-[3/2]">
+                  <Image
+                    src="/pages/about.png"
+                    alt="تشكيلة زُغْرُوطَة الهاند ميد للعروسة — بصمة ومراية ومنديل وبوكيه وأقلام"
+                    fill
+                    sizes="(max-width:1024px) 100vw, 50vw"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
               </div>
             </div>
           </Reveal>

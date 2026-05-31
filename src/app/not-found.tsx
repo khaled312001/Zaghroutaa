@@ -9,7 +9,7 @@ export default function NotFound() {
       <h1 className="mt-6 font-display text-6xl font-extrabold text-gold-gradient">٤٠٤</h1>
       <p className="mt-3 text-xl font-bold text-espresso-800">الصفحة دي مش موجودة</p>
       <p className="mt-2 max-w-md text-espresso-600">
-        يمكن الرابط اتغيّر أو القطعة اتشالت. ارجعي للرئيسية وكملي تسوّقك 🌷
+        يمكن الرابط اتغيّر أو القطعة اتشالت. ارجعي للرئيسية وكملي تسوّقك.
       </p>
       <Link href="/" className="btn-gold mt-7">
         <Home className="h-5 w-5" /> الرجوع للرئيسية

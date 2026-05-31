@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { El_Messiri, Tajawal, Cormorant_Garamond } from "next/font/google";
 import { Toaster } from "sonner";
+import { SITE_URL, SITE_DESCRIPTION, SITE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
 
 const display = El_Messiri({
@@ -25,30 +26,39 @@ const latin = Cormorant_Garamond({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://zaghroutaa.com";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "زُغْرُوطَة | كل حاجة تخص العروسة وكتب الكتاب والفرح",
+    default: "زُغْرُوطَة | أول براند مصري وعربي لإكسسوارات العرايس الهاند ميد",
     template: "%s | زُغْرُوطَة",
   },
-  description:
-    "زُغْرُوطَة — متخصصون في قطع العروسة الهاند ميد: مناديل كتب الكتاب المطرّزة، تابلوهات البصمة، مرايات وبوكيهات وإكسسوارات العروسة. شغل متقن ونضيف، وبننقذ العرايس في الوقت الضيّق وبنشحن لكل المحافظات.",
-  keywords: [
-    "زغروطة", "Zaghroutaa", "كتب كتاب", "منديل كتب كتاب", "بصمة العروسة",
-    "مراية العروسة", "بوكيه برايد", "هاند ميد", "العروسة", "الفرح",
-  ],
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
   authors: [{ name: "زُغْرُوطَة" }],
+  creator: "زُغْرُوطَة",
+  publisher: "زُغْرُوطَة",
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
   openGraph: {
     type: "website",
     locale: "ar_EG",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "زُغْرُوطَة",
-    title: "زُغْرُوطَة | كل حاجة تخص العروسة وكتب الكتاب والفرح",
-    description:
-      "قطع العروسة الهاند ميد المميزة — مناديل كتب الكتاب، البصمات، المرايات والبوكيهات. عشان العروسة تكون مختلفة في يومها.",
-    images: [{ url: "/logo.png", width: 1200, height: 1200, alt: "زُغْرُوطَة" }],
+    title: "زُغْرُوطَة | أول براند مصري وعربي لإكسسوارات العرايس الهاند ميد",
+    description: SITE_DESCRIPTION,
+    images: [
+      { url: "/pages/about.png", width: 1200, height: 800, alt: "زُغْرُوطَة — إكسسوارات العرايس الهاند ميد" },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "زُغْرُوطَة | إكسسوارات العرايس الهاند ميد",
+    description: SITE_DESCRIPTION,
+    images: ["/pages/about.png"],
   },
   icons: {
     icon: "/logo.png",

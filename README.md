@@ -57,8 +57,8 @@ npm run dev         # http://localhost:3000
 ```
 
 > **لوحة الأدمن:** `/admin/login`
-> الإيميل: `eman@zaghroutaa.com` — الباسورد الافتراضي: `Zaghroutaa@2026`
-> (غيّري الباسورد من متغير `ADMIN_PASSWORD` وأعيدي `npm run db:seed`).
+> الإيميل: `eman@zaghroutaa.com` — الباسورد هو اللي بتحطيه في `ADMIN_PASSWORD` بملف `.env`.
+> (يُفضّل تغييره بعد أول دخول، وأعيدي `npm run db:seed` بعد أي تغيير).
 
 ---
 
@@ -99,7 +99,7 @@ cat > .env <<'EOF'
 DATABASE_URL="mysql://u405809647_zaghroutaa:DB_PASSWORD_HERE@srv2123.hstgr.io:3306/u405809647_zaghroutaa"
 AUTH_SECRET="ضعي-سر-عشوائي-طويل-هنا"
 ADMIN_EMAIL="eman@zaghroutaa.com"
-ADMIN_PASSWORD="Zaghroutaa@2026"
+ADMIN_PASSWORD="ضع-باسورد-قوي-هنا"
 NEXT_PUBLIC_WHATSAPP_NUMBER="201001234567"
 NEXT_PUBLIC_SITE_URL="https://zaghroutaa.com"
 EOF

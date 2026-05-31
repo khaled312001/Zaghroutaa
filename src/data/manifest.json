@@ -1,43 +1,44 @@
 {
     "products":  {
-                     "fingerprint-handmade-deluxe":  [
-                                                         "fingerprint-handmade-deluxe-01.jpg"
-                                                     ],
-                     "wedding-pens":  [
-                                          "wedding-pens-01.28 pm",
-                                          "wedding-pens-02.zip",
-                                          "wedding-pens-03.jpg",
-                                          "wedding-pens-04.jpg",
-                                          "wedding-pens-05.jpg"
-                                      ],
-                     "strass-bouquets":  [
-                                             "strass-bouquets-01.38 pm",
-                                             "strass-bouquets-02.zip",
-                                             "strass-bouquets-03.jpg",
-                                             "strass-bouquets-04.jpg",
-                                             "strass-bouquets-05.jpg",
-                                             "strass-bouquets-06.jpg",
-                                             "strass-bouquets-07.jpg",
-                                             "strass-bouquets-08.jpg",
-                                             "strass-bouquets-09.jpg",
-                                             "strass-bouquets-10.jpg"
+                     "bridal-bouquets":  [
+                                             "bridal-bouquets-02.jpg",
+                                             "bridal-bouquets-04.jpg",
+                                             "bridal-bouquets-05.jpg",
+                                             "bridal-bouquets-06.jpg",
+                                             "bridal-bouquets-07.jpg",
+                                             "bridal-bouquets-08.jpg"
                                          ],
+                     "bridal-glasses":  [
+                                            "bridal-glasses-03.jpg",
+                                            "bridal-glasses-04.jpg",
+                                            "bridal-glasses-05.jpg"
+                                        ],
+                     "bridal-mirror":  [
+                                           "bridal-mirror-03.jpg",
+                                           "bridal-mirror-04.jpg",
+                                           "bridal-mirror-05.jpg",
+                                           "bridal-mirror-06.jpg",
+                                           "bridal-mirror-07.jpg",
+                                           "bridal-mirror-08.jpg",
+                                           "bridal-mirror-09.jpg",
+                                           "bridal-mirror-10.jpg"
+                                       ],
                      "bridal-robe":  [
-                                         "bridal-robe-01.31 pm",
-                                         "bridal-robe-02.zip",
                                          "bridal-robe-03.jpg",
                                          "bridal-robe-04.jpg"
                                      ],
-                     "pearl-crocs":  [
-                                         "pearl-crocs-01.jpg",
-                                         "pearl-crocs-02.jpg"
-                                     ],
+                     "bridal-slippers":  [
+                                             "bridal-slippers-03.jpg",
+                                             "bridal-slippers-04.jpg",
+                                             "bridal-slippers-05.jpg"
+                                         ],
+                     "bride-mug":  [
+                                       "bride-mug-01.jpg",
+                                       "bride-mug-02.jpg",
+                                       "bride-mug-03.jpg"
+                                   ],
                      "feather-fans":  [
-                                          "feather-fans-01.43 pm",
-                                          "feather-fans-02.58 pm",
                                           "feather-fans-03.jpg",
-                                          "feather-fans-04.zip",
-                                          "feather-fans-05.zip",
                                           "feather-fans-06.jpg",
                                           "feather-fans-07.jpg",
                                           "feather-fans-08.jpg",
@@ -53,34 +54,21 @@
                                           "feather-fans-18.jpg",
                                           "feather-fans-19.jpg"
                                       ],
-                     "bridal-mirror":  [
-                                           "bridal-mirror-01.46 pm",
-                                           "bridal-mirror-02.zip",
-                                           "bridal-mirror-03.jpg",
-                                           "bridal-mirror-04.jpg",
-                                           "bridal-mirror-05.jpg",
-                                           "bridal-mirror-06.jpg",
-                                           "bridal-mirror-07.jpg",
-                                           "bridal-mirror-08.jpg",
-                                           "bridal-mirror-09.jpg",
-                                           "bridal-mirror-10.jpg"
-                                       ],
-                     "bridal-glasses":  [
-                                            "bridal-glasses-01.17 pm",
-                                            "bridal-glasses-02.zip",
-                                            "bridal-glasses-03.jpg",
-                                            "bridal-glasses-04.jpg",
-                                            "bridal-glasses-05.jpg"
-                                        ],
-                     "satin-pajamas":  [
-                                           "satin-pajamas-01.jpg",
-                                           "satin-pajamas-02.jpg",
-                                           "satin-pajamas-03.jpg"
-                                       ],
+                     "fingerprint-book":  [
+                                              "fingerprint-book-01.jpg",
+                                              "fingerprint-book-02.jpg"
+                                          ],
+                     "fingerprint-handmade-deluxe":  [
+                                                         "fingerprint-handmade-deluxe-01.jpg"
+                                                     ],
+                     "framed-fingerprint":  [
+                                                "framed-fingerprint-03.jpg",
+                                                "framed-fingerprint-04.jpg",
+                                                "framed-fingerprint-05.jpg",
+                                                "framed-fingerprint-06.jpg"
+                                            ],
                      "katb-ketab-fingerprint":  [
-                                                    "katb-ketab-fingerprint-01.38 pm",
                                                     "katb-ketab-fingerprint-02.jpg",
-                                                    "katb-ketab-fingerprint-03.zip",
                                                     "katb-ketab-fingerprint-04.jpg",
                                                     "katb-ketab-fingerprint-05.jpg",
                                                     "katb-ketab-fingerprint-06.jpg",
@@ -92,47 +80,52 @@
                                                     "katb-ketab-fingerprint-12.jpg",
                                                     "katb-ketab-fingerprint-13.jpg"
                                                 ],
-                     "rose-bouquet":  [
-                                          "rose-bouquet-01.jpg"
-                                      ],
-                     "bridal-bouquets":  [
-                                             "bridal-bouquets-01.07 pm",
-                                             "bridal-bouquets-02.jpg",
-                                             "bridal-bouquets-03.zip",
-                                             "bridal-bouquets-04.jpg",
-                                             "bridal-bouquets-05.jpg",
-                                             "bridal-bouquets-06.jpg",
-                                             "bridal-bouquets-07.jpg",
-                                             "bridal-bouquets-08.jpg"
-                                         ],
-                     "veil-clip":  [
-                                       "veil-clip-01.49 pm",
-                                       "veil-clip-02.jpg",
-                                       "veil-clip-03.zip",
-                                       "veil-clip-04.jpg",
-                                       "veil-clip-05.jpg",
-                                       "veil-clip-06.jpg",
-                                       "veil-clip-07.jpg",
-                                       "veil-clip-08.jpg"
-                                   ],
+                     "katb-ketab-handkerchief":  [
+                                                     "katb-ketab-handkerchief-01.jpg",
+                                                     "katb-ketab-handkerchief-02.jpg"
+                                                 ],
                      "mirror-stand":  [
-                                          "mirror-stand-01.21 pm",
-                                          "mirror-stand-02.zip",
                                           "mirror-stand-03.jpg",
                                           "mirror-stand-04.jpg",
                                           "mirror-stand-05.jpg"
                                       ],
-                     "framed-fingerprint":  [
-                                                "framed-fingerprint-01.18 pm",
-                                                "framed-fingerprint-02.zip",
-                                                "framed-fingerprint-03.jpg",
-                                                "framed-fingerprint-04.jpg",
-                                                "framed-fingerprint-05.jpg",
-                                                "framed-fingerprint-06.jpg"
-                                            ],
+                     "pearl-crocs":  [
+                                         "pearl-crocs-01.jpg",
+                                         "pearl-crocs-02.jpg"
+                                     ],
+                     "pearl-tulip-crown":  [
+                                               "pearl-tulip-crown-01.jpg"
+                                           ],
+                     "printed-handkerchief":  [
+                                                  "printed-handkerchief-03.jpg",
+                                                  "printed-handkerchief-04.jpg",
+                                                  "printed-handkerchief-05.jpg",
+                                                  "printed-handkerchief-06.jpg",
+                                                  "printed-handkerchief-07.jpg",
+                                                  "printed-handkerchief-08.jpg",
+                                                  "printed-handkerchief-09.jpg",
+                                                  "printed-handkerchief-10.jpg",
+                                                  "printed-handkerchief-11.jpg"
+                                              ],
+                     "rose-bouquet":  [
+                                          "rose-bouquet-01.jpg"
+                                      ],
+                     "satin-pajamas":  [
+                                           "satin-pajamas-01.jpg",
+                                           "satin-pajamas-02.jpg",
+                                           "satin-pajamas-03.jpg"
+                                       ],
+                     "strass-bouquets":  [
+                                             "strass-bouquets-03.jpg",
+                                             "strass-bouquets-04.jpg",
+                                             "strass-bouquets-05.jpg",
+                                             "strass-bouquets-06.jpg",
+                                             "strass-bouquets-07.jpg",
+                                             "strass-bouquets-08.jpg",
+                                             "strass-bouquets-09.jpg",
+                                             "strass-bouquets-10.jpg"
+                                         ],
                      "strass-handkerchief":  [
-                                                 "strass-handkerchief-01.00 pm",
-                                                 "strass-handkerchief-02.zip",
                                                  "strass-handkerchief-03.jpg",
                                                  "strass-handkerchief-04.jpg",
                                                  "strass-handkerchief-05.jpg",
@@ -145,49 +138,24 @@
                                                  "strass-handkerchief-12.jpg",
                                                  "strass-handkerchief-13.jpg"
                                              ],
-                     "bridal-slippers":  [
-                                             "bridal-slippers-01.43 pm",
-                                             "bridal-slippers-02.zip",
-                                             "bridal-slippers-03.jpg",
-                                             "bridal-slippers-04.jpg",
-                                             "bridal-slippers-05.jpg"
-                                         ],
-                     "pearl-tulip-crown":  [
-                                               "pearl-tulip-crown-01.jpg"
-                                           ],
-                     "fingerprint-book":  [
-                                              "fingerprint-book-01.jpg",
-                                              "fingerprint-book-02.jpg"
-                                          ],
-                     "bride-mug":  [
-                                       "bride-mug-01.jpg",
-                                       "bride-mug-02.jpg",
-                                       "bride-mug-03.jpg"
+                     "veil-clip":  [
+                                       "veil-clip-02.jpg",
+                                       "veil-clip-04.jpg",
+                                       "veil-clip-05.jpg",
+                                       "veil-clip-06.jpg",
+                                       "veil-clip-07.jpg",
+                                       "veil-clip-08.jpg"
                                    ],
-                     "printed-handkerchief":  [
-                                                  "printed-handkerchief-01.33 pm",
-                                                  "printed-handkerchief-02.zip",
-                                                  "printed-handkerchief-03.jpg",
-                                                  "printed-handkerchief-04.jpg",
-                                                  "printed-handkerchief-05.jpg",
-                                                  "printed-handkerchief-06.jpg",
-                                                  "printed-handkerchief-07.jpg",
-                                                  "printed-handkerchief-08.jpg",
-                                                  "printed-handkerchief-09.jpg",
-                                                  "printed-handkerchief-10.jpg",
-                                                  "printed-handkerchief-11.jpg"
-                                              ],
-                     "katb-ketab-handkerchief":  [
-                                                     "katb-ketab-handkerchief-01.jpg",
-                                                     "katb-ketab-handkerchief-02.jpg"
-                                                 ]
+                     "wedding-pens":  [
+                                          "wedding-pens-03.jpg",
+                                          "wedding-pens-04.jpg",
+                                          "wedding-pens-05.jpg"
+                                      ]
                  },
     "reviews":  [
-                    "review-01.19 pm",
                     "review-02.jpg",
                     "review-03.jpg",
                     "review-04.jpg",
-                    "review-05.zip",
                     "review-06.jpg",
                     "review-07.jpg",
                     "review-08.jpg",
@@ -197,8 +165,6 @@
                     "review-12.jpg"
                 ],
     "gallery":  [
-                    "gallery-01.18 pm",
-                    "gallery-02.zip",
                     "gallery-03.jpg",
                     "gallery-04.jpg",
                     "gallery-05.jpg",

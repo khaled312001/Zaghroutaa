@@ -33,7 +33,7 @@ export default async function BookPage({
       <PageHeader
         eyebrow="خطوة وتكوني خلّصتي"
         title="احجزي أوردرك"
-        subtitle="املي بياناتك واسم العروسين وتاريخ المناسبة، وهنكمّل على واتساب فورًا 🌷"
+        subtitle="املي بياناتك واسم العروسين وتاريخ المناسبة، وهنكمّل على واتساب فورًا"
       />
       <div className="container-zg py-10">
         <BookingForm

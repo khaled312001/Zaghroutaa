@@ -3,15 +3,10 @@ import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
+import { authSecret } from "./secret";
 
 const COOKIE_NAME = "zg_admin";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 أيام
-
-function getSecret() {
-  return new TextEncoder().encode(
-    process.env.AUTH_SECRET || "dev-insecure-secret-change-me-please",
-  );
-}
 
 export type Session = { id: number; name: string; email: string };
 
@@ -21,7 +16,7 @@ export async function createSession(user: Session): Promise<void> {
     .setSubject(String(user.id))
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(getSecret());
+    .sign(authSecret);
 
   const store = await cookies();
   store.set(COOKIE_NAME, token, {
@@ -43,7 +38,7 @@ export async function getSession(): Promise<Session | null> {
   const token = store.get(COOKIE_NAME)?.value;
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, getSecret());
+    const { payload } = await jwtVerify(token, authSecret);
     return {
       id: Number(payload.sub),
       name: String(payload.name ?? "إيمان"),

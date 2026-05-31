@@ -80,7 +80,7 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
       <Image src="/logo.png" alt="زُغْرُوطَة" width={44} height={44} className="rounded-full ring-1 ring-gold-200" />
       <div>
         <p className="font-display text-base font-bold text-espresso-900">زُغْرُوطَة</p>
-        <p className="text-xs text-gold-600">أهلاً {adminName} 🌷</p>
+        <p className="text-xs text-gold-600">أهلاً {adminName}</p>
       </div>
     </div>
   );

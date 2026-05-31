@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { MessageCircle, Phone, Mail, MapPin, Clock, Instagram, Facebook } from "lucide-react";
 import { getSettings } from "@/lib/settings";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -8,8 +9,15 @@ import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { toArabicDigits } from "@/data/catalog";
 
 export const metadata: Metadata = {
-  title: "تواصلي معانا",
-  description: "كلّمي زُغْرُوطَة على واتساب أو ابعتيلنا رسالة — إحنا في خدمتك على مدار اليوم.",
+  title: "تواصلي معانا — زُغْرُوطَة لإكسسوارات العرايس",
+  description:
+    "كلّمي زُغْرُوطَة على واتساب أو ابعتيلنا رسالة لحجز إكسسوارات العروسة الهاند ميد وتجهيزات كتب الكتاب والفرح — إحنا في خدمتك على مدار اليوم وبنشحن لكل المحافظات.",
+  keywords: ["تواصل زغروطة", "حجز اكسسوارات العروسة", "واتساب زغروطة", "تجهيزات العروسة"],
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "تواصلي مع زُغْرُوطَة",
+    images: [{ url: "/pages/contact.png", alt: "تواصلي مع زُغْرُوطَة" }],
+  },
 };
 
 export default async function ContactPage() {
@@ -26,6 +34,23 @@ export default async function ContactPage() {
         title="تواصلي معانا"
         subtitle="أي استفسار أو طلب خاص؟ كلّمينا على واتساب على طول، أو ابعتيلنا رسالة."
       />
+
+      <div className="container-zg pt-8">
+        <Reveal>
+          <div className="mx-auto max-w-md overflow-hidden rounded-[2rem] border-4 border-pearl shadow-glow">
+            <div className="relative aspect-square">
+              <Image
+                src="/pages/contact.png"
+                alt="تواصلي مع زُغْرُوطَة على واتساب"
+                fill
+                sizes="(max-width:768px) 100vw, 448px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
+        </Reveal>
+      </div>
 
       <div className="container-zg grid gap-8 py-10 lg:grid-cols-2">
         <Reveal>

@@ -21,7 +21,7 @@ export default async function AdminLoginPage() {
           <h1 className="mt-4 font-display text-2xl font-bold text-espresso-900">
             لوحة تحكّم زُغْرُوطَة
           </h1>
-          <p className="mt-1 text-sm text-espresso-500">أهلاً إيمان 🌷 سجّلي دخولك للوحة التحكم</p>
+          <p className="mt-1 text-sm text-espresso-500">أهلاً إيمان، سجّلي دخولك للوحة التحكم</p>
         </div>
         <div className="card-zg p-6 sm:p-8">
           <LoginForm />

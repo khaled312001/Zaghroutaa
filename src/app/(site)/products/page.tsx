@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LayoutGrid } from "lucide-react";
 import { getSiteProducts } from "@/lib/products";
 import { CATEGORIES, toArabicDigits } from "@/data/catalog";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProductGrid } from "@/components/ProductGrid";
+import { MovingShowcase } from "@/components/MovingShowcase";
+import { CategoryIcon } from "@/lib/categoryIcons";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "كل المنتجات",
+  title: "كل منتجات وإكسسوارات العروسة الهاند ميد",
   description:
-    "تشكيلة زُغْرُوطَة الكاملة من قطع العروسة الهاند ميد — مناديل كتب الكتاب، البصمات، المرايات، البوكيهات والإكسسوارات.",
+    "تشكيلة زُغْرُوطَة الكاملة من إكسسوارات العروسة الهاند ميد — مناديل كتب الكتاب المطرّزة، تابلوهات البصمة، مرايات العروسة، بوكيهات البرايد، النظارات والأقلام وروب العروسة. أسعار تناسب الجميع وشحن لكل المحافظات.",
+  keywords: [
+    "اكسسوارات العروسة", "منديل كتب الكتاب", "بصمة العروسة", "مراية العروسة",
+    "بوكيه برايد", "نظارة برايد", "روب العروسة", "هاند ميد", "تجهيزات العروسة", "زغروطة",
+  ],
+  alternates: { canonical: "/products" },
 };
 
 export default async function ProductsPage({
@@ -39,16 +47,19 @@ export default async function ProductsPage({
         }
       />
 
+      <MovingShowcase title="كل القطع في صف واحد" />
+
       <div className="container-zg py-10">
         {/* فلاتر الأقسام */}
-        <div className="no-scrollbar mb-8 flex gap-2 overflow-x-auto pb-2">
-          <FilterPill href="/products" active={!current} label="الكل" count={all.length} />
+        <div className="no-scrollbar sticky top-[72px] z-20 -mx-5 mb-8 flex gap-2 overflow-x-auto border-b border-gold-100 bg-cream-100/85 px-5 py-3 backdrop-blur sm:-mx-8 sm:px-8">
+          <FilterPill href="/products" active={!current} label="الكل" count={all.length} icon={<LayoutGrid className="h-4 w-4" />} />
           {activeCats.map((c) => (
             <FilterPill
               key={c.slug}
               href={`/products?cat=${c.slug}`}
               active={current?.slug === c.slug}
-              label={`${c.emoji} ${c.nameAr}`}
+              label={c.nameAr}
+              icon={<CategoryIcon slug={c.slug} className="h-4 w-4" />}
               count={all.filter((p) => p.categorySlug === c.slug).length}
             />
           ))}
@@ -69,11 +80,13 @@ function FilterPill({
   active,
   label,
   count,
+  icon,
 }: {
   href: string;
   active: boolean;
   label: string;
   count: number;
+  icon?: React.ReactNode;
 }) {
   return (
     <Link
@@ -85,6 +98,7 @@ function FilterPill({
           : "border-gold-200 bg-pearl text-espresso-700 hover:border-gold-300 hover:bg-gold-50",
       )}
     >
+      {icon}
       {label}
       <span
         className={cn(

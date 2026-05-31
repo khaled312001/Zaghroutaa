@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, Star, ArrowLeft, Clock, Truck, Heart } from "lucide-react";
+import { Sparkles, Star, ArrowLeft, Clock, Truck, Heart, BadgeCheck } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -17,20 +17,19 @@ const fadeUp = {
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-cream-radial">
-      {/* زخارف متحركة */}
-      <Floaty className="left-[8%] top-[18%]" delay={0}>
+      <Floaty className="left-[7%] top-[16%]" delay={0}>
         <Sparkles className="h-6 w-6 text-gold-400/70" />
       </Floaty>
-      <Floaty className="right-[12%] top-[28%]" delay={1.2}>
+      <Floaty className="right-[10%] top-[24%]" delay={1.2}>
         <Star className="h-4 w-4 fill-gold-300/60 text-gold-300/60" />
       </Floaty>
-      <Floaty className="left-[18%] bottom-[16%]" delay={0.6}>
+      <Floaty className="left-[16%] bottom-[14%]" delay={0.6}>
         <Star className="h-5 w-5 fill-blush-300/70 text-blush-300/70" />
       </Floaty>
       <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-gold-200/30 blur-3xl" />
       <div className="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-blush-200/40 blur-3xl" />
 
-      <div className="container-zg relative grid items-center gap-10 py-14 lg:grid-cols-2 lg:py-20">
+      <div className="container-zg relative grid items-center gap-10 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-16">
         {/* النص */}
         <div className="text-center lg:text-right">
           <motion.span
@@ -40,7 +39,7 @@ export function Hero() {
             custom={0}
             className="chip mx-auto border border-gold-200 bg-pearl text-gold-700 shadow-sm lg:mx-0"
           >
-            <Sparkles className="h-3.5 w-3.5" /> هاند ميد بإيد مصرية • لعرايس مصر
+            <BadgeCheck className="h-4 w-4" /> الأول في مصر والوطن العربي لإكسسوارات العرايس الهاند ميد
           </motion.span>
 
           <motion.h1
@@ -48,7 +47,7 @@ export function Hero() {
             initial="hidden"
             animate="show"
             custom={1}
-            className="mt-5 text-4xl font-bold leading-[1.2] sm:text-5xl md:text-6xl"
+            className="mt-5 text-4xl font-bold leading-[1.18] sm:text-5xl md:text-6xl"
           >
             عشان العروسة تكون{" "}
             <span className="text-gold-shimmer">مختلفة</span>
@@ -91,69 +90,64 @@ export function Hero() {
           >
             <Trust icon={<Clock className="h-4 w-4 text-gold-500" />} text="بننقذك في الوقت الضيّق" />
             <Trust icon={<Truck className="h-4 w-4 text-gold-500" />} text="شحن لكل المحافظات" />
-            <Trust icon={<Heart className="h-4 w-4 text-blush-500" />} text="ريفيوهات بتفرح القلب" />
+            <Trust icon={<Heart className="h-4 w-4 text-blush-500" />} text="+٥٠٠ عروسة سعيدة" />
           </motion.div>
         </div>
 
-        {/* الكولاج */}
-        <div className="relative mx-auto h-[380px] w-full max-w-md sm:h-[460px] lg:h-[540px]">
+        {/* الصورة الرئيسية (براندد) */}
+        <div className="relative mx-auto w-full max-w-xl">
+          <div className="pointer-events-none absolute -inset-4 rounded-[2.5rem] border border-gold-200/50" />
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotate: -4 }}
-            animate={{ opacity: 1, scale: 1, rotate: -4 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute right-0 top-4 z-20 w-[62%]"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative overflow-hidden rounded-[2rem] border-4 border-pearl shadow-glow"
           >
-            <Frame src="/products/katb-ketab-handkerchief/katb-ketab-handkerchief-02.jpg" alt="منديل كتب كتاب هاند ميد" priority float />
+            <div className="relative aspect-[4/3]">
+              <Image
+                src="/pages/about.png"
+                alt="تشكيلة زُغْرُوطَة الهاند ميد للعروسة — بصمة ومراية ومنديل وبوكيه"
+                fill
+                sizes="(max-width: 1024px) 100vw, 600px"
+                className="object-cover"
+                priority
+              />
+            </div>
           </motion.div>
+
+          {/* بادج هاند ميد */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotate: 6 }}
-            animate={{ opacity: 1, scale: 1, rotate: 6 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute bottom-2 left-0 z-30 w-[50%]"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="absolute -bottom-4 right-4 flex items-center gap-2 rounded-2xl border border-gold-200 bg-pearl/95 px-4 py-2.5 shadow-card backdrop-blur"
           >
-            <Frame src="/products/strass-bouquets/strass-bouquets-04.jpg" alt="بوكيه استراس" float delay={1} />
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold-shine text-white">
+              <Sparkles className="h-5 w-5" />
+            </span>
+            <div className="text-right">
+              <p className="text-sm font-extrabold leading-none text-espresso-900">هاند ميد ١٠٠٪</p>
+              <p className="mt-0.5 text-[11px] text-espresso-500">تقفيل وتشطيب مفيش زيه</p>
+            </div>
           </motion.div>
+
+          {/* بادج تقييم */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotate: -8 }}
-            animate={{ opacity: 1, scale: 1, rotate: -8 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute left-6 top-0 z-10 w-[42%]"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="absolute -top-3 left-3 flex items-center gap-1.5 rounded-2xl border border-gold-200 bg-pearl/95 px-3 py-2 shadow-card backdrop-blur"
           >
-            <Frame src="/products/bridal-mirror/bridal-mirror-06.jpg" alt="مراية العروسة" float delay={2} />
+            {[0, 1, 2, 3, 4].map((i) => (
+              <Star key={i} className="h-4 w-4 fill-gold-400 text-gold-400" />
+            ))}
+            <span className="ms-1 text-xs font-bold text-espresso-700">٥٫٠</span>
           </motion.div>
         </div>
       </div>
 
-      {/* موجة سفلية */}
       <div className="h-10 w-full bg-gradient-to-b from-transparent to-cream-100" />
     </section>
-  );
-}
-
-function Frame({
-  src,
-  alt,
-  priority,
-  float,
-  delay = 0,
-}: {
-  src: string;
-  alt: string;
-  priority?: boolean;
-  float?: boolean;
-  delay?: number;
-}) {
-  return (
-    <div
-      className={`overflow-hidden rounded-[1.75rem] border-4 border-pearl bg-cream-200 shadow-glow ${
-        float ? "animate-float" : ""
-      }`}
-      style={{ animationDelay: `${delay}s` }}
-    >
-      <div className="relative aspect-[3/4]">
-        <Image src={src} alt={alt} fill sizes="320px" className="object-cover" priority={priority} />
-      </div>
-    </div>
   );
 }
 

@@ -6,9 +6,18 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export const metadata: Metadata = {
-  title: "الباكدجات",
+  title: "باكدجات العروسة الكاملة لكتب الكتاب والفرح",
   description:
-    "باكدج العروسة الكامل من زُغْرُوطَة — منديل كتب كتاب، تابلوه بصمة، مراية، نظارة وأقلام، كله في باكدج واحدة بسعر مميز.",
+    "باكدج العروسة الكامل من زُغْرُوطَة — منديل كتب كتاب مطرّز، تابلوه بصمة، مراية مرصّعة باللؤلؤ، نظارة برايد وأقلام، كله في باكدج واحدة هاند ميد بسعر مميز. أول براند مصري وعربي لإكسسوارات العرايس.",
+  keywords: [
+    "باكدج العروسة", "باكدج كتب الكتاب", "تجهيزات العروسة", "إكسسوارات العروسة",
+    "منديل كتب الكتاب", "بصمة العروسة", "مراية العروسة", "هاند ميد", "زغروطة",
+  ],
+  alternates: { canonical: "/packages" },
+  openGraph: {
+    title: "باكدجات العروسة الكاملة | زُغْرُوطَة",
+    images: [{ url: "/pages/packages.png", alt: "باكدج العروسة الكامل من زُغْرُوطَة" }],
+  },
 };
 
 export default async function PackagesPage() {
@@ -22,7 +31,7 @@ export default async function PackagesPage() {
         title="باكدجات العروسة"
         subtitle="باكدج متكامل فيه كل حاجة محتاجاها في يوم كتب الكتاب — بسعر مميز وشغل هاند ميد."
       />
-      <PackageSpotlight />
+      <PackageSpotlight heroImage="/pages/packages.png" />
       <section className="container-zg py-14 sm:py-16">
         <SectionHeading
           eyebrow="زوّدي على باكدجك"

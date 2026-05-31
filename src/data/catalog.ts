@@ -61,6 +61,9 @@ const manifest = manifestJson as {
   gallery: string[];
 };
 
+// فلتر أمان: نقبل ملفات الصور بس (يمنع أي zip/مجلد/ملف تالف يتسرب للموقع)
+const isImageFile = (f: string) => /\.(jpe?g|png|webp|avif)$/i.test(f);
+
 type Curation = { slug: string; cover: string; ordered: string[]; drop: string[]; captionAr?: string };
 const curationBySlug = new Map<string, Curation>(
   (curationJson as Curation[]).map((c) => [c.slug, c]),
@@ -393,7 +396,7 @@ function resolveImages(p: ProductMeta): ProductImage[] {
   if (p.imagePaths && p.imagePaths.length) {
     return p.imagePaths.map((url) => ({ url, alt: p.nameAr }));
   }
-  let files = [...(manifest.products[p.slug] ?? [])];
+  let files = [...(manifest.products[p.slug] ?? [])].filter(isImageFile);
   const drop = p.hide ?? cur?.drop;
   if (drop?.length) files = files.filter((f) => !drop.includes(f));
   const order = p.imageOrder ?? cur?.ordered;
@@ -450,5 +453,5 @@ export function getCategoriesWithCounts(): (Category & { count: number })[] {
     .map((c) => ({ ...c, count: all.filter((p) => p.categorySlug === c.slug).length }));
 }
 
-export const REVIEW_IMAGES = manifest.reviews.map((f) => `/reviews/${f}`);
-export const GALLERY_IMAGES = manifest.gallery.map((f) => `/gallery/${f}`);
+export const REVIEW_IMAGES = manifest.reviews.filter(isImageFile).map((f) => `/reviews/${f}`);
+export const GALLERY_IMAGES = manifest.gallery.filter(isImageFile).map((f) => `/gallery/${f}`);

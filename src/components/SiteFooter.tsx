@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Instagram, Facebook, Phone, Mail, MapPin, Heart } from "lucide-react";
 import { Logo } from "./ui/Logo";
 import { CATEGORIES, toArabicDigits } from "@/data/catalog";
+import { CategoryIcon } from "@/lib/categoryIcons";
 import type { SiteSettings } from "@/lib/settings";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 
@@ -64,7 +65,8 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
         <FooterCol title="أقسامنا">
           {CATEGORIES.slice(0, 6).map((c) => (
             <FooterLink key={c.slug} href={`/products?cat=${c.slug}`}>
-              {c.emoji} {c.nameAr}
+              <CategoryIcon slug={c.slug} className="h-4 w-4 text-gold-400" />
+              {c.nameAr}
             </FooterLink>
           ))}
         </FooterCol>
@@ -112,7 +114,7 @@ function FooterCol({ title, children }: { title: string; children: React.ReactNo
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="py-1.5 text-sm text-cream-200/85 transition-colors hover:text-gold-300">
+    <Link href={href} className="flex items-center gap-2 py-1.5 text-sm text-cream-200/85 transition-colors hover:text-gold-300">
       {children}
     </Link>
   );

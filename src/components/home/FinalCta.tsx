@@ -19,7 +19,7 @@ export function FinalCta({ whatsappNumber }: { whatsappNumber: string }) {
             جاهزة تكوني أحلى عروسة؟
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-white/90">
-            خلّينا نعملك حاجة مختلفة تشرّفك في يومك. احجزي دلوقتي وسيبي الباقي علينا 💛
+            خلّينا نعملك حاجة مختلفة تشرّفك في يومك. احجزي دلوقتي وسيبي الباقي علينا.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link href="/products" className="btn bg-white px-7 text-gold-700 hover:bg-cream-100">
