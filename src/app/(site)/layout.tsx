@@ -6,8 +6,9 @@ import { WhatsappFab } from "@/components/WhatsappFab";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 
-// الموقع بيقرا من الداتابيز (سعر/ظهور/إعدادات) عشان تعديلات الأدمن تظهر فورًا
-export const dynamic = "force-dynamic";
+// ISR: الصفحات بتتخزن في الكاش وبتتجدد كل 60 ثانية —
+// كدا تعديلات الأدمن بتظهر خلال دقيقة، والسيرفر مش بيتحمل فوق طاقته.
+export const revalidate = 60;
 
 export default async function SiteLayout({
   children,

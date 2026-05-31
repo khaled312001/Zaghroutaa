@@ -8,4 +8,5 @@ export const prisma =
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+// نحفظ في الـ global عشان ما يتعملش أكتر من instance (حتى في الإنتاج)
+globalForPrisma.prisma = prisma;
