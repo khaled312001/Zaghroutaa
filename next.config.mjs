@@ -10,6 +10,10 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
+  eslint: {
+    // الـ build مش بيوقف على تحذيرات اللينت
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

@@ -4,6 +4,9 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { WhatsappFab } from "@/components/WhatsappFab";
 
+// الموقع بيقرا من الداتابيز (سعر/ظهور/إعدادات) عشان تعديلات الأدمن تظهر فورًا
+export const dynamic = "force-dynamic";
+
 export default async function SiteLayout({
   children,
 }: {

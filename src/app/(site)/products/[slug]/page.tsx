@@ -6,15 +6,11 @@ import {
 } from "lucide-react";
 import { getSiteProductBySlug, getSiteByCategory } from "@/lib/products";
 import { getSettings } from "@/lib/settings";
-import { formatPrice, toArabicDigits, PRODUCTS } from "@/data/catalog";
+import { formatPrice, toArabicDigits } from "@/data/catalog";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-
-export async function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
-}
 
 export async function generateMetadata({
   params,
