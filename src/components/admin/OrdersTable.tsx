@@ -116,7 +116,7 @@ export function OrdersTable({ orders: initial }: { orders: AdminOrder[] }) {
             const st = ORDER_STATUS[o.status];
             const wa = buildWhatsappUrl(
               egyptWa(o.phone),
-              `أهلاً ${o.customerName} 🌷 معاكي زُغْرُوطَة بخصوص أوردر: ${o.productName}`,
+              `أهلاً ${o.customerName}، معاكي زُغْرُوطَة بخصوص أوردر: ${o.productName}`,
             );
             return (
               <div key={o.id} className="card-zg overflow-hidden">

@@ -6,7 +6,7 @@ import { buildWhatsappUrl } from "@/lib/whatsapp";
 export function FinalCta({ whatsappNumber }: { whatsappNumber: string }) {
   const wa = buildWhatsappUrl(
     whatsappNumber,
-    "السلام عليكم 🌷 حابة أحجز مع زُغْرُوطَة",
+    "السلام عليكم، حابة أحجز مع زُغْرُوطَة",
   );
 
   return (

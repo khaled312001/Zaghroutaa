@@ -60,7 +60,7 @@ export default async function ProductPage({
 
   const wa = buildWhatsappUrl(
     settings.whatsappNumber,
-    `السلام عليكم 🌷 حابة أستفسر عن: ${product.nameAr}`,
+    `السلام عليكم، حابة أستفسر عن: ${product.nameAr}`,
   );
 
   const productLd = {

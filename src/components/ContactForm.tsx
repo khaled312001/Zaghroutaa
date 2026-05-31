@@ -20,7 +20,7 @@ export function ContactForm({ whatsappNumber }: { whatsappNumber: string }) {
 
   const onSubmit = (v: Values) => {
     const text = [
-      "السلام عليكم 🌷 (رسالة من موقع زُغْرُوطَة)",
+      "السلام عليكم، رسالة من موقع زُغْرُوطَة",
       `الاسم: ${v.name}`,
       v.phone ? `الموبايل: ${v.phone}` : "",
       "",
@@ -28,7 +28,7 @@ export function ContactForm({ whatsappNumber }: { whatsappNumber: string }) {
     ]
       .filter(Boolean)
       .join("\n");
-    toast.success("جاري تحويلك على واتساب 💛");
+    toast.success("جاري تحويلك على واتساب");
     window.location.href = buildWhatsappUrl(whatsappNumber, text);
   };
 

@@ -90,7 +90,7 @@ export function BookingForm({
       });
       if (!res.ok) throw new Error("save failed");
     } catch {
-      toast.warning("هنكمّل على واتساب على طول 💛");
+      toast.warning("هنكمّل على واتساب على طول");
     }
 
     const message = buildWhatsappMessage({
@@ -108,10 +108,10 @@ export function BookingForm({
       notes: values.notes,
     });
     const fullMessage = refImage
-      ? `${message}\n📎 صورة مرجعية: ${window.location.origin}${refImage}`
+      ? `${message}\nصورة مرجعية: ${window.location.origin}${refImage}`
       : message;
     const url = buildWhatsappUrl(whatsappNumber, fullMessage);
-    toast.success("جاري تحويلك على واتساب لتأكيد الحجز 🌷");
+    toast.success("جاري تحويلك على واتساب لتأكيد الحجز");
     window.location.href = url;
   };
 

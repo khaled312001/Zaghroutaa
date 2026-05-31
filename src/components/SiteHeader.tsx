@@ -42,7 +42,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  const wa = buildWhatsappUrl(whatsappNumber, "السلام عليكم 🌷 حابة أستفسر عن منتجات زُغْرُوطَة");
+  const wa = buildWhatsappUrl(whatsappNumber, "السلام عليكم، حابة أستفسر عن منتجات زُغْرُوطَة");
 
   return (
     <header

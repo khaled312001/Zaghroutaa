@@ -5,7 +5,7 @@ import { buildWhatsappUrl } from "@/lib/whatsapp";
 export function WhatsappFab({ number }: { number: string }) {
   const url = buildWhatsappUrl(
     number,
-    "السلام عليكم 🌷 حابة أستفسر عن منتجات زُغْرُوطَة",
+    "السلام عليكم، حابة أستفسر عن منتجات زُغْرُوطَة",
   );
 
   return (

@@ -26,7 +26,7 @@ export default async function ContactPage() {
   const content = await getContentMap();
   const wa = buildWhatsappUrl(
     settings.whatsappNumber,
-    "السلام عليكم 🌷 حابة أستفسر عن منتجات زُغْرُوطَة",
+    "السلام عليكم، حابة أستفسر عن منتجات زُغْرُوطَة",
   );
 
   return (

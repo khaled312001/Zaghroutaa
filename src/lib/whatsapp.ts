@@ -18,23 +18,23 @@ export type BookingInfo = {
 /** يبني رسالة الواتساب اللي بتترسل بضغطة واحدة لتأكيد الحجز */
 export function buildWhatsappMessage(b: BookingInfo): string {
   const lines = [
-    "✨ حجز جديد من موقع زُغْرُوطَة ✨",
+    "حجز جديد من موقع زُغْرُوطَة",
     "ـــــــــــــــــــــــــــــــ",
-    `🛍️ المنتج: ${b.productName}${b.variantName ? " — " + b.variantName : ""}`,
-    b.price ? `💰 السعر: ${formatPriceEGP(b.price)}` : "",
+    `المنتج: ${b.productName}${b.variantName ? " - " + b.variantName : ""}`,
+    b.price ? `السعر: ${formatPriceEGP(b.price)}` : "",
     "",
-    `👰🏻 اسم العروسة: ${b.brideName || "—"}`,
-    `🤵🏻 اسم العريس: ${b.groomName || "—"}`,
-    b.eventType ? `📜 المناسبة: ${b.eventType}` : "",
-    b.eventDate ? `📅 التاريخ: ${b.eventDate}` : "",
+    `اسم العروسة: ${b.brideName || "-"}`,
+    `اسم العريس: ${b.groomName || "-"}`,
+    b.eventType ? `المناسبة: ${b.eventType}` : "",
+    b.eventDate ? `التاريخ: ${b.eventDate}` : "",
     "ـــــــــــــــــــــــــــــــ",
-    `🙋🏻‍♀️ الاسم: ${b.customerName}`,
-    `📞 الموبايل: ${b.phone}`,
-    `📍 المحافظة: ${b.governorate}`,
-    `🏠 العنوان: ${b.address}`,
-    b.notes ? `📝 ملاحظات: ${b.notes}` : "",
+    `الاسم: ${b.customerName}`,
+    `الموبايل: ${b.phone}`,
+    `المحافظة: ${b.governorate}`,
+    `العنوان: ${b.address}`,
+    b.notes ? `ملاحظات: ${b.notes}` : "",
     "ـــــــــــــــــــــــــــــــ",
-    "حابة أأكّد الحجز وأدفع الديبوزت 💕",
+    "حابة أأكّد الحجز وأدفع الديبوزت",
   ].filter(Boolean);
   return lines.join("\n");
 }
