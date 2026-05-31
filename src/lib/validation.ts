@@ -18,6 +18,7 @@ export const orderSchema = z.object({
   eventType: z.string().optional(),
   eventDate: z.string().optional(),
   notes: z.string().max(1000).optional(),
+  referenceImage: z.string().optional(),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;

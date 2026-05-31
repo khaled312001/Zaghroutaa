@@ -8,6 +8,7 @@ import { Loader2, MessageCircle, ShieldCheck } from "lucide-react";
 import { formatPriceEGP, toArabicDigits, cn } from "@/lib/utils";
 import { buildWhatsappMessage, buildWhatsappUrl } from "@/lib/whatsapp";
 import { GOVERNORATES, EVENT_TYPES } from "@/lib/governorates";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export type BookingProduct = {
   slug: string;
@@ -45,6 +46,7 @@ export function BookingForm({
 }) {
   const [variantIdx, setVariantIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [refImage, setRefImage] = useState("");
 
   const variant = product.variants?.[variantIdx];
   const price = variant?.price ?? product.basePrice;
@@ -76,6 +78,7 @@ export function BookingForm({
       variantName: variant?.nameAr,
       price,
       ...values,
+      referenceImage: refImage || undefined,
     };
 
     // نحفظ الطلب في الداتابيز (لو فشل مش بنوقف العميلة — بنكمّل واتساب)
@@ -104,7 +107,10 @@ export function BookingForm({
       eventDate: values.eventDate,
       notes: values.notes,
     });
-    const url = buildWhatsappUrl(whatsappNumber, message);
+    const fullMessage = refImage
+      ? `${message}\n📎 صورة مرجعية: ${window.location.origin}${refImage}`
+      : message;
+    const url = buildWhatsappUrl(whatsappNumber, fullMessage);
     toast.success("جاري تحويلك على واتساب لتأكيد الحجز 🌷");
     window.location.href = url;
   };
@@ -230,6 +236,10 @@ export function BookingForm({
 
           <Field label="عايزة تضيفي حاجة؟ (اختياري)">
             <input className={inputClass} placeholder="مثلاً: إضافة بوكيه ورد" {...register("notes")} />
+          </Field>
+
+          <Field label="صورة مرجعية أو فكرة عايزاها (اختياري)" full>
+            <ImageUpload value={refImage} onChange={setRefImage} aspect="aspect-[16/9]" className="max-w-md" />
           </Field>
         </div>
 

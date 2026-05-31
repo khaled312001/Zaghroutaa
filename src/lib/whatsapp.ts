@@ -39,9 +39,20 @@ export function buildWhatsappMessage(b: BookingInfo): string {
   return lines.join("\n");
 }
 
-/** يطهّر رقم الواتساب ويبني رابط wa.me */
+/**
+ * يطبّع رقم الواتساب للصيغة الدولية اللي wa.me بيفهمها.
+ * بيحوّل الرقم المصري المحلي (مثال 01224244401) لـ 201224244401 تلقائيًا.
+ */
+export function normalizeWhatsappNumber(raw: string): string {
+  let d = (raw || "").replace(/\D/g, "");
+  if (d.startsWith("00")) d = d.slice(2); // 00201... → 201...
+  if (d.startsWith("0")) d = "20" + d.slice(1); // 01224244401 → 201224244401 (مصر)
+  return d;
+}
+
+/** يبني رابط wa.me برقم متظبّط ورسالة جاهزة */
 export function buildWhatsappUrl(rawNumber: string, message?: string): string {
-  const n = (rawNumber || "").replace(/\D/g, "");
+  const n = normalizeWhatsappNumber(rawNumber);
   const base = `https://wa.me/${n}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }

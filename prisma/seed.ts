@@ -5,6 +5,7 @@ import {
   PRODUCTS,
   buildProduct,
   REVIEW_IMAGES,
+  GALLERY_IMAGES,
 } from "../src/data/catalog";
 
 const prisma = new PrismaClient();
@@ -127,6 +128,17 @@ async function main() {
     console.log(`✓ آراء العملاء: ${REVIEW_IMAGES.length}`);
   } else {
     console.log(`• آراء العملاء موجودة بالفعل (${reviewsCount})`);
+  }
+
+  // ---------- معرض الأعمال ----------
+  const galleryCount = await prisma.galleryItem.count();
+  if (galleryCount === 0 && GALLERY_IMAGES.length) {
+    await prisma.galleryItem.createMany({
+      data: GALLERY_IMAGES.map((url, i) => ({ imageUrl: url, isActive: true, order: i })),
+    });
+    console.log(`✓ معرض الأعمال: ${GALLERY_IMAGES.length}`);
+  } else {
+    console.log(`• معرض الأعمال موجود بالفعل (${galleryCount})`);
   }
 
   console.log("✅ تم تجهيز قاعدة البيانات بنجاح");

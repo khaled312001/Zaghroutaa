@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSettings } from "@/lib/settings";
+import { getContentMap } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
 import { MovingShowcase } from "@/components/MovingShowcase";
 
@@ -19,15 +20,23 @@ import { FinalCta } from "@/components/home/FinalCta";
 
 export default async function HomePage() {
   const settings = await getSettings();
+  const content = await getContentMap();
 
   return (
     <>
-      <Hero />
+      <Hero
+        badge={content.hero_badge}
+        title1={content.hero_title_1}
+        highlight={content.hero_title_highlight}
+        title2={content.hero_title_2}
+        subtitle={content.hero_subtitle}
+        image={content.hero_image}
+      />
       <MovingShowcase />
       <ValueProps />
       <CategoriesSection />
       <FeaturedProducts />
-      <PackageSpotlight heroImage="/pages/packages.png" />
+      <PackageSpotlight heroImage={content.package_image} />
       <WhyUs />
       <GalleryPreview />
       <ReviewsPreview />

@@ -42,6 +42,16 @@ export async function POST(req: Request) {
       select: { id: true },
     });
 
+    if (d.referenceImage) {
+      try {
+        await prisma.orderImage.create({
+          data: { orderId: order.id, url: d.referenceImage },
+        });
+      } catch {
+        // مش بنوقف الأوردر لو صورة المرجع فشلت
+      }
+    }
+
     return NextResponse.json({ ok: true, id: order.id });
   } catch (error) {
     console.error("order create error", error);

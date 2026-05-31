@@ -14,7 +14,21 @@ const fadeUp = {
   }),
 };
 
-export function Hero() {
+export function Hero({
+  badge = "الأول في مصر والوطن العربي لإكسسوارات العرايس الهاند ميد",
+  title1 = "عشان العروسة تكون",
+  highlight = "مختلفة",
+  title2 = "في يوم العمر",
+  subtitle = "كل حاجة تخص العروسة في كتب الكتاب والفرح — مناديل مطرّزة، بصمات، مرايات وبوكيهات هاند ميد معمولة بدقة ونضافة تقفيل مفيش زيها في مصر.",
+  image = "/pages/about.png",
+}: {
+  badge?: string;
+  title1?: string;
+  highlight?: string;
+  title2?: string;
+  subtitle?: string;
+  image?: string;
+} = {}) {
   return (
     <section className="relative overflow-hidden bg-cream-radial">
       <Floaty className="left-[7%] top-[16%]" delay={0}>
@@ -39,7 +53,7 @@ export function Hero() {
             custom={0}
             className="chip mx-auto border border-gold-200 bg-pearl text-gold-700 shadow-sm lg:mx-0"
           >
-            <BadgeCheck className="h-4 w-4" /> الأول في مصر والوطن العربي لإكسسوارات العرايس الهاند ميد
+            <BadgeCheck className="h-4 w-4" /> {badge}
           </motion.span>
 
           <motion.h1
@@ -49,10 +63,10 @@ export function Hero() {
             custom={1}
             className="mt-5 text-4xl font-bold leading-[1.18] sm:text-5xl md:text-6xl"
           >
-            عشان العروسة تكون{" "}
-            <span className="text-gold-shimmer">مختلفة</span>
+            {title1}{" "}
+            <span className="text-gold-shimmer">{highlight}</span>
             <br />
-            في يوم العمر
+            {title2}
           </motion.h1>
 
           <motion.p
@@ -62,8 +76,7 @@ export function Hero() {
             custom={2}
             className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-espresso-600 sm:text-lg lg:mx-0"
           >
-            كل حاجة تخص العروسة في كتب الكتاب والفرح — مناديل مطرّزة، بصمات،
-            مرايات وبوكيهات هاند ميد معمولة بدقة ونضافة تقفيل مفيش زيها في مصر.
+            {subtitle}
           </motion.p>
 
           <motion.div
@@ -105,7 +118,7 @@ export function Hero() {
           >
             <div className="relative aspect-[4/3]">
               <Image
-                src="/pages/about.png"
+                src={image}
                 alt="تشكيلة زُغْرُوطَة الهاند ميد للعروسة — بصمة ومراية ومنديل وبوكيه"
                 fill
                 sizes="(max-width: 1024px) 100vw, 600px"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { MessageCircle, Phone, Mail, MapPin, Clock, Instagram, Facebook } from "lucide-react";
 import { getSettings } from "@/lib/settings";
+import { getContentMap } from "@/lib/content";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { ContactForm } from "@/components/ContactForm";
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const settings = await getSettings();
+  const content = await getContentMap();
   const wa = buildWhatsappUrl(
     settings.whatsappNumber,
     "السلام عليكم 🌷 حابة أستفسر عن منتجات زُغْرُوطَة",
@@ -40,7 +42,7 @@ export default async function ContactPage() {
           <div className="mx-auto max-w-md overflow-hidden rounded-[2rem] border-4 border-pearl shadow-glow">
             <div className="relative aspect-square">
               <Image
-                src="/pages/contact.png"
+                src={content.contact_image}
                 alt="تواصلي مع زُغْرُوطَة على واتساب"
                 fill
                 sizes="(max-width:768px) 100vw, 448px"

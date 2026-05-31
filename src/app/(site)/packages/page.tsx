@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteProducts } from "@/lib/products";
+import { getContentMap } from "@/lib/content";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { PackageSpotlight } from "@/components/home/PackageSpotlight";
 import { ProductGrid } from "@/components/ProductGrid";
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 export default async function PackagesPage() {
   const all = await getSiteProducts();
   const addons = all.filter((p) => !p.isPackage);
+  const content = await getContentMap();
 
   return (
     <>
@@ -31,7 +33,7 @@ export default async function PackagesPage() {
         title="باكدجات العروسة"
         subtitle="باكدج متكامل فيه كل حاجة محتاجاها في يوم كتب الكتاب — بسعر مميز وشغل هاند ميد."
       />
-      <PackageSpotlight heroImage="/pages/packages.png" />
+      <PackageSpotlight heroImage={content.package_image} />
       <section className="container-zg py-14 sm:py-16">
         <SectionHeading
           eyebrow="زوّدي على باكدجك"
