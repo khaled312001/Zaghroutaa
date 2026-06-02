@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
   BellRing, RefreshCw, Send, ShoppingCart, Plus, Trash2, Check, MessageCircle,
-  Calendar, Star, AlarmClock, AlertTriangle, Wifi, WifiOff, QrCode, ChevronDown,
+  Calendar, Star, AlarmClock, AlertTriangle, Wifi, WifiOff, QrCode, ChevronDown, Link2, LogOut, Loader2,
 } from "lucide-react";
 import { URGENCY_META, type UrgencyLevel } from "@/lib/alerts";
 import { ORDER_STATUS, type OrderStatusKey } from "@/lib/orderStatus";
@@ -153,7 +153,7 @@ export function AlertsBoard({
       )}
 
       {/* حالة الاتصال بالواتساب */}
-      <WorkerStatus worker={worker} />
+      <WorkerStatus initial={worker} />
 
       {/* ملخص الأولويات */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -276,9 +276,64 @@ function Banner({ tone, children }: { tone: "warn" | "info"; children: React.Rea
   );
 }
 
-function WorkerStatus({ worker }: { worker: { state: string; lastSeen: string; qr: string } }) {
-  const connected = worker.state === "connected";
-  const needsQr = worker.state === "qr";
+function WorkerStatus({ initial }: { initial: { state: string; lastSeen: string; qr: string } }) {
+  const [state, setState] = useState(initial.state || "");
+  const [qr, setQr] = useState(initial.qr || "");
+  const [busy, setBusy] = useState(false);
+
+  // متابعة الحالة الحيّة من السيرفر
+  useEffect(() => {
+    let stop = false;
+    const tick = async () => {
+      try {
+        const r = await fetch("/api/wa/state");
+        const d = await r.json();
+        if (!stop && d.ok) {
+          setState(d.state);
+          setQr(d.qr || "");
+        }
+      } catch {
+        /* تجاهل */
+      }
+    };
+    tick();
+    const id = setInterval(tick, 4000);
+    return () => {
+      stop = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const connected = state === "connected";
+  const needsQr = state === "qr";
+  const connecting = state === "connecting";
+
+  const connect = async () => {
+    setBusy(true);
+    try {
+      await fetch("/api/wa/connect", { method: "POST" });
+      toast.success("بنبدأ الاتصال... هيظهر الكود خلال ثواني");
+    } catch {
+      toast.error("حصل خطأ");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const logout = async () => {
+    if (!window.confirm("متأكدة عايزة تفصلي الواتساب؟ هتحتاجي تمسحي الكود تاني.")) return;
+    setBusy(true);
+    try {
+      await fetch("/api/wa/logout", { method: "POST" });
+      setState("disconnected");
+      setQr("");
+      toast.success("اتفصل الواتساب");
+    } catch {
+      toast.error("حصل خطأ");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="card-zg p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -292,33 +347,44 @@ function WorkerStatus({ worker }: { worker: { state: string; lastSeen: string; q
           )}
           <div>
             <p className="font-semibold text-espresso-800">
-              {connected ? "الواتساب متصل وجاهز للإرسال" : needsQr ? "محتاج تمسحي كود الربط" : "الواتساب مش متصل"}
+              {connected ? "الواتساب متصل وجاهز للإرسال" : needsQr ? "امسحي كود الربط تحت" : connecting ? "بنتصل..." : "الواتساب مش متصل"}
             </p>
             <p className="text-xs text-espresso-400">
-              {worker.lastSeen ? `آخر اتصال ${relTime(worker.lastSeen)}` : "الـ worker لسه مشتغلش"}
+              {connected ? "بيبعت التنبيهات تلقائيًا" : "اضغطي «اربطي واتساب» وامسحي الكود"}
             </p>
           </div>
         </div>
-        <span
-          className={cn(
-            "chip",
-            connected ? "bg-emerald-100 text-emerald-700" : needsQr ? "bg-amber-100 text-amber-700" : "bg-rose-100 text-rose-700",
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "chip",
+              connected ? "bg-emerald-100 text-emerald-700" : needsQr || connecting ? "bg-amber-100 text-amber-700" : "bg-rose-100 text-rose-700",
+            )}
+          >
+            {connected ? "متصل" : needsQr ? "ربط مطلوب" : connecting ? "جاري" : "غير متصل"}
+          </span>
+          {connected ? (
+            <button type="button" onClick={logout} disabled={busy} className="flex items-center gap-1.5 rounded-xl border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50">
+              <LogOut className="h-3.5 w-3.5" /> افصلي
+            </button>
+          ) : (
+            <button type="button" onClick={connect} disabled={busy} className="btn-gold px-3 py-1.5 text-xs">
+              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Link2 className="h-3.5 w-3.5" />} اربطي واتساب
+            </button>
           )}
-        >
-          {connected ? "متصل" : needsQr ? "ربط مطلوب" : "غير متصل"}
-        </span>
+        </div>
       </div>
 
-      {needsQr && worker.qr && (
-        <div className="mt-4 flex flex-col items-center gap-2 border-t border-gold-100 pt-4 sm:flex-row sm:items-start">
+      {needsQr && qr && (
+        <div className="mt-4 flex flex-col items-center gap-3 border-t border-gold-100 pt-4 sm:flex-row sm:items-start">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={worker.qr} alt="كود ربط الواتساب" className="h-44 w-44 rounded-xl border border-gold-200 bg-white p-2" />
+          <img src={qr} alt="كود ربط الواتساب" className="h-48 w-48 rounded-xl border border-gold-200 bg-white p-2" />
           <div className="text-sm text-espresso-600">
-            <p className="font-semibold text-espresso-800">اربطي رقم التنبيهات:</p>
+            <p className="font-semibold text-espresso-800">اربطي رقم الإرسال:</p>
             <ol className="mt-1 list-decimal space-y-1 pr-4">
-              <li>افتحي واتساب على رقم التنبيهات.</li>
+              <li>افتحي واتساب على رقم التنبيهات (رقم الإرسال).</li>
               <li>الإعدادات ← الأجهزة المرتبطة ← ربط جهاز.</li>
-              <li>امسحي الكود ده، وبعدها بثواني هيتحول لـ «متصل».</li>
+              <li>امسحي الكود ده، وخلال ثواني الحالة تبقى «متصل».</li>
             </ol>
           </div>
         </div>
@@ -326,20 +392,11 @@ function WorkerStatus({ worker }: { worker: { state: string; lastSeen: string; q
 
       {!connected && !needsQr && (
         <div className="mt-4 border-t border-gold-100 pt-4 text-sm text-espresso-600">
-          <p className="font-semibold text-espresso-800">إزاي تربطي الواتساب؟</p>
+          <p className="font-semibold text-espresso-800">خطوة واحدة وتشتغل:</p>
           <ol className="mt-1 list-decimal space-y-1 pr-4">
-            <li>
-              رقم اللي <b>بيستقبل</b> التنبيهات: حطّيه في{" "}
-              <Link href="/admin/settings" className="text-gold-700 underline">الإعدادات</Link> (خانة «رقم استقبال التنبيهات»).
-            </li>
-            <li>
-              رقم اللي <b>بيبعت</b>: لازم تشغّلي برنامج الـ worker الأول (على سيرفر VPS للشغل ٢٤ ساعة، أو على جهازك للتجربة).
-            </li>
-            <li>أول ما الـ worker يشتغل، <b>كود الـ QR هيظهر هنا في الكارت ده</b> — امسحيه برقم الإرسال ويتحوّل لـ «متصل».</li>
+            <li>حطّي <b>رقم استقبال التنبيهات</b> في <Link href="/admin/settings" className="text-gold-700 underline">الإعدادات</Link>.</li>
+            <li>اضغطي <b>«اربطي واتساب»</b> فوق، هيظهر كود QR هنا — امسحيه برقم الإرسال.</li>
           </ol>
-          <p className="mt-2 text-xs text-espresso-400">
-            الخطوات بالتفصيل موجودة في ملف <span dir="ltr" className="font-mono">worker/README.md</span> جوّه مشروع الموقع.
-          </p>
         </div>
       )}
     </div>
