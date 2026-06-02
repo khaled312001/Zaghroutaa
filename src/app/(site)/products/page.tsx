@@ -7,6 +7,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProductGrid } from "@/components/ProductGrid";
 import { MovingShowcase } from "@/components/MovingShowcase";
 import { CategoryIcon } from "@/lib/categoryIcons";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -35,8 +37,27 @@ export default async function ProductsPage({
     ? all.filter((p) => p.categorySlug === current.slug)
     : all;
 
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: current ? current.nameAr : "كل منتجات زُغْرُوطَة",
+    url: `${SITE_URL}/products${cat ? `?cat=${cat}` : ""}`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: products.length,
+      itemListElement: products.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${SITE_URL}/products/${p.slug}`,
+        name: p.nameAr,
+        image: p.cover?.startsWith("http") ? p.cover : `${SITE_URL}${p.cover}`,
+      })),
+    },
+  };
+
   return (
     <>
+      <JsonLd data={itemListLd} />
       <PageHeader
         eyebrow="تشكيلتنا الكاملة"
         title={current ? current.nameAr : "كل منتجات زُغْرُوطَة"}

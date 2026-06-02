@@ -6,15 +6,21 @@ import { JsonLd } from "@/components/seo/JsonLd";
 
 const KEYWORDS: { label: string; href: string }[] = [
   { label: "منديل كتب الكتاب المطرّز", href: "/products?cat=handkerchiefs" },
+  { label: "منديل كتب كتاب بالاستراس", href: "/products?cat=handkerchiefs" },
   { label: "تابلوه بصمة كتب الكتاب", href: "/products?cat=fingerprints" },
+  { label: "تابلوه بصمة بالبرواز", href: "/products?cat=fingerprints" },
   { label: "مراية العروسة باللؤلؤ", href: "/products?cat=mirrors" },
   { label: "بوكيه برايد هاند ميد", href: "/products?cat=bouquets" },
   { label: "نظارة برايد", href: "/products?cat=accessories" },
   { label: "روب وبجامة العروسة", href: "/products?cat=sleepwear" },
   { label: "أقلام كتب الكتاب", href: "/products?cat=accessories" },
-  { label: "مراوح الفوتوسيشن", href: "/products?cat=photoshoot" },
-  { label: "كروكس وسليبر العروسة", href: "/products?cat=footwear" },
+  { label: "مراوح الفوتوسيشن بالريش", href: "/products?cat=photoshoot" },
+  { label: "كروكس عروسة مرصّع لؤلؤ", href: "/products?cat=footwear" },
+  { label: "سليبر العريس والعروسة", href: "/products?cat=footwear" },
+  { label: "ديكور ومكرامية هاند ميد", href: "/products" },
   { label: "باكدج العروسة الكامل", href: "/packages" },
+  { label: "صممي باكدجك بنفسك", href: "/build" },
+  { label: "باكدج كتب كتاب مستعجل", href: "/packages" },
 ];
 
 const FAQ = [
