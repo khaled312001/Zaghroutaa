@@ -347,32 +347,21 @@ function WorkerStatus({ initial }: { initial: { state: string; lastSeen: string;
           )}
           <div>
             <p className="font-semibold text-espresso-800">
-              {connected ? "الواتساب متصل وجاهز للإرسال" : needsQr ? "امسحي كود الربط تحت" : connecting ? "بنتصل..." : "الواتساب مش متصل"}
+              {connected ? "الواتساب متصل وجاهز للإرسال" : needsQr ? "امسحي كود الربط تحت" : connecting ? "بنتصل..." : "المحرّك مش شغّال"}
             </p>
             <p className="text-xs text-espresso-400">
-              {connected ? "بيبعت التنبيهات تلقائيًا" : "اضغطي «اربطي واتساب» وامسحي الكود"}
+              {connected ? "بيبعت التنبيهات تلقائيًا" : "المحرّك بيشتغل لوحده على السيرفر عبر الكرون"}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "chip",
-              connected ? "bg-emerald-100 text-emerald-700" : needsQr || connecting ? "bg-amber-100 text-amber-700" : "bg-rose-100 text-rose-700",
-            )}
-          >
-            {connected ? "متصل" : needsQr ? "ربط مطلوب" : connecting ? "جاري" : "غير متصل"}
-          </span>
-          {connected ? (
-            <button type="button" onClick={logout} disabled={busy} className="flex items-center gap-1.5 rounded-xl border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50">
-              <LogOut className="h-3.5 w-3.5" /> افصلي
-            </button>
-          ) : (
-            <button type="button" onClick={connect} disabled={busy} className="btn-gold px-3 py-1.5 text-xs">
-              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Link2 className="h-3.5 w-3.5" />} اربطي واتساب
-            </button>
+        <span
+          className={cn(
+            "chip",
+            connected ? "bg-emerald-100 text-emerald-700" : needsQr || connecting ? "bg-amber-100 text-amber-700" : "bg-rose-100 text-rose-700",
           )}
-        </div>
+        >
+          {connected ? "متصل" : needsQr ? "ربط مطلوب" : connecting ? "جاري" : "مش شغّال"}
+        </span>
       </div>
 
       {needsQr && qr && (
@@ -392,10 +381,11 @@ function WorkerStatus({ initial }: { initial: { state: string; lastSeen: string;
 
       {!connected && !needsQr && (
         <div className="mt-4 border-t border-gold-100 pt-4 text-sm text-espresso-600">
-          <p className="font-semibold text-espresso-800">خطوة واحدة وتشتغل:</p>
+          <p className="font-semibold text-espresso-800">عشان الإرسال يشتغل:</p>
           <ol className="mt-1 list-decimal space-y-1 pr-4">
             <li>حطّي <b>رقم استقبال التنبيهات</b> في <Link href="/admin/settings" className="text-gold-700 underline">الإعدادات</Link>.</li>
-            <li>اضغطي <b>«اربطي واتساب»</b> فوق، هيظهر كود QR هنا — امسحيه برقم الإرسال.</li>
+            <li>تأكدي إن <b>الكرون مضاف</b> على hPanel (الخطوات في ملف WHATSAPP.md).</li>
+            <li>أول ما المحرّك يشتغل، <b>كود الـ QR هيظهر هنا</b> — امسحيه برقم الإرسال.</li>
           </ol>
         </div>
       )}

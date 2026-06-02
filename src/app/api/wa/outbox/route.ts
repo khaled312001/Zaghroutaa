@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateReminders } from "@/lib/reminders";
+import { getWaToken, tokenFromReq } from "@/lib/wa/token";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -8,22 +9,13 @@ export const dynamic = "force-dynamic";
 const MAX_ATTEMPTS = 5;
 const BATCH = 20;
 
-function authed(req: Request): boolean {
-  const token = process.env.WA_WORKER_TOKEN;
-  if (!token) return false;
-  const header = req.headers.get("authorization") || "";
-  const bearer = header.startsWith("Bearer ") ? header.slice(7) : "";
-  const url = new URL(req.url);
-  const qp = url.searchParams.get("token") || "";
-  return bearer === token || qp === token;
-}
-
-/** الـ worker بينده هنا كل دقيقة: بنولّد المستحق ونرجّع الرسائل الجاهزة للإرسال */
+/** المحرّك الخارجي بينده هنا: بنولّد المستحق ونرجّع الرسائل الجاهزة للإرسال */
 export async function GET(req: Request) {
-  if (!process.env.WA_WORKER_TOKEN) {
-    return NextResponse.json({ ok: false, error: "worker token not configured" }, { status: 503 });
+  const valid = await getWaToken();
+  if (!valid) {
+    return NextResponse.json({ ok: false, error: "token not configured" }, { status: 503 });
   }
-  if (!authed(req)) {
+  if (tokenFromReq(req) !== valid) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
@@ -64,9 +56,10 @@ export async function GET(req: Request) {
   }
 }
 
-/** الـ worker بيرجّع نتيجة الإرسال: { id, ok, error? } أو { results: [...] } */
+/** المحرّك بيرجّع نتيجة الإرسال: { id, ok, error? } أو { results: [...] } */
 export async function POST(req: Request) {
-  if (!authed(req)) {
+  const valid = await getWaToken();
+  if (!valid || tokenFromReq(req) !== valid) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
   try {
