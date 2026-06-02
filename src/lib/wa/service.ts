@@ -20,10 +20,19 @@ type WaSingleton = {
   qr: string; // data URL
   sock: { sendMessage: (jid: string, c: { text: string }) => Promise<unknown>; logout: () => Promise<void>; ev: { on: (e: string, cb: (a: unknown) => void) => void } } | null;
   starting: boolean;
+  attempts: number;
+  reconnectTimer: ReturnType<typeof setTimeout> | null;
 };
 
 const g = globalThis as unknown as { __waSvc?: WaSingleton };
-const wa: WaSingleton = (g.__waSvc ??= { state: "idle", qr: "", sock: null, starting: false });
+const wa: WaSingleton = (g.__waSvc ??= {
+  state: "idle",
+  qr: "",
+  sock: null,
+  starting: false,
+  attempts: 0,
+  reconnectTimer: null,
+});
 
 /* لوجر صامت عشان Baileys ما يطبعش حاجة */
 const silentLogger = {
@@ -72,7 +81,12 @@ export async function startWa(): Promise<void> {
       browser: ["زُغْرُوطَة", "Chrome", "1.0"],
       markOnlineOnConnect: false,
       syncFullHistory: false,
-    });
+      shouldSyncHistoryMessage: () => false,
+      generateHighQualityLinkPreview: false,
+      // بنقلّل الضغط على السيرفر المشترك
+      keepAliveIntervalMs: 25000,
+      retryRequestDelayMs: 1500,
+    } as unknown as Parameters<typeof makeWASocket>[0]);
     wa.sock = sock;
     await persist("connecting");
 
@@ -90,16 +104,27 @@ export async function startWa(): Promise<void> {
           /* تجاهل */
         }
       }
-      if (u.connection === "open") await persist("connected");
+      if (u.connection === "open") {
+        wa.attempts = 0;
+        await persist("connected");
+      }
       if (u.connection === "close") {
         wa.sock = null;
         const code = u.lastDisconnect?.error?.output?.statusCode;
-        await persist("disconnected");
-        if (code !== DisconnectReason.loggedOut) {
-          // قطع مؤقت → نحاول نرجع نتصل بعد شوية
-          setTimeout(() => {
-            startWa().catch(() => {});
-          }, 4000);
+        if (code === DisconnectReason.loggedOut) {
+          wa.attempts = 0;
+          await persist("disconnected"); // محتاج QR جديد
+        } else {
+          // قطع مؤقت → نفضّل حالة "بنتصل" ونرجع نتصل بـ backoff (مرة واحدة بس)
+          wa.attempts += 1;
+          if (wa.state !== "connecting") await persist("connecting");
+          const delay = Math.min(3000 * wa.attempts, 30000);
+          if (!wa.reconnectTimer) {
+            wa.reconnectTimer = setTimeout(() => {
+              wa.reconnectTimer = null;
+              startWa().catch(() => {});
+            }, delay);
+          }
         }
       }
     });
@@ -129,6 +154,11 @@ export async function waSend(number: string, text: string): Promise<void> {
 
 /** يسجّل خروج ويمسح الجلسة (هيطلب QR تاني) */
 export async function waLogout(): Promise<void> {
+  if (wa.reconnectTimer) {
+    clearTimeout(wa.reconnectTimer);
+    wa.reconnectTimer = null;
+  }
+  wa.attempts = 0;
   try {
     if (wa.sock) await wa.sock.logout();
   } catch {
