@@ -12,8 +12,10 @@
 من لوحة Hostinger ← **Cron Jobs** ← أضيفي مهمة **كل دقيقة** بالأمر ده (بيشغّل السكربت لو لقاه واقف):
 
 ```
-pgrep -f wa-engine.mjs >/dev/null 2>&1 || (cd /home/u405809647/domains/zaghroutaa.com && setsid /opt/alt/alt-nodejs22/root/bin/node wa-engine.mjs >/dev/null 2>&1 </dev/null &)
+pgrep -f "[w]a-engine.mjs" >/dev/null 2>&1 || (cd /home/u405809647/domains/zaghroutaa.com && setsid /opt/alt/alt-nodejs22/root/bin/node wa-engine.mjs >/dev/null 2>&1 </dev/null &)
 ```
+
+> ملاحظة: لازم تكون `"[w]a-engine.mjs"` (بالأقواس) — دي حيلة تخلّي الفحص ما يطابقش أمر الكرون نفسه بالغلط.
 
 كل دقيقة الكرون بيتأكد إن المحرّك شغّال؛ لو وقع لأي سبب بيرجّعه تاني، والجلسة بترجع لوحدها من غير QR.
 
