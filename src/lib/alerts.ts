@@ -98,7 +98,10 @@ export function computeUrgency(
 ): Urgency {
   const bump = order.priorityBump ?? 0;
   const readyBy = effectiveReadyBy(order, bufferDays);
-  const dueInDays = readyBy ? dayDiff(readyBy, now) : null;
+  const event = toDate(order.eventDate);
+  // بنحسب الأيام على المناسبة نفسها — عشان «فات الميعاد» تبقى بس لما المناسبة تعدّي فعلاً،
+  // والفرح القريّب يبقى «عاجل جدًا» مش «فات». (لو مفيش مناسبة بنرجع لميعاد التجهيز)
+  const dueInDays = event ? dayDiff(event, now) : readyBy ? dayDiff(readyBy, now) : null;
 
   // متسلّم أو ملغي → خلص
   if (order.status === "DONE" || order.status === "CANCELLED") {
@@ -115,10 +118,10 @@ export function computeUrgency(
   let level: UrgencyLevel;
   if (dueInDays === null) {
     level = needsFollowup ? "soon" : "later";
-  } else if (dueInDays <= 0) level = "overdue";
-  else if (dueInDays <= 2) level = "critical";
-  else if (dueInDays <= 6) level = "soon";
-  else if (dueInDays <= 12) level = "upcoming";
+  } else if (dueInDays < 0) level = "overdue"; // المناسبة عدّت فعلاً
+  else if (dueInDays <= bufferDays) level = "critical"; // الفرح خلال أيام والوقت ضيّق
+  else if (dueInDays <= 7) level = "soon";
+  else if (dueInDays <= 14) level = "upcoming";
   else level = "later";
 
   const meta = URGENCY_META[level];
