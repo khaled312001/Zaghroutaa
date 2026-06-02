@@ -8,6 +8,12 @@
  *   cd /home/USER/domains/zaghroutaa.com && node wa-engine.mjs
  * (لازم يكون فيه symlink: node_modules -> nodejs/node_modules في نفس المجلد)
  */
+// نكتم لوج libsignal/Baileys الزحام (بيطبع مفاتيح الجلسة) — بنستخدم _log لرسائلنا بس
+const _log = console.log.bind(console);
+console.log = () => {};
+console.info = () => {};
+console.debug = () => {};
+
 import makeWASocket, {
   useMultiFileAuthState,
   DisconnectReason,
@@ -67,13 +73,13 @@ async function start() {
         try {
           const dataUrl = await qrcode.toDataURL(u.qr, { margin: 1, width: 300 });
           await postStatus("qr", dataUrl);
-          console.log("QR posted — scan it from the dashboard");
+          _log("QR posted — scan it from the dashboard");
         } catch {}
       }
       if (u.connection === "open") {
         connected = true;
         attempts = 0;
-        console.log("✓ connected");
+        _log("✓ connected");
         await postStatus("connected");
       }
       if (u.connection === "close") {
@@ -81,7 +87,7 @@ async function start() {
         sock = null;
         const code = u.lastDisconnect?.error?.output?.statusCode;
         if (code === DisconnectReason.loggedOut) {
-          console.log("logged out — needs new QR");
+          _log("logged out — needs new QR");
           await postStatus("disconnected");
         } else {
           attempts += 1;
@@ -106,14 +112,14 @@ async function drain() {
     const data = await res.json().catch(() => ({}));
     const reminders = data?.reminders || [];
     if (!reminders.length) return;
-    console.log(`→ ${reminders.length} to send`);
+    _log(`→ ${reminders.length} to send`);
     const results = [];
     for (const r of reminders) {
       try {
         const jid = `${String(r.to).replace(/\D/g, "")}@s.whatsapp.net`;
         await sock.sendMessage(jid, { text: r.body });
         results.push({ id: r.id, ok: true });
-        console.log("  ✓", r.id);
+        _log("  ✓", r.id);
         await sleep(1500 + Math.floor(Math.random() * 1500));
       } catch (e) {
         results.push({ id: r.id, ok: false, error: String(e?.message || e).slice(0, 200) });
@@ -142,5 +148,5 @@ async function loop() {
 process.on("unhandledRejection", (e) => console.error("unhandledRejection:", e?.message || e));
 process.on("uncaughtException", (e) => console.error("uncaughtException:", e?.message || e));
 
-console.log("⏳ starting WhatsApp engine...");
+_log("⏳ starting WhatsApp engine...");
 loop();
