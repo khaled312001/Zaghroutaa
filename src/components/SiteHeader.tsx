@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Menu, X, Sparkles, Home, ShoppingBag, Crown, Images, Star, Info, Phone, MessageCircle, HelpCircle, PackageSearch, Wand2,
@@ -28,6 +29,8 @@ export function SiteHeader({ whatsappNumber, logoUrl }: { whatsappNumber: string
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -96,10 +99,13 @@ export function SiteHeader({ whatsappNumber, logoUrl }: { whatsappNumber: string
         </div>
       </div>
 
-      {/* درج الموبايل */}
-      <AnimatePresence>
-        {open && (
-          <>
+      {/* درج الموبايل — عبر Portal لـ body عشان الـ backdrop-blur في الهيدر ما يكسرش الـ fixed positioning
+          (كان بيخلّي القائمة تفضل ظاهرة/متعلّقة في بعض المتصفحات) */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -112,7 +118,7 @@ export function SiteHeader({ whatsappNumber, logoUrl }: { whatsappNumber: string
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed right-0 top-0 z-50 flex h-[100dvh] w-[300px] max-w-[85vw] flex-col bg-pearl shadow-2xl lg:hidden"
+              className="fixed right-0 top-0 z-[60] flex h-screen max-h-screen w-[300px] max-w-[85vw] flex-col bg-pearl shadow-2xl lg:hidden"
             >
               <div className="flex items-center justify-between border-b border-gold-100 p-5">
                 <Logo showText={false} src={logoUrl} />
@@ -159,9 +165,11 @@ export function SiteHeader({ whatsappNumber, logoUrl }: { whatsappNumber: string
                 </a>
               </div>
             </motion.aside>
-          </>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </header>
   );
 }

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Check, Sparkles, MessageCircle, Truck, Clock, ShieldCheck, ChevronLeft } from "lucide-react";
 import { getSiteProductBySlug, getSiteByCategory } from "@/lib/products";
 import { getSettings } from "@/lib/settings";
+import { prisma } from "@/lib/prisma";
+import { productOfferExtras, productRatingLd } from "@/lib/seo";
 import { formatPrice, toArabicDigits } from "@/data/catalog";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { CategoryIcon } from "@/lib/categoryIcons";
@@ -45,6 +47,7 @@ export default async function ProductPage({
 
   const settings = await getSettings();
   const hasVariants = !!product.variants?.length;
+  const reviewCount = await prisma.review.count({ where: { isActive: true } }).catch(() => 0);
   const related = (await getSiteByCategory(product.categorySlug))
     .filter((p) => p.slug !== product.slug)
     .slice(0, 4);
@@ -60,6 +63,7 @@ export default async function ProductPage({
     name: product.nameAr,
     description: product.descriptionAr || product.shortAr || product.nameAr,
     image: product.images.map((i) => `${SITE_URL}${i.url}`),
+    sku: product.slug,
     brand: { "@type": "Brand", name: "زُغْرُوطَة" },
     category: product.category?.nameAr,
     offers: {
@@ -69,7 +73,9 @@ export default async function ProductPage({
       availability: "https://schema.org/InStock",
       url: `${SITE_URL}/products/${product.slug}`,
       seller: { "@type": "Organization", name: "زُغْرُوطَة" },
+      ...productOfferExtras,
     },
+    ...productRatingLd(reviewCount),
   };
   const crumbs = [
     { name: "الرئيسية", item: SITE_URL },

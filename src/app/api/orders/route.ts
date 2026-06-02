@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { orderSchema } from "@/lib/validation";
 import { validateCoupon } from "@/lib/coupons";
+import { RUSH_FEE, isRushDate } from "@/lib/rush";
+import { shippingCost } from "@/lib/shipping";
 
 export async function POST(req: Request) {
   try {
@@ -35,6 +37,15 @@ export async function POST(req: Request) {
         couponCode = chk.code;
       }
     }
+
+    // رسوم الاستعجال — لو المناسبة خلال 3 أيام أو أقل
+    const rush = !!d.eventDate && isRushDate(d.eventDate);
+    if (rush && finalPrice !== null) finalPrice += RUSH_FEE;
+
+    // الشحن التلقائي حسب المحافظة
+    const deliveryType = typeof json.deliveryType === "string" ? json.deliveryType : "";
+    const shipping = shippingCost(d.governorate, deliveryType);
+    if (finalPrice !== null) finalPrice += shipping;
 
     // أولوية تلقائية للأوردرات المستعجلة (الفرح قريب)
     let priorityBump = 0;

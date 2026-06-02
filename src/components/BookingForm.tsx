@@ -4,10 +4,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2, MessageCircle, ShieldCheck, Zap, Ticket, Check, Gift } from "lucide-react";
+import { Loader2, MessageCircle, ShieldCheck, Zap, Ticket, Check, Gift, Truck, Plus, Minus } from "lucide-react";
 import { formatPriceEGP, toArabicDigits, cn } from "@/lib/utils";
-import { buildWhatsappMessage, buildWhatsappUrl } from "@/lib/whatsapp";
+import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { GOVERNORATES, EVENT_TYPES } from "@/lib/governorates";
+import { RUSH_DAYS, RUSH_FEE, rushDaysLeft } from "@/lib/rush";
+import { isCairoArea, shippingCost, DELIVERY_OPTIONS } from "@/lib/shipping";
+import { downloadInvoice } from "@/lib/invoice";
 import { ImageUpload } from "@/components/ImageUpload";
 
 export type BookingProduct = {
@@ -64,6 +67,8 @@ export function BookingForm({
   const [coupon, setCoupon] = useState<{ code: string; percent: number } | null>(null);
   const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [couponLoading, setCouponLoading] = useState(false);
+  const [deliveryType, setDeliveryType] = useState("metro");
+  const [qty, setQty] = useState(1);
 
   const variant = product.variants?.[variantIdx];
   const price = variant?.price ?? product.basePrice;
@@ -89,16 +94,22 @@ export function BookingForm({
   });
 
   const eventDate = watch("eventDate");
+  const governorate = watch("governorate");
   const rushDays = rushDaysLeft(eventDate);
-  const isRush = rushDays !== null && rushDays >= 0 && rushDays <= 10;
+  const isRush = rushDays !== null && rushDays >= 0 && rushDays <= RUSH_DAYS;
 
+  const lineTotal = price * qty;
   const discountPercent = coupon?.percent ?? 0;
-  const finalPrice = discountPercent ? Math.round(price * (1 - discountPercent / 100)) : price;
+  const discounted = discountPercent ? Math.round(lineTotal * (1 - discountPercent / 100)) : lineTotal;
+  const rushFee = isRush ? RUSH_FEE : 0;
+  const finalPrice = discounted + rushFee;
 
-  const showUpsell = !!upsell && upsell.items.length > 0 && price >= upsell.threshold;
+  const shipping = shippingCost(governorate, deliveryType);
+
+  const showUpsell = !!upsell && upsell.items.length > 0 && lineTotal >= upsell.threshold;
   const selectedAddons = upsell ? upsell.items.filter((i) => addonSlugs.includes(i.slug)) : [];
   const addonsTotal = selectedAddons.reduce((s, i) => s + i.offerPrice, 0);
-  const grandTotal = finalPrice + addonsTotal;
+  const grandTotal = finalPrice + addonsTotal + shipping;
   const toggleAddon = (slug: string) =>
     setAddonSlugs((cur) => (cur.includes(slug) ? cur.filter((s) => s !== slug) : [...cur, slug]));
 
@@ -129,24 +140,32 @@ export function BookingForm({
 
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
-    const rushNote = isRush ? `طلب مستعجل، الفرح فاضلّه ${rushDays} يوم` : "";
-    const couponNote = coupon ? `كود خصم ${coupon.code} (${coupon.percent}%)` : "";
-    const addonNote = selectedAddons.length
-      ? `إضافات: ${selectedAddons.map((a) => `${a.nameAr} (${toArabicDigits(a.offerPrice)} ج)`).join("، ")} — الإجمالي بعد الإضافات: ${toArabicDigits(grandTotal)} ج`
+    const itemName = product.nameAr + (variant ? ` — ${variant.nameAr}` : "");
+    const deliveryLabel = isCairoArea(values.governorate)
+      ? DELIVERY_OPTIONS.find((o) => o.key === deliveryType)?.label || ""
       : "";
-    const notesOut = [values.notes, rushNote, couponNote, addonNote].filter(Boolean).join(" — ");
+    const notesOut = [
+      values.notes,
+      isRush ? `طلب مستعجل (فاضل ${rushDays} يوم) — رسوم استعجال ${RUSH_FEE} ج` : "",
+      coupon ? `كود خصم ${coupon.code} (${coupon.percent}%)` : "",
+      selectedAddons.length ? `إضافات: ${selectedAddons.map((a) => a.nameAr).join("، ")}` : "",
+      shipping > 0 ? `الشحن (${values.governorate}${deliveryLabel ? " - " + deliveryLabel : ""}): ${shipping} ج` : "",
+      `الإجمالي شامل الشحن: ${grandTotal} ج`,
+    ].filter(Boolean).join(" — ");
+
     const payload = {
       productSlug: product.slug,
       productName: product.nameAr,
       variantName: variant?.nameAr,
-      price,
+      price: lineTotal,
       ...values,
       notes: notesOut,
       couponCode: coupon?.code || undefined,
+      deliveryType,
       referenceImage: refImage || undefined,
     };
 
-    // نحفظ الطلب في الداتابيز (لو فشل مش بنوقف العميلة — بنكمّل واتساب)
+    let orderId: number | undefined;
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
@@ -154,30 +173,65 @@ export function BookingForm({
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("save failed");
+      const j = await res.json().catch(() => ({}));
+      orderId = j.id;
     } catch {
       toast.warning("هنكمّل على واتساب على طول");
     }
 
-    const message = buildWhatsappMessage({
-      productName: product.nameAr,
-      variantName: variant?.nameAr,
-      price: finalPrice,
-      customerName: values.customerName,
-      phone: values.phone,
-      governorate: values.governorate,
-      address: values.address,
-      groomName: values.groomName,
-      brideName: values.brideName,
-      eventType: values.eventType,
-      eventDate: values.eventDate,
-      notes: notesOut,
-    });
-    const fullMessage = refImage
-      ? `${message}\nصورة مرجعية: ${window.location.origin}${refImage}`
-      : message;
-    const url = buildWhatsappUrl(whatsappNumber, fullMessage);
-    toast.success("جاري تحويلك على واتساب لتأكيد الحجز");
-    window.location.href = url;
+    // فاتورة PDF تلقائية
+    try {
+      await downloadInvoice({
+        orderId,
+        customerName: values.customerName,
+        phone: values.phone,
+        governorate: values.governorate,
+        address: values.address,
+        brideName: values.brideName,
+        groomName: values.groomName,
+        eventType: values.eventType,
+        eventDate: values.eventDate,
+        items: [
+          { name: itemName, qty, unit: price },
+          ...selectedAddons.map((a) => ({ name: `${a.nameAr} (إضافة)`, qty: 1, unit: a.offerPrice })),
+          ...(shipping > 0 ? [{ name: `الشحن — ${values.governorate}${deliveryLabel ? " (" + deliveryLabel + ")" : ""}`, qty: 1, unit: shipping }] : []),
+        ],
+        discountAmount: discountPercent ? lineTotal - discounted : 0,
+        discountLabel: coupon ? `خصم كود ${coupon.code}` : undefined,
+        rushFee,
+        total: grandTotal,
+      });
+    } catch {
+      /* لو الفاتورة فشلت مش بنوقف العميلة */
+    }
+
+    const lines = [
+      "حجز جديد من موقع زُغْرُوطَة",
+      "ـــــــــــــــــــــــــــــــ",
+      `المنتج: ${itemName}${qty > 1 ? ` × ${toArabicDigits(qty)}` : ""} — ${formatPriceEGP(lineTotal)}`,
+      ...selectedAddons.map((a) => `إضافة: ${a.nameAr} (${formatPriceEGP(a.offerPrice)})`),
+      coupon ? `كود خصم: ${coupon.code} (${coupon.percent}%)` : "",
+      isRush ? `رسوم استعجال: ${formatPriceEGP(RUSH_FEE)}` : "",
+      shipping > 0 ? `الشحن: ${formatPriceEGP(shipping)}${deliveryLabel ? " (" + deliveryLabel + ")" : ""}` : "",
+      `الإجمالي شامل الشحن: ${formatPriceEGP(grandTotal)}`,
+      "ـــــــــــــــــــــــــــــــ",
+      `الاسم: ${values.customerName}`,
+      `الموبايل: ${values.phone}`,
+      `المحافظة: ${values.governorate}`,
+      `العنوان: ${values.address}`,
+      values.brideName || values.groomName ? `العروسين: ${values.brideName || "-"} و ${values.groomName || "-"}` : "",
+      values.eventType ? `المناسبة: ${values.eventType}` : "",
+      values.eventDate ? `التاريخ: ${values.eventDate}` : "",
+      values.notes ? `ملاحظات: ${values.notes}` : "",
+      refImage ? `صورة مرجعية: ${window.location.origin}${refImage}` : "",
+      "ـــــــــــــــــــــــــــــــ",
+      "حابة أأكّد الحجز وأدفع الديبوزت",
+    ].filter(Boolean);
+    const url = buildWhatsappUrl(whatsappNumber, lines.join("\n"));
+    toast.success("اتحمّلت الفاتورة وبنحوّلك على واتساب");
+    setTimeout(() => {
+      window.location.href = url;
+    }, 900);
   };
 
   return (
@@ -214,22 +268,31 @@ export function BookingForm({
               </div>
             ) : null}
 
-            <div className="mt-4 flex flex-wrap items-baseline gap-2 border-t border-gold-100 pt-4">
-              <span className="text-sm text-espresso-500">الإجمالي:</span>
-              <span className="font-display text-2xl font-extrabold text-gold-gradient">
-                {formatPriceEGP(finalPrice)}
-              </span>
-              {discountPercent ? (
-                <span className="text-sm text-espresso-400 line-through">{toArabicDigits(price)} جنيه</span>
-              ) : oldPrice ? (
-                <span className="text-sm text-espresso-400 line-through">{toArabicDigits(oldPrice)} جنيه</span>
-              ) : null}
+            {/* الكمية */}
+            <div className="mt-4 flex items-center justify-between border-t border-gold-100 pt-4">
+              <span className="text-sm font-semibold text-espresso-700">الكمية</span>
+              <div className="flex items-center gap-2 rounded-xl bg-cream-100 p-1">
+                <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-espresso-700 shadow-sm" aria-label="أقل">
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-8 text-center text-base font-bold">{toArabicDigits(qty)}</span>
+                <button type="button" onClick={() => setQty((q) => Math.min(99, q + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-espresso-700 shadow-sm" aria-label="أكتر">
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-            {discountPercent ? (
-              <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
-                <Check className="h-3.5 w-3.5" /> وفّرتي {toArabicDigits(price - finalPrice)} جنيه بكود {coupon!.code}
-              </p>
-            ) : null}
+
+            <div className="mt-3 space-y-1.5 text-sm">
+              <SumRow label={qty > 1 ? `السعر (${toArabicDigits(price)} × ${toArabicDigits(qty)})` : "السعر"} value={formatPriceEGP(lineTotal)} />
+              {discountPercent ? <SumRow label={`خصم ${coupon!.code}`} value={`- ${formatPriceEGP(lineTotal - discounted)}`} tone="green" /> : null}
+              {isRush ? <SumRow label="رسوم استعجال ⚡" value={`+ ${formatPriceEGP(RUSH_FEE)}`} tone="rose" /> : null}
+              {selectedAddons.length ? <SumRow label="إضافات" value={`+ ${formatPriceEGP(addonsTotal)}`} /> : null}
+              <SumRow label="الشحن" value={governorate ? `+ ${formatPriceEGP(shipping)}` : "حسب المحافظة"} muted={!governorate} />
+              <div className="flex items-center justify-between border-t border-gold-100 pt-2">
+                <span className="font-bold text-espresso-700">الإجمالي شامل الشحن</span>
+                <span className="font-display text-2xl font-extrabold text-gold-gradient">{formatPriceEGP(grandTotal)}</span>
+              </div>
+            </div>
             <p className="mt-3 flex items-start gap-1.5 text-xs leading-relaxed text-espresso-500">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold-500" />
               {depositNote}
@@ -299,10 +362,10 @@ export function BookingForm({
             </span>
             <div className="text-sm">
               <p className="font-bold text-rose-700">
-                فرحك قريّب — فاضل {toArabicDigits(rushDays!)} يوم! ⚡
+                فرحك قريّب — فاضل {toArabicDigits(rushDays!)} يوم! ⚡ حجز مستعجل
               </p>
               <p className="mt-0.5 leading-relaxed text-rose-600">
-                متاح <b>حجز مستعجل</b> بأولوية قصوى في التنفيذ. أكّدي دلوقتي وهنبدأ أوردرك فورًا ونلحقك في ميعادك.
+                هنبدأ تنفيذ أوردرك <b>فورًا بأولوية قصوى</b> عشان نلحقك في ميعادك — بتنضاف <b>رسوم استعجال {toArabicDigits(RUSH_FEE)} جنيه</b> على إجمالي الأوردر.
               </p>
             </div>
           </div>
@@ -338,6 +401,23 @@ export function BookingForm({
               ))}
             </select>
           </Field>
+
+          {governorate && isCairoArea(governorate) && (
+            <Field label="نوع التوصيل (القاهرة الكبرى)">
+              <select className={inputClass} value={deliveryType} onChange={(e) => setDeliveryType(e.target.value)}>
+                {DELIVERY_OPTIONS.map((o) => (
+                  <option key={o.key} value={o.key}>{o.label} — {o.price} ج</option>
+                ))}
+              </select>
+            </Field>
+          )}
+
+          {governorate && (
+            <div className="flex items-center gap-2 rounded-2xl bg-cream-100 px-4 py-2.5 text-sm text-espresso-600 sm:col-span-2">
+              <Truck className="h-4 w-4 shrink-0 text-gold-500" />
+              الشحن لـ {governorate}: <b className="text-gold-700">{formatPriceEGP(shipping)}</b> — بيتضاف على الإجمالي تلقائيًا.
+            </div>
+          )}
 
           <Field label="المناسبة" error={errors.eventType?.message}>
             <select className={inputClass} {...register("eventType")}>
@@ -416,9 +496,9 @@ export function BookingForm({
           </div>
         )}
 
-        {(addonsTotal > 0 || discountPercent > 0) && (
+        {grandTotal !== lineTotal && (
           <div className="mt-4 flex items-center justify-between rounded-2xl bg-espresso-900 px-4 py-3 text-white">
-            <span className="text-sm">الإجمالي النهائي</span>
+            <span className="text-sm">الإجمالي شامل الشحن</span>
             <span className="font-display text-xl font-extrabold">{formatPriceEGP(grandTotal)}</span>
           </div>
         )}
@@ -442,14 +522,15 @@ export function BookingForm({
   );
 }
 
-/** كام يوم فاضل على المناسبة (null لو مفيش تاريخ) */
-function rushDaysLeft(dateStr: string): number | null {
-  if (!dateStr) return null;
-  const target = new Date(dateStr + "T00:00:00");
-  if (Number.isNaN(target.getTime())) return null;
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return Math.round((target.getTime() - now.getTime()) / 86_400_000);
+function SumRow({ label, value, tone, muted }: { label: string; value: string; tone?: "green" | "rose"; muted?: boolean }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className={cn("text-espresso-500", muted && "text-espresso-400")}>{label}</span>
+      <span className={cn("font-semibold", tone === "green" ? "text-emerald-600" : tone === "rose" ? "text-rose-600" : "text-espresso-800")}>
+        {value}
+      </span>
+    </div>
+  );
 }
 
 function Field({
