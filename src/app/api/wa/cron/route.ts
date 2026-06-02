@@ -10,12 +10,10 @@ export const maxDuration = 60;
 const MAX_ATTEMPTS = 5;
 const BATCH = 10;
 
-function authed(req: Request): boolean {
-  const token = process.env.WA_WORKER_TOKEN;
-  if (!token) return false;
-  const header = req.headers.get("authorization") || "";
-  const bearer = header.startsWith("Bearer ") ? header.slice(7) : "";
-  return bearer === token || new URL(req.url).searchParams.get("token") === token;
+// التوكن بييجي من الداتابيز (waCronToken) أو من البيئة — عشان نقدر نغيّره من غير restart للسيرفر
+async function getCronToken(): Promise<string | null> {
+  const row = await prisma.setting.findUnique({ where: { key: "waCronToken" } }).catch(() => null);
+  return (row?.value || process.env.WA_WORKER_TOKEN || "").trim() || null;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -25,10 +23,14 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * بتتأكد إن الواتساب شغّال، بتولّد التذكيرات المستحقة، وبتبعت اللي في الطابور.
  */
 export async function GET(req: Request) {
-  if (!process.env.WA_WORKER_TOKEN) {
-    return NextResponse.json({ ok: false, error: "WA_WORKER_TOKEN not set" }, { status: 503 });
+  const valid = await getCronToken();
+  if (!valid) {
+    return NextResponse.json({ ok: false, error: "cron token not set" }, { status: 503 });
   }
-  if (!authed(req)) {
+  const header = req.headers.get("authorization") || "";
+  const bearer = header.startsWith("Bearer ") ? header.slice(7) : "";
+  const provided = bearer || new URL(req.url).searchParams.get("token") || "";
+  if (provided !== valid) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
