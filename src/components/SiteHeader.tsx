@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Menu, X, Sparkles, Home, ShoppingBag, Crown, Images, Star, Info, Phone, MessageCircle,
+  Menu, X, Sparkles, Home, ShoppingBag, Crown, Images, Star, Info, Phone, MessageCircle, HelpCircle,
 } from "lucide-react";
 import { Logo } from "./ui/Logo";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,7 @@ const NAV = [
   { href: "/packages", label: "الباكدجات", icon: Crown },
   { href: "/gallery", label: "معرض الأعمال", icon: Images },
   { href: "/reviews", label: "آراء العملاء", icon: Star },
+  { href: "/ask", label: "اسألي زُغْرُوطَة", icon: HelpCircle },
   { href: "/about", label: "عننا", icon: Info },
   { href: "/contact", label: "تواصلي", icon: Phone },
 ];

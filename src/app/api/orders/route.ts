@@ -23,6 +23,19 @@ export async function POST(req: Request) {
       productId = p?.id ?? null;
     }
 
+    // أولوية تلقائية للأوردرات المستعجلة (الفرح قريب)
+    let priorityBump = 0;
+    if (d.eventDate) {
+      const target = new Date(d.eventDate);
+      target.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const days = Math.round((target.getTime() - today.getTime()) / 86_400_000);
+      if (days >= 0 && days <= 3) priorityBump = 3;
+      else if (days <= 7) priorityBump = 2;
+      else if (days <= 10) priorityBump = 1;
+    }
+
     const order = await prisma.order.create({
       data: {
         productId,
@@ -38,6 +51,7 @@ export async function POST(req: Request) {
         eventType: d.eventType || null,
         eventDate: d.eventDate ? new Date(d.eventDate) : null,
         notes: d.notes || null,
+        priorityBump,
       },
       select: { id: true },
     });

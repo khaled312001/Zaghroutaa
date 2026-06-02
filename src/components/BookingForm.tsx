@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2, MessageCircle, ShieldCheck } from "lucide-react";
+import { Loader2, MessageCircle, ShieldCheck, Zap } from "lucide-react";
 import { formatPriceEGP, toArabicDigits, cn } from "@/lib/utils";
 import { buildWhatsappMessage, buildWhatsappUrl } from "@/lib/whatsapp";
 import { GOVERNORATES, EVENT_TYPES } from "@/lib/governorates";
@@ -55,6 +55,7 @@ export function BookingForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -70,14 +71,22 @@ export function BookingForm({
     },
   });
 
+  const eventDate = watch("eventDate");
+  const rushDays = rushDaysLeft(eventDate);
+  const isRush = rushDays !== null && rushDays >= 0 && rushDays <= 10;
+
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
+    const notesOut = isRush
+      ? `${values.notes ? values.notes + " — " : ""}طلب مستعجل، الفرح فاضلّه ${rushDays} يوم`
+      : values.notes;
     const payload = {
       productSlug: product.slug,
       productName: product.nameAr,
       variantName: variant?.nameAr,
       price,
       ...values,
+      notes: notesOut,
       referenceImage: refImage || undefined,
     };
 
@@ -105,7 +114,7 @@ export function BookingForm({
       brideName: values.brideName,
       eventType: values.eventType,
       eventDate: values.eventDate,
-      notes: values.notes,
+      notes: notesOut,
     });
     const fullMessage = refImage
       ? `${message}\nصورة مرجعية: ${window.location.origin}${refImage}`
@@ -174,6 +183,22 @@ export function BookingForm({
         <p className="mt-1 text-sm text-espresso-500">
           املي البيانات وهنحوّلك على الواتساب فورًا لتأكيد الأوردر ودفع الديبوزت.
         </p>
+
+        {isRush && (
+          <div className="mt-4 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4">
+            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500 text-white">
+              <Zap className="h-4 w-4" />
+            </span>
+            <div className="text-sm">
+              <p className="font-bold text-rose-700">
+                فرحك قريّب — فاضل {toArabicDigits(rushDays!)} يوم! ⚡
+              </p>
+              <p className="mt-0.5 leading-relaxed text-rose-600">
+                متاح <b>حجز مستعجل</b> بأولوية قصوى في التنفيذ. أكّدي دلوقتي وهنبدأ أوردرك فورًا ونلحقك في ميعادك.
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <Field label="اسمك" error={errors.customerName?.message}>
@@ -260,6 +285,16 @@ export function BookingForm({
       </form>
     </div>
   );
+}
+
+/** كام يوم فاضل على المناسبة (null لو مفيش تاريخ) */
+function rushDaysLeft(dateStr: string): number | null {
+  if (!dateStr) return null;
+  const target = new Date(dateStr + "T00:00:00");
+  if (Number.isNaN(target.getTime())) return null;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - now.getTime()) / 86_400_000);
 }
 
 function Field({
