@@ -22,6 +22,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
   const lastInteract = useRef(0);
   const dragging = useRef(false);
   const moved = useRef(false);
+  const captured = useRef(false);
   const startX = useRef(0);
   const startScroll = useRef(0);
   const count = products.length;
@@ -72,9 +73,10 @@ export function ProductMarquee({ products }: { products: Product[] }) {
     if (!el) return;
     dragging.current = true;
     moved.current = false;
+    captured.current = false;
     startX.current = e.clientX;
     startScroll.current = el.scrollLeft;
-    el.setPointerCapture(e.pointerId);
+    // مش بنمسك المؤشّر إلا لما يبدأ سحب فعلي — عشان الضغطة العادية تفتح المنتج
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
@@ -82,7 +84,17 @@ export function ProductMarquee({ products }: { products: Product[] }) {
     const el = ref.current;
     if (!el) return;
     const dx = e.clientX - startX.current;
-    if (Math.abs(dx) > 4) moved.current = true;
+    if (Math.abs(dx) > 4) {
+      moved.current = true;
+      if (!captured.current) {
+        try {
+          el.setPointerCapture(e.pointerId);
+          captured.current = true;
+        } catch {
+          /* تجاهل */
+        }
+      }
+    }
     let target = startScroll.current - dx;
     const kids = el.children;
     const w =
@@ -105,10 +117,13 @@ export function ProductMarquee({ products }: { products: Product[] }) {
     if (!dragging.current) return;
     dragging.current = false;
     mark();
-    try {
-      ref.current?.releasePointerCapture(e.pointerId);
-    } catch {
-      /* تجاهل */
+    if (captured.current) {
+      try {
+        ref.current?.releasePointerCapture(e.pointerId);
+      } catch {
+        /* تجاهل */
+      }
+      captured.current = false;
     }
   };
 

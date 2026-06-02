@@ -17,6 +17,7 @@ export function ReviewsMarquee({ images }: { images: string[] }) {
   const lastInteract = useRef(0);
   const dragging = useRef(false);
   const moved = useRef(false);
+  const captured = useRef(false);
   const startX = useRef(0);
   const startScroll = useRef(0);
   const count = images.length;
@@ -80,16 +81,26 @@ export function ReviewsMarquee({ images }: { images: string[] }) {
     if (!el) return;
     dragging.current = true;
     moved.current = false;
+    captured.current = false;
     startX.current = e.clientX;
     startScroll.current = el.scrollLeft;
-    el.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragging.current) return;
     const el = ref.current;
     if (!el) return;
     const dx = e.clientX - startX.current;
-    if (Math.abs(dx) > 4) moved.current = true;
+    if (Math.abs(dx) > 4) {
+      moved.current = true;
+      if (!captured.current) {
+        try {
+          el.setPointerCapture(e.pointerId);
+          captured.current = true;
+        } catch {
+          /* تجاهل */
+        }
+      }
+    }
     let target = startScroll.current - dx;
     const kids = el.children;
     const w =
@@ -111,10 +122,13 @@ export function ReviewsMarquee({ images }: { images: string[] }) {
     if (!dragging.current) return;
     dragging.current = false;
     mark();
-    try {
-      ref.current?.releasePointerCapture(e.pointerId);
-    } catch {
-      /* تجاهل */
+    if (captured.current) {
+      try {
+        ref.current?.releasePointerCapture(e.pointerId);
+      } catch {
+        /* تجاهل */
+      }
+      captured.current = false;
     }
   };
   const onClickCapture = (e: React.MouseEvent) => {
