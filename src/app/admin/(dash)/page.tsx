@@ -13,6 +13,9 @@ const STATUS_HEX: Record<OrderStatusKey, string> = {
   NEW: "#3B82F6",
   CONTACTED: "#F59E0B",
   CONFIRMED: "#8B5CF6",
+  EMBROIDERING: "#6366F1",
+  PACKING: "#06B6D4",
+  SHIPPING: "#14B8A6",
   DONE: "#22C55E",
   CANCELLED: "#F43F5E",
 };

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { OrdersTable, type AdminOrder } from "@/components/admin/OrdersTable";
+import { AddOrderForm } from "@/components/admin/AddOrderForm";
 import type { OrderStatusKey } from "@/lib/orderStatus";
 
 export const dynamic = "force-dynamic";
@@ -26,9 +27,12 @@ export default async function OrdersPage() {
 
   return (
     <div>
-      <header className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-espresso-900 sm:text-3xl">الطلبات</h1>
-        <p className="mt-1 text-sm text-espresso-500">كل طلبات الحجز اللي جت من الموقع — تابعيها وكلّمي العرايس.</p>
+      <header className="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-espresso-900 sm:text-3xl">الطلبات</h1>
+          <p className="mt-1 text-sm text-espresso-500">كل طلبات الحجز — من الموقع أو اللي بتضيفيها بإيدك.</p>
+        </div>
+        <AddOrderForm />
       </header>
       <OrdersTable orders={data} />
     </div>

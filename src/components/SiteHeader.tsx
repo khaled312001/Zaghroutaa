@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Menu, X, Sparkles, Home, ShoppingBag, Crown, Images, Star, Info, Phone, MessageCircle, HelpCircle,
+  Menu, X, Sparkles, Home, ShoppingBag, Crown, Images, Star, Info, Phone, MessageCircle, HelpCircle, PackageSearch, Wand2,
 } from "lucide-react";
 import { Logo } from "./ui/Logo";
 import { cn } from "@/lib/utils";
@@ -15,8 +15,10 @@ const NAV = [
   { href: "/", label: "الرئيسية", icon: Home },
   { href: "/products", label: "المنتجات", icon: ShoppingBag },
   { href: "/packages", label: "الباكدجات", icon: Crown },
+  { href: "/build", label: "صممي باكدجك", icon: Wand2 },
   { href: "/gallery", label: "معرض الأعمال", icon: Images },
   { href: "/reviews", label: "آراء العملاء", icon: Star },
+  { href: "/track", label: "اتبعي أوردرك", icon: PackageSearch },
   { href: "/ask", label: "اسألي زُغْرُوطَة", icon: HelpCircle },
   { href: "/about", label: "عننا", icon: Info },
   { href: "/contact", label: "تواصلي", icon: Phone },
@@ -57,13 +59,13 @@ export function SiteHeader({ whatsappNumber, logoUrl }: { whatsappNumber: string
       <div className="container-zg flex h-[72px] items-center justify-between gap-4">
         <Logo showText={false} src={logoUrl} />
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "relative rounded-full px-4 py-2 text-[15px] font-semibold transition-colors",
+                "relative rounded-full px-3 py-2 text-[13.5px] font-semibold transition-colors",
                 isActive(item.href) ? "text-gold-700" : "text-espresso-700 hover:text-gold-700",
               )}
             >

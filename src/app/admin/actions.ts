@@ -54,6 +54,49 @@ export async function deleteOrderAction(id: number) {
   revalidatePath("/admin");
 }
 
+export type ManualOrderInput = {
+  productName: string;
+  variantName?: string;
+  price?: number | null;
+  customerName: string;
+  phone: string;
+  governorate?: string;
+  address?: string;
+  brideName?: string;
+  groomName?: string;
+  eventType?: string;
+  eventDate?: string | null;
+  notes?: string;
+  status?: OrderStatusKey;
+};
+
+/** إضافة طلب يدوي (للأوردرات القديمة اللي مش جاية من الموقع) */
+export async function createManualOrderAction(input: ManualOrderInput) {
+  await assertAdmin();
+  if (!input.productName?.trim()) throw new Error("اكتبي اسم المنتج أو الباكدج");
+  if (!input.customerName?.trim()) throw new Error("اكتبي اسم العميلة");
+  if (!input.phone?.trim()) throw new Error("اكتبي رقم الموبايل");
+  await prisma.order.create({
+    data: {
+      productName: input.productName.trim(),
+      variantName: input.variantName?.trim() || null,
+      price: input.price ?? null,
+      customerName: input.customerName.trim(),
+      phone: input.phone.trim(),
+      governorate: input.governorate?.trim() || "—",
+      address: input.address?.trim() || "—",
+      brideName: input.brideName?.trim() || null,
+      groomName: input.groomName?.trim() || null,
+      eventType: input.eventType?.trim() || null,
+      eventDate: input.eventDate ? new Date(input.eventDate) : null,
+      notes: input.notes?.trim() || null,
+      status: input.status ?? "NEW",
+    },
+  });
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin");
+}
+
 export async function toggleReviewAction(id: number, isActive: boolean) {
   await assertAdmin();
   await prisma.review.update({ where: { id }, data: { isActive } });

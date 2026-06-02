@@ -2,6 +2,9 @@ export type OrderStatusKey =
   | "NEW"
   | "CONTACTED"
   | "CONFIRMED"
+  | "EMBROIDERING"
+  | "PACKING"
+  | "SHIPPING"
   | "DONE"
   | "CANCELLED";
 
@@ -24,6 +27,21 @@ export const ORDER_STATUS: Record<
     badge: "bg-violet-100 text-violet-700",
     dot: "bg-violet-500",
   },
+  EMBROIDERING: {
+    label: "جاري التطريز",
+    badge: "bg-indigo-100 text-indigo-700",
+    dot: "bg-indigo-500",
+  },
+  PACKING: {
+    label: "جاري التغليف",
+    badge: "bg-cyan-100 text-cyan-700",
+    dot: "bg-cyan-500",
+  },
+  SHIPPING: {
+    label: "مع الشحن",
+    badge: "bg-teal-100 text-teal-700",
+    dot: "bg-teal-500",
+  },
   DONE: {
     label: "تم التسليم",
     badge: "bg-green-100 text-green-700",
@@ -40,6 +58,41 @@ export const ORDER_STATUS_KEYS: OrderStatusKey[] = [
   "NEW",
   "CONTACTED",
   "CONFIRMED",
+  "EMBROIDERING",
+  "PACKING",
+  "SHIPPING",
   "DONE",
   "CANCELLED",
 ];
+
+/** مراحل التتبع اللي بتظهر للعروسة */
+export const TRACK_STAGES = [
+  { label: "تأكيد الحجز", icon: "check" },
+  { label: "جاري التطريز", icon: "needle" },
+  { label: "جاري التغليف", icon: "gift" },
+  { label: "مع الشحن", icon: "truck" },
+  { label: "تم التسليم", icon: "home" },
+] as const;
+
+/** مرحلة التتبع الحالية حسب حالة الأوردر (−2 = ملغي، −1 = لسه بنراجع) */
+export function trackStageIndex(status: OrderStatusKey): number {
+  switch (status) {
+    case "CANCELLED":
+      return -2;
+    case "NEW":
+    case "CONTACTED":
+      return -1;
+    case "CONFIRMED":
+      return 0;
+    case "EMBROIDERING":
+      return 1;
+    case "PACKING":
+      return 2;
+    case "SHIPPING":
+      return 3;
+    case "DONE":
+      return 4;
+    default:
+      return -1;
+  }
+}
