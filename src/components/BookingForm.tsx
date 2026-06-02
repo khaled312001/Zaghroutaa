@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2, MessageCircle, ShieldCheck, Zap } from "lucide-react";
+import { Loader2, MessageCircle, ShieldCheck, Zap, Ticket, Check } from "lucide-react";
 import { formatPriceEGP, toArabicDigits, cn } from "@/lib/utils";
 import { buildWhatsappMessage, buildWhatsappUrl } from "@/lib/whatsapp";
 import { GOVERNORATES, EVENT_TYPES } from "@/lib/governorates";
@@ -47,6 +47,10 @@ export function BookingForm({
   const [variantIdx, setVariantIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [refImage, setRefImage] = useState("");
+  const [couponInput, setCouponInput] = useState("");
+  const [coupon, setCoupon] = useState<{ code: string; percent: number } | null>(null);
+  const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const variant = product.variants?.[variantIdx];
   const price = variant?.price ?? product.basePrice;
@@ -75,11 +79,39 @@ export function BookingForm({
   const rushDays = rushDaysLeft(eventDate);
   const isRush = rushDays !== null && rushDays >= 0 && rushDays <= 10;
 
+  const discountPercent = coupon?.percent ?? 0;
+  const finalPrice = discountPercent ? Math.round(price * (1 - discountPercent / 100)) : price;
+
+  const applyCoupon = async () => {
+    const code = couponInput.trim();
+    if (!code) return;
+    setCouponLoading(true);
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setCoupon({ code: data.code, percent: data.percent });
+        setCouponMsg({ ok: true, text: `تم! خصم ${toArabicDigits(data.percent)}٪ اتطبّق 🎉` });
+      } else {
+        setCoupon(null);
+        setCouponMsg({ ok: false, text: data.error || "الكود غير صالح" });
+      }
+    } catch {
+      setCouponMsg({ ok: false, text: "حصل خطأ، حاولي تاني" });
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
-    const notesOut = isRush
-      ? `${values.notes ? values.notes + " — " : ""}طلب مستعجل، الفرح فاضلّه ${rushDays} يوم`
-      : values.notes;
+    const rushNote = isRush ? `طلب مستعجل، الفرح فاضلّه ${rushDays} يوم` : "";
+    const couponNote = coupon ? `كود خصم ${coupon.code} (${coupon.percent}%)` : "";
+    const notesOut = [values.notes, rushNote, couponNote].filter(Boolean).join(" — ");
     const payload = {
       productSlug: product.slug,
       productName: product.nameAr,
@@ -87,6 +119,7 @@ export function BookingForm({
       price,
       ...values,
       notes: notesOut,
+      couponCode: coupon?.code || undefined,
       referenceImage: refImage || undefined,
     };
 
@@ -105,7 +138,7 @@ export function BookingForm({
     const message = buildWhatsappMessage({
       productName: product.nameAr,
       variantName: variant?.nameAr,
-      price,
+      price: finalPrice,
       customerName: values.customerName,
       phone: values.phone,
       governorate: values.governorate,
@@ -158,17 +191,22 @@ export function BookingForm({
               </div>
             ) : null}
 
-            <div className="mt-4 flex items-baseline gap-2 border-t border-gold-100 pt-4">
+            <div className="mt-4 flex flex-wrap items-baseline gap-2 border-t border-gold-100 pt-4">
               <span className="text-sm text-espresso-500">الإجمالي:</span>
               <span className="font-display text-2xl font-extrabold text-gold-gradient">
-                {formatPriceEGP(price)}
+                {formatPriceEGP(finalPrice)}
               </span>
-              {oldPrice && (
-                <span className="text-sm text-espresso-400 line-through">
-                  {toArabicDigits(oldPrice)} جنيه
-                </span>
-              )}
+              {discountPercent ? (
+                <span className="text-sm text-espresso-400 line-through">{toArabicDigits(price)} جنيه</span>
+              ) : oldPrice ? (
+                <span className="text-sm text-espresso-400 line-through">{toArabicDigits(oldPrice)} جنيه</span>
+              ) : null}
             </div>
+            {discountPercent ? (
+              <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                <Check className="h-3.5 w-3.5" /> وفّرتي {toArabicDigits(price - finalPrice)} جنيه بكود {coupon!.code}
+              </p>
+            ) : null}
             <p className="mt-3 flex items-start gap-1.5 text-xs leading-relaxed text-espresso-500">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold-500" />
               {depositNote}
@@ -179,6 +217,53 @@ export function BookingForm({
 
       {/* الفورم */}
       <form onSubmit={handleSubmit(onSubmit)} className="card-zg p-6 sm:p-8">
+        {/* كود الخصم — في الأول خالص */}
+        <div className="mb-6 rounded-2xl border border-dashed border-gold-300 bg-gold-50/60 p-4">
+          <label className="flex items-center gap-1.5 text-sm font-bold text-gold-700">
+            <Ticket className="h-4 w-4" /> معاكي كود خصم؟
+          </label>
+          <div className="mt-2 flex gap-2">
+            <input
+              value={couponInput}
+              onChange={(e) => {
+                setCouponInput(e.target.value.toUpperCase());
+                setCouponMsg(null);
+              }}
+              placeholder="اكتبي الكود هنا"
+              dir="ltr"
+              disabled={!!coupon}
+              className={cn(inputClass, "py-2.5 text-center font-bold tracking-widest disabled:opacity-70")}
+            />
+            {coupon ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setCoupon(null);
+                  setCouponInput("");
+                  setCouponMsg(null);
+                }}
+                className="btn-outline shrink-0 px-4 py-2 text-sm"
+              >
+                إلغاء
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={applyCoupon}
+                disabled={couponLoading || !couponInput.trim()}
+                className="btn-gold shrink-0 px-5 py-2 text-sm"
+              >
+                {couponLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "تطبيق"}
+              </button>
+            )}
+          </div>
+          {couponMsg && (
+            <p className={cn("mt-2 text-xs font-semibold", couponMsg.ok ? "text-emerald-600" : "text-blush-600")}>
+              {couponMsg.text}
+            </p>
+          )}
+        </div>
+
         <h3 className="text-xl font-bold text-espresso-900">بيانات الحجز</h3>
         <p className="mt-1 text-sm text-espresso-500">
           املي البيانات وهنحوّلك على الواتساب فورًا لتأكيد الأوردر ودفع الديبوزت.

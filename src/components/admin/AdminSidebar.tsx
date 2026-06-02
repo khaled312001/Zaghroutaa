@@ -18,6 +18,7 @@ import {
   Images,
   LayoutTemplate,
   BellRing,
+  Ticket,
 } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ const NAV = [
   { href: "/admin/orders", label: "الطلبات", icon: ShoppingBag },
   { href: "/admin/alerts", label: "التنبيهات الذكية", icon: BellRing },
   { href: "/admin/products", label: "المنتجات", icon: Package },
+  { href: "/admin/coupons", label: "أكواد الخصم", icon: Ticket },
   { href: "/admin/portfolio", label: "معرض الأعمال", icon: Images },
   { href: "/admin/reviews", label: "آراء العملاء", icon: Star },
   { href: "/admin/content", label: "محتوى الموقع", icon: LayoutTemplate },

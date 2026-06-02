@@ -98,6 +98,9 @@ model Order {
   reminders     Reminder[]
   shoppingItems ShoppingItem[]
 
+  // --- كود الخصم ---
+  couponCode   String? // الكود اللي استخدمته العروسة (لو فيه)
+
   @@index([productId])
   @@index([status])
   @@index([readyByDate])
@@ -123,6 +126,20 @@ model Reminder {
 
   @@index([status, scheduledAt])
   @@index([orderId])
+}
+
+/// أكواد الخصم (بتتحكم فيها إيمان: تفعيل/إيقاف + مواسم + حد استخدام)
+model Coupon {
+  id         Int       @id @default(autoincrement())
+  code       String    @unique
+  percent    Int       @default(10) // نسبة الخصم %
+  active     Boolean   @default(true)
+  startsAt   DateTime? // بداية الموسم (اختياري)
+  endsAt     DateTime? // نهاية الموسم (اختياري)
+  usageLimit Int? // أقصى عدد استخدام (اختياري)
+  usedCount  Int       @default(0)
+  note       String? // ملاحظة لإيمان (مثلاً: حملة رمضان)
+  createdAt  DateTime  @default(now())
 }
 
 /// قائمة الخامات اللي محتاجة تتشتري

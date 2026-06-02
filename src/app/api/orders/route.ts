@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { orderSchema } from "@/lib/validation";
+import { validateCoupon } from "@/lib/coupons";
 
 export async function POST(req: Request) {
   try {
@@ -23,6 +24,18 @@ export async function POST(req: Request) {
       productId = p?.id ?? null;
     }
 
+    // كود الخصم — إعادة تحقق على السيرفر وتطبيقه على السعر
+    let finalPrice = d.price ?? null;
+    let couponCode: string | null = null;
+    const rawCoupon = typeof json.couponCode === "string" ? json.couponCode : "";
+    if (rawCoupon && finalPrice) {
+      const chk = await validateCoupon(rawCoupon);
+      if (chk.ok) {
+        finalPrice = Math.round(finalPrice * (1 - chk.percent / 100));
+        couponCode = chk.code;
+      }
+    }
+
     // أولوية تلقائية للأوردرات المستعجلة (الفرح قريب)
     let priorityBump = 0;
     if (d.eventDate) {
@@ -41,7 +54,6 @@ export async function POST(req: Request) {
         productId,
         productName: d.productName,
         variantName: d.variantName || null,
-        price: d.price ?? null,
         customerName: d.customerName,
         phone: d.phone,
         governorate: d.governorate,
@@ -52,9 +64,17 @@ export async function POST(req: Request) {
         eventDate: d.eventDate ? new Date(d.eventDate) : null,
         notes: d.notes || null,
         priorityBump,
+        price: finalPrice,
+        couponCode,
       },
       select: { id: true },
     });
+
+    if (couponCode) {
+      await prisma.coupon
+        .update({ where: { code: couponCode }, data: { usedCount: { increment: 1 } } })
+        .catch(() => {});
+    }
 
     if (d.referenceImage) {
       try {
