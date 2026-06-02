@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Save, Loader2, MessageCircle } from "lucide-react";
+import { Save, Loader2, MessageCircle, BellRing } from "lucide-react";
 import { updateSettingsAction, type SettingsState } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/ImageUpload";
 
@@ -35,6 +35,8 @@ export function SettingsForm({ values }: { values: Record<string, string> }) {
     {},
   );
   const [logo, setLogo] = useState(values.logoUrl || "/logo.png");
+  const [alertsOn, setAlertsOn] = useState(values.alertsEnabled !== "0");
+  const [customerOn, setCustomerOn] = useState(values.customerFollowupOn !== "0");
 
   useEffect(() => {
     if (state.ok) toast.success("اتحفظت الإعدادات بنجاح");
@@ -85,6 +87,61 @@ export function SettingsForm({ values }: { values: Record<string, string> }) {
             <textarea name={t.key} rows={2} defaultValue={values[t.key] ?? ""} className={inputClass} />
           </label>
         ))}
+      </div>
+
+      {/* نظام التنبيهات الذكي */}
+      <div className="mt-8 border-t border-gold-100 pt-6">
+        <div className="mb-4 flex items-center gap-2">
+          <BellRing className="h-5 w-5 text-gold-600" />
+          <h2 className="font-display text-lg font-bold text-espresso-900">نظام التنبيهات الذكي (واتساب)</h2>
+        </div>
+
+        <label className="mb-4 flex cursor-pointer items-center justify-between rounded-2xl border border-gold-200 bg-cream-50 px-4 py-3">
+          <span className="text-sm font-semibold text-espresso-700">تفعيل التذكير التلقائي على الواتساب</span>
+          <input type="hidden" name="alertsEnabled" value={alertsOn ? "1" : "0"} />
+          <button
+            type="button"
+            onClick={() => setAlertsOn((v) => !v)}
+            className={`relative h-6 w-11 rounded-full transition ${alertsOn ? "bg-gold-shine" : "bg-espresso-200"}`}
+            aria-pressed={alertsOn}
+          >
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${alertsOn ? "left-0.5" : "right-0.5"}`} />
+          </button>
+        </label>
+
+        <label className="mb-4 flex cursor-pointer items-center justify-between rounded-2xl border border-gold-200 bg-cream-50 px-4 py-3">
+          <span className="text-sm font-semibold text-espresso-700">
+            تذكير العروسة اللي حجزت ومكمّلتش
+            <span className="mt-0.5 block text-xs font-normal text-espresso-400">بعد ٣ ساعات من الحجز، بيوصلها واتساب يفكّرها تأكّد أوردرها.</span>
+          </span>
+          <input type="hidden" name="customerFollowupOn" value={customerOn ? "1" : "0"} />
+          <button
+            type="button"
+            onClick={() => setCustomerOn((v) => !v)}
+            className={`relative h-6 w-11 shrink-0 rounded-full transition ${customerOn ? "bg-gold-shine" : "bg-espresso-200"}`}
+            aria-pressed={customerOn}
+          >
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${customerOn ? "left-0.5" : "right-0.5"}`} />
+          </button>
+        </label>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-espresso-700">رقم استقبال التنبيهات (واتساب الشغل)</span>
+            <input name="waAlertNumber" type="tel" dir="ltr" defaultValue={values.waAlertNumber ?? ""} placeholder="201001234567" className={inputClass} />
+            <span className="mt-1 block text-xs text-espresso-400">الرقم اللي هيوصله التذكير. بمفتاح الدولة من غير + (مثال: 201001234567).</span>
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-espresso-700">نجهّز القطعة قبل المناسبة بـ (أيام)</span>
+            <input name="prepBufferDays" type="number" min={0} max={30} dir="ltr" defaultValue={values.prepBufferDays ?? "3"} className={inputClass} />
+            <span className="mt-1 block text-xs text-espresso-400">بنحسب آخر ميعاد للتجهيز = تاريخ المناسبة ناقص الأيام دي.</span>
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-espresso-700">ميعاد الملخّص اليومي</span>
+            <input name="dailyDigestTime" type="time" dir="ltr" defaultValue={values.dailyDigestTime ?? "09:00"} className={inputClass} />
+            <span className="mt-1 block text-xs text-espresso-400">رسالة ملخّص بأهم أوردرات اليوم بتوصل في الوقت ده كل يوم.</span>
+          </label>
+        </div>
       </div>
 
       <button type="submit" disabled={pending} className="btn-gold mt-7 w-full sm:w-auto">

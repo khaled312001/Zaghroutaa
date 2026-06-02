@@ -91,8 +91,51 @@ model Order {
   createdAt    DateTime    @default(now())
   images       OrderImage[]
 
+  // --- نظام التنبيهات الذكي ---
+  readyByDate  DateTime? // آخر ميعاد لازم القطعة تكون خلصت فيه (للتسليم/الشحن)
+  priorityBump Int       @default(0) // رفع أولوية يدوي من إيمان
+  remindersOn  Boolean   @default(true) // تفعيل/إيقاف تنبيهات الأوردر ده
+  reminders     Reminder[]
+  shoppingItems ShoppingItem[]
+
   @@index([productId])
   @@index([status])
+  @@index([readyByDate])
+}
+
+/// طابور رسائل الواتساب (Outbox) — الموقع بيكتب فيه، والـ worker بيبعت منه
+model Reminder {
+  id          Int       @id @default(autoincrement())
+  orderId     Int?
+  order       Order?    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  kind        String    @default("custom") // due_soon | followup | materials | digest | custom
+  title       String
+  body        String    @db.Text
+  toNumber    String // الرقم اللي بيستقبل التنبيه (رقم الشغل)
+  priority    Int       @default(0)
+  scheduledAt DateTime // ميعاد الإرسال
+  sentAt      DateTime?
+  status      String    @default("PENDING") // PENDING | SENT | FAILED | CANCELLED
+  attempts    Int       @default(0)
+  error       String?   @db.Text
+  dedupeKey   String?   @unique // يمنع تكرار نفس التذكير
+  createdAt   DateTime  @default(now())
+
+  @@index([status, scheduledAt])
+  @@index([orderId])
+}
+
+/// قائمة الخامات اللي محتاجة تتشتري
+model ShoppingItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int?
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  name      String
+  qty       String?
+  bought    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
 }
 
 /// صور مرفقة بالطلب (صورة مرجعية من العميلة)

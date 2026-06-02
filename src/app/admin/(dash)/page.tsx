@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ShoppingBag, BellRing, CheckCircle2, Package, Star, ArrowLeft, Wallet, Images } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { getSettings } from "@/lib/settings";
 import { ORDER_STATUS, ORDER_STATUS_KEYS, type OrderStatusKey } from "@/lib/orderStatus";
+import { computeUrgency, dueLabel } from "@/lib/alerts";
 import { OrdersChart } from "@/components/admin/OrdersChart";
-import { formatArabicDateTime, formatPriceEGP, toArabicDigits } from "@/lib/utils";
+import { formatArabicDateTime, formatPriceEGP, toArabicDigits, cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ export default async function AdminHome() {
   since.setHours(0, 0, 0, 0);
   since.setDate(since.getDate() - 6);
 
-  const [totalOrders, newOrders, confirmed, products, reviews, gallery, recent, last7, statusGroups, revenueAgg] =
+  const [totalOrders, newOrders, confirmed, products, reviews, gallery, recent, last7, statusGroups, revenueAgg, activeOrders, settings] =
     await Promise.all([
       prisma.order.count(),
       prisma.order.count({ where: { status: "NEW" } }),
@@ -32,9 +34,23 @@ export default async function AdminHome() {
       prisma.order.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true } }),
       prisma.order.groupBy({ by: ["status"], _count: { _all: true } }),
       prisma.order.aggregate({ _sum: { price: true }, where: { status: { in: ["CONFIRMED", "DONE"] } } }),
+      prisma.order.findMany({ where: { status: { in: ["NEW", "CONTACTED", "CONFIRMED"] } } }),
+      getSettings(),
     ]);
 
   const revenue = revenueAgg._sum.price ?? 0;
+
+  // أولويات التنبيهات الذكية
+  const now = new Date();
+  const buffer = Number(settings.prepBufferDays) || 3;
+  const topAlerts = activeOrders
+    .map((o) => ({ o, u: computeUrgency({ id: o.id, status: o.status, eventDate: o.eventDate, readyByDate: o.readyByDate, createdAt: o.createdAt, priorityBump: o.priorityBump, remindersOn: o.remindersOn }, now, buffer) }))
+    .filter((x) => x.u.level === "overdue" || x.u.level === "critical" || x.u.level === "soon" || x.u.needsFollowup)
+    .sort((a, b) => b.u.score - a.u.score)
+    .slice(0, 5);
+  const urgentCount = activeOrders
+    .map((o) => computeUrgency({ id: o.id, status: o.status, eventDate: o.eventDate, readyByDate: o.readyByDate, createdAt: o.createdAt, priorityBump: o.priorityBump }, now, buffer))
+    .filter((u) => u.level === "overdue" || u.level === "critical").length;
 
   // بيانات رسم آخر ٧ أيام
   const days: { key: string; label: string; value: number }[] = [];
@@ -90,6 +106,43 @@ export default async function AdminHome() {
             <div className="text-xs text-espresso-500">{s.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* مركز التنبيهات الذكي — أهم الأولويات */}
+      <div className="card-zg mt-6 overflow-hidden">
+        <div className="flex items-center justify-between border-b border-gold-100 px-5 py-4">
+          <h2 className="flex items-center gap-2 font-display text-lg font-bold text-espresso-900">
+            <BellRing className="h-5 w-5 text-gold-600" /> أولويات النهاردة
+            {urgentCount > 0 && (
+              <span className="chip bg-rose-100 text-rose-700">{toArabicDigits(urgentCount)} عاجل</span>
+            )}
+          </h2>
+          <Link href="/admin/alerts" className="flex items-center gap-1 text-sm font-semibold text-gold-700 hover:text-gold-800">
+            مركز التنبيهات <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </div>
+        {topAlerts.length === 0 ? (
+          <div className="px-5 py-10 text-center text-sm text-espresso-400">مفيش حاجة عاجلة دلوقتي — كله تمام 🤍</div>
+        ) : (
+          <ul className="divide-y divide-gold-50">
+            {topAlerts.map(({ o, u }) => (
+              <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 px-5 py-3">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full", u.dot)} />
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-espresso-900">{o.productName}</p>
+                    <p className="truncate text-xs text-espresso-500">{o.customerName} • {o.governorate}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {u.needsFollowup && <span className="chip bg-sky-100 text-sky-700">متابعة</span>}
+                  <span className={cn("chip", u.chip)}>{u.label}</span>
+                  <span className="text-xs font-semibold text-espresso-600">{dueLabel(u.dueInDays)}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <OrdersChart days={days} statuses={statuses} />

@@ -12,6 +12,12 @@ export type SiteSettings = {
   depositNote: string;
   announcement: string;
   logoUrl: string;
+  // --- نظام التنبيهات الذكي ---
+  waAlertNumber: string; // رقم الشغل اللي بيستقبل التنبيهات (واتساب)
+  prepBufferDays: string; // بنجهّز القطعة قبل المناسبة بكام يوم
+  dailyDigestTime: string; // ميعاد الملخص اليومي (HH:MM 24س)
+  alertsEnabled: string; // "1" مفعّل / "0" موقوف
+  customerFollowupOn: string; // تذكير العروسة اللي حجزت ومكمّلتش (للعميلة نفسها)
 };
 
 export const SETTING_KEYS: (keyof SiteSettings)[] = [
@@ -24,6 +30,11 @@ export const SETTING_KEYS: (keyof SiteSettings)[] = [
   "depositNote",
   "announcement",
   "logoUrl",
+  "waAlertNumber",
+  "prepBufferDays",
+  "dailyDigestTime",
+  "alertsEnabled",
+  "customerFollowupOn",
 ];
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -36,6 +47,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   depositNote: "بنأكّد الحجز بعد دفع ديبوزت بسيط، والباقي عند الاستلام.",
   announcement: "بننقذ العرايس في الوقت الضيّق — وبنشحن لكل المحافظات بأمان وسرعة",
   logoUrl: "/logo.png",
+  waAlertNumber: "",
+  prepBufferDays: "3",
+  dailyDigestTime: "09:00",
+  alertsEnabled: "1",
+  customerFollowupOn: "1",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
