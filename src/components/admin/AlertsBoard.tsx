@@ -323,6 +323,25 @@ function WorkerStatus({ worker }: { worker: { state: string; lastSeen: string; q
           </div>
         </div>
       )}
+
+      {!connected && !needsQr && (
+        <div className="mt-4 border-t border-gold-100 pt-4 text-sm text-espresso-600">
+          <p className="font-semibold text-espresso-800">إزاي تربطي الواتساب؟</p>
+          <ol className="mt-1 list-decimal space-y-1 pr-4">
+            <li>
+              رقم اللي <b>بيستقبل</b> التنبيهات: حطّيه في{" "}
+              <Link href="/admin/settings" className="text-gold-700 underline">الإعدادات</Link> (خانة «رقم استقبال التنبيهات»).
+            </li>
+            <li>
+              رقم اللي <b>بيبعت</b>: لازم تشغّلي برنامج الـ worker الأول (على سيرفر VPS للشغل ٢٤ ساعة، أو على جهازك للتجربة).
+            </li>
+            <li>أول ما الـ worker يشتغل، <b>كود الـ QR هيظهر هنا في الكارت ده</b> — امسحيه برقم الإرسال ويتحوّل لـ «متصل».</li>
+          </ol>
+          <p className="mt-2 text-xs text-espresso-400">
+            الخطوات بالتفصيل موجودة في ملف <span dir="ltr" className="font-mono">worker/README.md</span> جوّه مشروع الموقع.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
