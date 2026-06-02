@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2, MessageCircle, ShieldCheck, Zap, Ticket, Check } from "lucide-react";
+import { Loader2, MessageCircle, ShieldCheck, Zap, Ticket, Check, Gift } from "lucide-react";
 import { formatPriceEGP, toArabicDigits, cn } from "@/lib/utils";
 import { buildWhatsappMessage, buildWhatsappUrl } from "@/lib/whatsapp";
 import { GOVERNORATES, EVENT_TYPES } from "@/lib/governorates";
@@ -19,6 +19,16 @@ export type BookingProduct = {
   isPackage?: boolean;
   variants?: { nameAr: string; price: number; oldPrice?: number }[];
 };
+
+export type AddonItem = {
+  slug: string;
+  nameAr: string;
+  cover: string;
+  basePrice: number;
+  offerPrice: number;
+};
+
+export type UpsellConfig = { items: AddonItem[]; threshold: number; percent: number };
 
 type FormValues = {
   customerName: string;
@@ -39,14 +49,17 @@ export function BookingForm({
   product,
   whatsappNumber,
   depositNote,
+  upsell,
 }: {
   product: BookingProduct;
   whatsappNumber: string;
   depositNote: string;
+  upsell?: UpsellConfig;
 }) {
   const [variantIdx, setVariantIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [refImage, setRefImage] = useState("");
+  const [addonSlugs, setAddonSlugs] = useState<string[]>([]);
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; percent: number } | null>(null);
   const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -82,6 +95,13 @@ export function BookingForm({
   const discountPercent = coupon?.percent ?? 0;
   const finalPrice = discountPercent ? Math.round(price * (1 - discountPercent / 100)) : price;
 
+  const showUpsell = !!upsell && upsell.items.length > 0 && price >= upsell.threshold;
+  const selectedAddons = upsell ? upsell.items.filter((i) => addonSlugs.includes(i.slug)) : [];
+  const addonsTotal = selectedAddons.reduce((s, i) => s + i.offerPrice, 0);
+  const grandTotal = finalPrice + addonsTotal;
+  const toggleAddon = (slug: string) =>
+    setAddonSlugs((cur) => (cur.includes(slug) ? cur.filter((s) => s !== slug) : [...cur, slug]));
+
   const applyCoupon = async () => {
     const code = couponInput.trim();
     if (!code) return;
@@ -111,7 +131,10 @@ export function BookingForm({
     setSubmitting(true);
     const rushNote = isRush ? `طلب مستعجل، الفرح فاضلّه ${rushDays} يوم` : "";
     const couponNote = coupon ? `كود خصم ${coupon.code} (${coupon.percent}%)` : "";
-    const notesOut = [values.notes, rushNote, couponNote].filter(Boolean).join(" — ");
+    const addonNote = selectedAddons.length
+      ? `إضافات: ${selectedAddons.map((a) => `${a.nameAr} (${toArabicDigits(a.offerPrice)} ج)`).join("، ")} — الإجمالي بعد الإضافات: ${toArabicDigits(grandTotal)} ج`
+      : "";
+    const notesOut = [values.notes, rushNote, couponNote, addonNote].filter(Boolean).join(" — ");
     const payload = {
       productSlug: product.slug,
       productName: product.nameAr,
@@ -352,6 +375,53 @@ export function BookingForm({
             <ImageUpload value={refImage} onChange={setRefImage} aspect="aspect-[16/9]" className="max-w-md" />
           </Field>
         </div>
+
+        {/* عروض الإضافات (هدية برفع المبيعات) */}
+        {showUpsell && (
+          <div className="mt-6 rounded-2xl border border-gold-300 bg-gradient-to-br from-gold-50 to-blush-50 p-4">
+            <p className="flex items-center gap-1.5 font-bold text-gold-700">
+              <Gift className="h-5 w-5" /> مبروك! أوردرك عدّى {toArabicDigits(upsell!.threshold)} جنيه 🎉
+            </p>
+            <p className="mt-0.5 text-sm text-espresso-600">
+              ضيفي دول بخصم {toArabicDigits(upsell!.percent)}٪ خصيصًا ليكي:
+            </p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {upsell!.items.map((a) => {
+                const on = addonSlugs.includes(a.slug);
+                return (
+                  <button
+                    key={a.slug}
+                    type="button"
+                    onClick={() => toggleAddon(a.slug)}
+                    className={cn(
+                      "flex items-center gap-2 rounded-xl border-2 bg-white p-2 text-right transition",
+                      on ? "border-gold-500 ring-2 ring-gold-200" : "border-gold-100 hover:border-gold-300",
+                    )}
+                  >
+                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">
+                      <Image src={a.cover} alt={a.nameAr} fill sizes="48px" className="object-cover" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-xs font-bold text-espresso-800">{a.nameAr}</span>
+                      <span className="text-xs font-extrabold text-gold-700">{toArabicDigits(a.offerPrice)} ج</span>
+                      <span className="ms-1 text-[10px] text-espresso-400 line-through">{toArabicDigits(a.basePrice)}</span>
+                    </span>
+                    <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2", on ? "border-gold-500 bg-gold-500 text-white" : "border-gold-300 text-transparent")}>
+                      <Check className="h-3 w-3" />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {(addonsTotal > 0 || discountPercent > 0) && (
+          <div className="mt-4 flex items-center justify-between rounded-2xl bg-espresso-900 px-4 py-3 text-white">
+            <span className="text-sm">الإجمالي النهائي</span>
+            <span className="font-display text-xl font-extrabold">{formatPriceEGP(grandTotal)}</span>
+          </div>
+        )}
 
         <button type="submit" disabled={submitting} className="btn-whatsapp mt-7 w-full text-base">
           {submitting ? (

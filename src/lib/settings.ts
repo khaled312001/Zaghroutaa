@@ -18,6 +18,8 @@ export type SiteSettings = {
   dailyDigestTime: string; // ميعاد الملخص اليومي (HH:MM 24س)
   alertsEnabled: string; // "1" مفعّل / "0" موقوف
   customerFollowupOn: string; // تذكير العروسة اللي حجزت ومكمّلتش (للعميلة نفسها)
+  upsellThreshold: string; // لو الأوردر عدّى المبلغ ده بنعرض هدايا/إضافات بخصم
+  upsellPercent: string; // نسبة خصم الإضافات
 };
 
 export const SETTING_KEYS: (keyof SiteSettings)[] = [
@@ -35,6 +37,8 @@ export const SETTING_KEYS: (keyof SiteSettings)[] = [
   "dailyDigestTime",
   "alertsEnabled",
   "customerFollowupOn",
+  "upsellThreshold",
+  "upsellPercent",
 ];
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -52,6 +56,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   dailyDigestTime: "09:00",
   alertsEnabled: "1",
   customerFollowupOn: "1",
+  upsellThreshold: "1000",
+  upsellPercent: "30",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {

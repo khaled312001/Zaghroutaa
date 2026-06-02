@@ -144,6 +144,24 @@ export function SettingsForm({ values }: { values: Record<string, string> }) {
         </div>
       </div>
 
+      {/* عروض رفع المبيعات */}
+      <div className="mt-8 border-t border-gold-100 pt-6">
+        <h2 className="mb-1 font-display text-lg font-bold text-espresso-900">عروض الإضافات (رفع قيمة الأوردر)</h2>
+        <p className="mb-4 text-sm text-espresso-500">
+          لو أوردر العروسة عدّى مبلغ معيّن، بيظهرلها بوكس فيه إضافات بخصم تقدر تضيفها — بيرفع متوسط الأوردر.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-espresso-700">يظهر العرض لو الأوردر عدّى (جنيه)</span>
+            <input name="upsellThreshold" type="number" min={0} dir="ltr" defaultValue={values.upsellThreshold ?? "1000"} className={inputClass} />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-espresso-700">نسبة خصم الإضافات %</span>
+            <input name="upsellPercent" type="number" min={0} max={90} dir="ltr" defaultValue={values.upsellPercent ?? "30"} className={inputClass} />
+          </label>
+        </div>
+      </div>
+
       <button type="submit" disabled={pending} className="btn-gold mt-7 w-full sm:w-auto">
         {pending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
         حفظ الإعدادات
