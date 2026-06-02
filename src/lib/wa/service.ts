@@ -53,6 +53,10 @@ async function persist(state: WaState, qr = "") {
 
 /** يبدأ/يستأنف اتصال الواتساب (بيطلّع QR لو أول مرة) */
 export async function startWa(): Promise<void> {
+  // الاستضافة المشتركة الحالية مش بتتحمّل تشغيل واتساب جوّا الموقع (بيستهلك موارد
+  // أكتر من حد الحساب ويوقّع الموقع). فبنشغّل المحرّك الداخلي بس لو اتفعّل صراحةً
+  // عبر WA_INAPP=1 — والافتراضي إنه متوقّف عشان نحمي الموقع.
+  if (process.env.WA_INAPP !== "1") return;
   if (wa.sock || wa.starting) return;
   wa.starting = true;
   try {
