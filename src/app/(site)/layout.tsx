@@ -3,6 +3,7 @@ import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { WhatsappFab } from "@/components/WhatsappFab";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 
@@ -35,6 +36,7 @@ export default async function SiteLayout({
       <main className="min-h-[60vh]">{children}</main>
       <SiteFooter settings={settings} />
       <WhatsappFab number={settings.whatsappNumber} />
+      <ChatWidget whatsappNumber={settings.whatsappNumber} />
     </>
   );
 }
