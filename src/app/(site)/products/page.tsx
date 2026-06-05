@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LayoutGrid } from "lucide-react";
 import { getSiteProducts } from "@/lib/products";
-import { CATEGORIES, toArabicDigits } from "@/data/catalog";
+import { getCategories } from "@/lib/categories";
+import { toArabicDigits } from "@/data/catalog";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProductGrid } from "@/components/ProductGrid";
 import { MovingShowcase } from "@/components/MovingShowcase";
@@ -29,7 +30,8 @@ export default async function ProductsPage({
 }) {
   const { cat } = await searchParams;
   const all = await getSiteProducts();
-  const activeCats = CATEGORIES.filter((c) =>
+  const cats = await getCategories();
+  const activeCats = cats.filter((c) =>
     all.some((p) => p.categorySlug === c.slug),
   );
   const current = activeCats.find((c) => c.slug === cat);

@@ -10,6 +10,7 @@ import {
   Shirt,
   Waypoints,
   Armchair,
+  Gift,
   type LucideIcon,
 } from "lucide-react";
 
@@ -26,6 +27,7 @@ const ICONS: Record<string, LucideIcon> = {
   sleepwear: Shirt,
   macrame: Waypoints,
   decor: Armchair,
+  favors: Gift,
 };
 
 export function getCategoryIcon(slug: string): LucideIcon {

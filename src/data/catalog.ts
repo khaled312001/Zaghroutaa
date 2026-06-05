@@ -86,6 +86,7 @@ export const CATEGORIES: Category[] = [
   { slug: "sleepwear", nameAr: "روب وبجامة", emoji: "🪶", order: 8 },
   { slug: "macrame", nameAr: "مكرامية هاند ميد", emoji: "🧶", order: 9 },
   { slug: "decor", nameAr: "ديكور وتحف", emoji: "🏺", order: 10 },
+  { slug: "favors", nameAr: "التوزيعات", emoji: "🎁", order: 11 },
 ];
 
 /* ----------------------------- المنتجات ----------------------------- */

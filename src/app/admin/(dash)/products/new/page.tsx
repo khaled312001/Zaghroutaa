@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { CATEGORIES } from "@/data/catalog";
+import { getCategories } from "@/lib/categories";
 import { ProductForm, type ProductFormValues } from "@/components/admin/ProductForm";
 
 export const dynamic = "force-dynamic";
 
-export default function NewProductPage() {
+export default async function NewProductPage() {
+  const categories = await getCategories();
   const initial: ProductFormValues = {
     nameAr: "",
     categorySlug: "",
@@ -30,7 +31,7 @@ export default function NewProductPage() {
         <h1 className="font-display text-2xl font-bold text-espresso-900 sm:text-3xl">إضافة منتج جديد</h1>
         <p className="mt-1 text-sm text-espresso-500">املي بيانات المنتج، اختاري قسمه، وارفعي صوره.</p>
       </header>
-      <ProductForm mode="create" categories={CATEGORIES.map((c) => ({ slug: c.slug, nameAr: c.nameAr }))} initial={initial} />
+      <ProductForm mode="create" categories={categories.map((c) => ({ slug: c.slug, nameAr: c.nameAr }))} initial={initial} />
     </div>
   );
 }

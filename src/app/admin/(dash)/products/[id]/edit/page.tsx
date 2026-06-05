@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { CATEGORIES } from "@/data/catalog";
+import { getCategories } from "@/lib/categories";
 import { ProductForm, type ProductFormValues } from "@/components/admin/ProductForm";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +23,7 @@ export default async function EditProductPage({
   });
   if (!p) notFound();
 
+  const categories = await getCategories();
   const extraImages = p.images.map((i) => i.url).filter((u) => u !== p.coverImage);
   const initial: ProductFormValues = {
     id: p.id,
@@ -53,7 +54,7 @@ export default async function EditProductPage({
         <h1 className="font-display text-2xl font-bold text-espresso-900 sm:text-3xl">تعديل المنتج</h1>
         <p className="mt-1 text-sm text-espresso-500">{p.nameAr}</p>
       </header>
-      <ProductForm mode="edit" categories={CATEGORIES.map((c) => ({ slug: c.slug, nameAr: c.nameAr }))} initial={initial} />
+      <ProductForm mode="edit" categories={categories.map((c) => ({ slug: c.slug, nameAr: c.nameAr }))} initial={initial} />
     </div>
   );
 }
