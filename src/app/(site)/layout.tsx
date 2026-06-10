@@ -7,9 +7,10 @@ import { ChatWidget } from "@/components/chat/ChatWidget";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 
-// ISR: الصفحات بتتخزن في الكاش وبتتجدد كل 60 ثانية —
-// كدا تعديلات الأدمن بتظهر خلال دقيقة، والسيرفر مش بيتحمل فوق طاقته.
-export const revalidate = 60;
+// رندر ديناميكي وقت الطلب (مش وقت الـ build) — كدا:
+// 1) الـ build على الاستضافة المشتركة مش بيشغّل استعلامات الداتابيز في عامل البناء (كان بيعمل crash).
+// 2) تعديلات الأدمن بتظهر فورًا. الصفحات لسه بتترندر كاملة من السيرفر (SEO زي ما هو).
+export const dynamic = "force-dynamic";
 
 export default async function SiteLayout({
   children,
