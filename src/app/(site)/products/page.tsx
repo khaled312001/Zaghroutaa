@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LayoutGrid } from "lucide-react";
 import { getSiteProducts } from "@/lib/products";
 import { getCategories } from "@/lib/categories";
-import { toArabicDigits } from "@/data/catalog";
+import { CATEGORIES, toArabicDigits } from "@/data/catalog";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProductGrid } from "@/components/ProductGrid";
 import { MovingShowcase } from "@/components/MovingShowcase";
@@ -18,8 +18,8 @@ export async function generateMetadata({
   searchParams: Promise<{ cat?: string }>;
 }): Promise<Metadata> {
   const { cat } = await searchParams;
-  const cats = await getCategories();
-  const current = cat ? cats.find((c) => c.slug === cat) : undefined;
+  // الميتاداتا بتستخدم الكتالوج الثابت (من غير استعلام داتابيز وقت الـ build)
+  const current = cat ? CATEGORIES.find((c) => c.slug === cat) : undefined;
 
   // صفحة قسم: عنوان ووصف وكانونيكال خاص بيها عشان تتفهرس كصفحة هبوط مستقلة
   if (current) {
