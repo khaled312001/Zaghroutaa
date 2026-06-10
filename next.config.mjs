@@ -11,6 +11,9 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react"],
+    // الاستضافة المشتركة محدودة الموارد — نبني بعامل واحد عشان الـ build ما يتعداش حد الميموري
+    cpus: 1,
+    workerThreads: false,
   },
   eslint: {
     // الـ build مش بيوقف على تحذيرات اللينت

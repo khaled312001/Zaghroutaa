@@ -12,16 +12,36 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "كل منتجات وإكسسوارات العروسة الهاند ميد",
-  description:
-    "تشكيلة زُغْرُوطَة الكاملة من إكسسوارات العروسة الهاند ميد — مناديل كتب الكتاب المطرّزة، تابلوهات البصمة، مرايات العروسة، بوكيهات البرايد، النظارات والأقلام وروب العروسة. أسعار تناسب الجميع وشحن لكل المحافظات.",
-  keywords: [
-    "اكسسوارات العروسة", "منديل كتب الكتاب", "بصمة العروسة", "مراية العروسة",
-    "بوكيه برايد", "نظارة برايد", "روب العروسة", "هاند ميد", "تجهيزات العروسة", "زغروطة",
-  ],
-  alternates: { canonical: "/products" },
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>;
+}): Promise<Metadata> {
+  const { cat } = await searchParams;
+  const cats = await getCategories();
+  const current = cat ? cats.find((c) => c.slug === cat) : undefined;
+
+  // صفحة قسم: عنوان ووصف وكانونيكال خاص بيها عشان تتفهرس كصفحة هبوط مستقلة
+  if (current) {
+    return {
+      title: `${current.nameAr} هاند ميد — زُغْرُوطَة`,
+      description: `تشكيلة ${current.nameAr} الهاند ميد من زُغْرُوطَة، أول براند مصري لإكسسوارات العرايس وتجهيزات كتب الكتاب والفرح — شغل متقن وأسعار تناسب الجميع وشحن لكل محافظات مصر.`,
+      keywords: [current.nameAr, "زغروطة", "اكسسوارات العروسة", "هاند ميد", "كتب الكتاب", "تجهيزات العروسة"],
+      alternates: { canonical: `/products?cat=${current.slug}` },
+    };
+  }
+
+  return {
+    title: "كل منتجات وإكسسوارات العروسة الهاند ميد",
+    description:
+      "تشكيلة زُغْرُوطَة الكاملة من إكسسوارات العروسة الهاند ميد — مناديل كتب الكتاب المطرّزة، تابلوهات البصمة، مرايات العروسة، بوكيهات البرايد، النظارات والأقلام وروب العروسة. أسعار تناسب الجميع وشحن لكل المحافظات.",
+    keywords: [
+      "اكسسوارات العروسة", "منديل كتب الكتاب", "بصمة العروسة", "مراية العروسة",
+      "بوكيه برايد", "نظارة برايد", "روب العروسة", "هاند ميد", "تجهيزات العروسة", "زغروطة",
+    ],
+    alternates: { canonical: "/products" },
+  };
+}
 
 export default async function ProductsPage({
   searchParams,

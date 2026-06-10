@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin", "/api", "/book/"],
+        // /book مش محظورة في robots عشان جوجل يقدر يشوف وسم noindex اللي في الصفحة
+        // (الحظر في robots كان بيمنعه يشوف الـ noindex → تحذير "indexed though blocked")
+        disallow: ["/admin", "/api"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
