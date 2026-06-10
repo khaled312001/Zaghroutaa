@@ -19,6 +19,10 @@ const nextConfig = {
     // الـ build مش بيوقف على تحذيرات اللينت
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    // بنعمل typecheck محليًا قبل الـ commit — بنوفّر ميموري ووقت على الاستضافة المشتركة
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
